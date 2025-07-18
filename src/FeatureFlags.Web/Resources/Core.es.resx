@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Ahorra</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Alternar ayuda</value>
+  </data>
+  <data name="Brand" xml:space="preserve">
+    <value>FeatureFlags</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Está seguro?</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="ErrorInvalidId" xml:space="preserve">
+    <value>El identificador proporcionado no es válido.</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="ErrorEmailAddress" xml:space="preserve">
+    <value>{0} no es un email válido.</value>
+  </data>
+  <data name="ErrorMaxLength" xml:space="preserve">
+    <value>{0} no puede ser más que {1} caracteres.</value>
+  </data>
+  <data name="ErrorRequired" xml:space="preserve">
+    <value>{0} es obligatorio.</value>
+  </data>
+  <data name="ErrorEmailAddressFormat" xml:space="preserve">
+    <value>Debe introducir una dirección de correo electrónico con el formato correcto.</value>
+  </data>
+  <data name="FirstPage" xml:space="preserve">
+    <value>Primera página</value>
+  </data>
+  <data name="LastPage" xml:space="preserve">
+    <value>Última página</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>Página Siguiente</value>
+  </data>
+  <data name="PerPage" xml:space="preserve">
+    <value>Por página</value>
+  </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>Página Anterior</value>
+  </data>
+  <data name="ConfirmDeleteBody" xml:space="preserve">
+    <value>Seguro de que desea eliminar esto {0}?</value>
+  </data>
+  <data name="ErrorMinMaxLength" xml:space="preserve">
+    <value>{0} debe ser al menos {1} caracteres y no más de {1} caracteres.</value>
+  </data>
+  <data name="ErrorAlreadyLoggedIn" xml:space="preserve">
+    <value>No se puede hacer que cuando ya estas conectado.</value>
+  </data>
+  <data name="HelpDisabled" xml:space="preserve">
+    <value>Ayuda contextual está desactivada.</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Vuelve a intentarlo</value>
+  </data>
+  <data name="ErrorChartLoad" xml:space="preserve">
+    <value>Error al cargar la tabla.</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Desplazar hacia abajo</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Mover hacia arriba</value>
+  </data>
+  <data name="ViewSql" xml:space="preserve">
+    <value>Ver</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rol</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Añadir</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Renombre</value>
+  </data>
+  <data name="CopyOf" xml:space="preserve">
+    <value>Copia de {0}</value>
+  </data>
+  <data name="DiscardChanges" xml:space="preserve">
+    <value>Con cambios sin guardar. ¿Está seguro de que desea salir sin guardar los cambios?</value>
+  </data>
+  <data name="Okay" xml:space="preserve">
+    <value>Okay</value>
+  </data>
+  <data name="ErrorNameRequired" xml:space="preserve">
+    <value>El nombre es obligatorio.</value>
+  </data>
+  <data name="ErrorGeneric" xml:space="preserve">
+    <value>Ocurrió un error.</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorUserOrRole" xml:space="preserve">
+    <value>Debe seleccionar un usuario o un papel.</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="TableOf" xml:space="preserve">
+    <value>de</value>
+  </data>
+  <data name="ErrorRefresh" xml:space="preserve">
+    <value>El informe/gráfico que está viendo está sincronizado. Por favor actualice la página.</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Recargar</value>
+  </data>
+  <data name="StartTyping" xml:space="preserve">
+    <value>Comienza a escribir para buscar…</value>
+  </data>
+  <data name="ErrorSessionInvalid" xml:space="preserve">
+    <value>Esta sesión ya no es válida porque el usuario inició sesión en otro dispositivo.</value>
+  </data>
+  <data name="JavascriptException" xml:space="preserve">
+    <value>Javascript Excepion</value>
+  </data>
+  <data name="UnhandledError" xml:space="preserve">
+    <value>Unhandled error code `{0}` for request `{1}`.</value>
+  </data>
+  <data name="CronError" xml:space="preserve">
+    <value>Error de Cron</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cerca</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Panel de control</value>
+  </data>
+  <data name="TableLoadingError" xml:space="preserve">
+    <value>Se produjo un error al cargar los datos de la tabla.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Rever</value>
+  </data>
+  <data name="TableHasNoData" xml:space="preserve">
+    <value>No hay datos para mostrar.</value>
+  </data>
+  <data name="TableTo" xml:space="preserve">
+    <value>a</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>Acerca de</value>
+  </data>
+  <data name="Ascending" xml:space="preserve">
+    <value>Ascendente</value>
+  </data>
+  <data name="Descending" xml:space="preserve">
+    <value>Descendente</value>
+  </data>
+  <data name="TableTooManyResults" xml:space="preserve">
+    <value>Demasiados datos para mostrar.</value>
+  </data>
+  <data name="AutocompleteNoMatches" xml:space="preserve">
+    <value>No hay coincidencias.</value>
+  </data>
+  <data name="ErrorTryRefreshing" xml:space="preserve">
+    <value>Se produjo un error no controlado.</value>
+  </data>
+  <data name="ErrorConcurrency" xml:space="preserve">
+    <value>Hubo un conflicto durante la actualización.  Actualice y vuelva a intentarlo.</value>
+  </data>
+  <data name="HelpEnabled" xml:space="preserve">
+    <value>La ayuda de contexto ahora está habilitada. Verá este icono que indica dónde está disponible la ayuda.</value>
+  </data>
+</root>

@@ -1,0 +1,34 @@
+.icon {
+    height: 1.6rem;
+    width: 1.6rem;
+    display: block;
+
+    & svg {
+        margin-left: -.4rem;
+        margin-top: -.4rem;
+
+        & path {
+            fill: currentcolor;
+        }
+    }
+}
+
+.button-icon {
+    padding: .5rem .6rem;
+
+    & svg {
+        & path {
+            fill: currentcolor;
+        }
+    }
+}
+
+.label-icon {
+    background-color: var(--color-light-grey);
+    border-radius: 4px;
+
+    .icon {
+        width: auto;
+        padding: .9rem;
+    }
+}

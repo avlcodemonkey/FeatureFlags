@@ -1,0 +1,23 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources;
+@inject Microsoft​.AspNetCore​.Http.IHttpContextAccessor _HttpContextAccessor
+
+@{
+    var alertModel = new AlertModel {
+        Content = _HttpContextAccessor.HttpContext?.Session.IsEnabled(SessionProperties.Help) == true ? Core.HelpEnabled : Core.HelpDisabled,
+        Icon = Icon.CircleInformation,
+        CanDismiss = true
+    };
+}
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@Account.Settings" controller="@nameof(AccountController)" action="@nameof(AccountController.Index)" />
+        <breadcrumb-item label="@Core.Help" controller="@nameof(AccountController)" action="@nameof(AccountController.ToggleContextHelp)" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <partial name="_Alert" model="alertModel" />
+</content>

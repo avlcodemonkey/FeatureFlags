@@ -1,0 +1,35 @@
+{
+    "version": "1.0.0",
+    "name": "FeatureFlags",
+    "private": true,
+    "engines": {
+        "node": "^22.0.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "9.31.0",
+        "@stylistic/eslint-plugin": "5.1.0",
+        "esbuild": "0.25.6",
+        "eslint": "9.31.0",
+        "eslint-plugin-jsdoc": "51.3.4",
+        "globals": "16.3.0",
+        "jsdom": "26.1.0",
+        "stylelint": "16.21.1",
+        "stylelint-config-standard": "38.0.0",
+        "vitest": "3.2.4"
+    },
+    "scripts": {
+        "build": "node build.mjs",
+        "watch": "node build.mjs --watch",
+        "css:lint": "stylelint Assets/css/*.css",
+        "css:fix": "stylelint Assets/css/*.css --fix",
+        "test": "vitest",
+        "js:lint": "eslint .",
+        "js:fix": "eslint --fix ."
+    },
+    "dependencies": {
+        "autocompleter": "9.3.2",
+        "fecha": "4.2.3",
+        "ky": "1.8.1",
+        "pretty-print-json": "3.0.5"
+    }
+}

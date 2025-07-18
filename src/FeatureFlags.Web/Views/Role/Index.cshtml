@@ -1,0 +1,51 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Utils
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@Roles.ViewAll" controller="@nameof(RoleController)" action="@nameof(RoleController.Index)" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <data-table key="roles" src-url="@Url.Action(nameof(RoleController.List), nameof(RoleController).StripController())">
+        <data-head>
+            <th style="width:@Html.Width(ColumnWidth.TripleIcon)px">
+                <a authorize-roles="role.edit" href="@Url.Action(nameof(RoleController.Create), nameof(RoleController).StripController())" class="button primary" title="@Roles.CreateRole">
+                    <icon name="Add" label="@Roles.CreateRole" />
+                </a>
+                <nilla-confirm authorize-roles="role.refreshpermissions">
+                    <a href="@Url.Action(nameof(RoleController.RefreshPermissions), nameof(RoleController).StripController())" class="button primary" title="@Roles.RefreshPermissions"
+                        data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Roles.ConfirmRefreshPermissions"
+                    >
+                        <icon name="Refresh" label="@Roles.RefreshPermissions" />
+                    </a>
+                </nilla-confirm>
+            </th>
+            <th style="width:@Html.Width(ColumnWidth.Id)px" data-property="id">@Core.Id</th>
+            <th data-property="name">@Roles.Name</th>
+        </data-head>
+        <data-body colspan="3">
+            <td>
+                <a authorize-roles="role.edit" href="@Url.ActionForMustache(nameof(RoleController.Edit))" class="button primary" title="@Roles.EditRole">
+                    <icon name="EditAlt" label="@Roles.EditRole" />
+                </a>
+                <a authorize-roles="role.edit" href="@Url.ActionForMustache(nameof(RoleController.Copy))" class="button primary" title="@Core.Copy">
+                    <icon name="Copy" label="@Core.Copy" />
+                </a>
+                <nilla-confirm authorize-roles="role.delete">
+                    <a href="@Url.ActionForMustache(nameof(RoleController.Delete))" class="button dark" title="@Core.Delete" data-pjax-method="delete"
+                        data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel"
+                        data-dialog-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
+                    >
+                        <icon name="DeleteAlt" label="@Core.Delete" />
+                    </a>
+                </nilla-confirm>
+            </td>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+        </data-body>
+    </data-table>
+</content>

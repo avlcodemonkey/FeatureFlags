@@ -1,0 +1,130 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ScopedCssEnabled>false</ScopedCssEnabled>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RootNamespace>FeatureFlags</RootNamespace>
+    <Product>FeatureFlags</Product>
+    <AssemblyVersion>1.0.0.141</AssemblyVersion>
+    <UserSecretsId>564f8f0d-f563-416d-8988-3966cb50fb7a</UserSecretsId>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TypeScriptTarget>ESNext</TypeScriptTarget>
+    <TypeScriptLib>ESNext</TypeScriptLib>
+    <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TypeScriptTarget>ESNext</TypeScriptTarget>
+    <TypeScriptLib>ESNext</TypeScriptLib>
+    <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="jsconfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="jsconfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.13.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.23.0" />
+    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="4.2.1" />
+    <PackageReference Include="MimeKit" Version="4.13.0" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="1.1.0" />
+    <PackageReference Include="Sentry.AspNetCore" Version="5.12.0" />
+    <PackageReference Include="System.Text.Json" Version="9.0.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FeatureFlags.Domain\FeatureFlags.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Account.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Account.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ContextHelp.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ContextHelp.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Core.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Core.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\AuditLogs.Designer.cs">
+      <DependentUpon>AuditLogs.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\Flags.Designer.cs">
+      <DependentUpon>Flags.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\Roles.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Roles.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Users.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Users.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Account.es.resx">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Account.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ContextHelp.es.resx">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ContextHelp.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ContextHelp.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Core.es.resx">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Core.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Core.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\AuditLogs.resx">
+      <LastGenOutput>AuditLogs.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Flags.resx">
+      <LastGenOutput>Flags.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Roles.es.resx">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Roles.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Roles.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Users.es.resx">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Users.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Users.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

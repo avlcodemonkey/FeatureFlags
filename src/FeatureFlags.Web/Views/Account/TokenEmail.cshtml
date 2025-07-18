@@ -1,0 +1,30 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using System.Globalization
+@model LoginTokenModel
+@inject ILanguageService _LanguageService
+
+@{
+    Layout = "_EmailLayout";
+    var loginLink = Url.ActionLink(nameof(AccountController.LoginByLink), nameof(AccountController).StripController(), new { Email = Model.Email, Token = Model.Token });
+}
+
+<h3 class="text-primary">@Account.LoginCode</h3>
+
+<p>
+    @Account.TokenEmailBody.Replace("{0}", Auth.TokenLifeTime.ToString())
+</p>
+
+<div class="text-center p-2 text-red">
+    <h2>@Model.Token</h2>
+</div>
+
+<p>
+    @Account.TokenEmailLink <a href="@loginLink">@loginLink</a>
+</p>
+
+<p class="text-dark-grey">
+    @Account.TokenEmailDisclaimer
+</p>

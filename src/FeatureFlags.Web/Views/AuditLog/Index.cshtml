@@ -1,0 +1,77 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using FeatureFlags.Utils
+@model AuditLogSearchModel
+@inject IAuditLogService _AuditLogService
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@AuditLogs.ViewAll" controller="@nameof(AuditLogController)" action="@nameof(AuditLogController.Index)" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="container mb-2">
+        <details>
+            <summary><b>@AuditLogs.Filters</b></summary>
+            <form method="post" action="@Url.Action(nameof(AuditLogController.Search), nameof(AuditLogController).StripController())" id="auditLogSearch" class="form-compact">
+                <div class="row">
+                    <div class="col">
+                        <input-group for="StartDate" autofocus />
+                    </div>
+                    <div class="col">
+                        <input-group for="EndDate" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input-group for="Entity" />
+                    </div>
+                    <div class="col">
+                        <select-group for="State" options="@_AuditLogService.GetEntityStates().Select(x => new SelectListItem(x.ToString(), x.ToString())).ToList()" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <autocomplete-group for="UserId" src-url="@Url.Action("UserList", "AuditLog")" />
+                    </div>
+                    <div class="col">
+                        <input-group for="BatchId" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col is-bottom-right">
+                        <input class="button primary" type="submit" value="@Core.Search">
+                    </div>
+                </div>
+            </form>
+        </details>
+    </div>
+
+    <data-table key="auditLogs" src-form="auditLogSearch" max-results="AuditLogService.MaxResults">
+        <data-head>
+            <th style="width:@Html.Width(ColumnWidth.SingleIcon)px"></th>
+            <th data-property="universalDate">@AuditLogs.Date</th>
+            <th data-property="name">@AuditLogs.Name</th>
+            <th data-property="state">@AuditLogs.State</th>
+            <th data-property="entity">@AuditLogs.Entity</th>
+            <th data-property="batchId">@AuditLogs.Batch</th>
+        </data-head>
+        <data-body colspan="6">
+            <td>
+                <a authorize-roles="auditlog.view" href="@Url.ActionForMustache(nameof(AuditLogController.View))" class="button primary" title="@AuditLogs.ViewAuditLog">
+                    <icon name="Search" label="@AuditLogs.ViewAuditLog" />
+                </a>
+            </td>
+            @* @todo replace this date-format when a user setting is added*@
+            <td><nilla-date data-date-format="MM/DD/YYYY hh:mm:ss A">{{universalDate}}</nilla-date></td>
+            <td>{{name}}</td>
+            <td>{{state}}</td>
+            <td>{{entity}}</td>
+            <td>{{batchId}}</td>
+        </data-body>
+    </data-table>
+</content>

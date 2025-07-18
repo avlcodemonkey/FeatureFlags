@@ -1,0 +1,12 @@
+{
+    "extends": [
+        "stylelint-config-standard"
+    ],
+    "ignorePath": [
+        "wwwroot/**",
+        "Assets/external/**"
+    ],
+    "rules": {
+        "custom-property-pattern": null
+    }
+}

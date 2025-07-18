@@ -1,0 +1,55 @@
+@using System.Globalization;
+@using FeatureFlags.Constants
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources;
+@using FeatureFlags.Utils
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title id="page-title">@(ViewData[ViewProperties.Title] ?? Core.Brand)</title>
+
+        <style>
+        html {
+            -webkit-box-sizing: border-box; box-sizing: border-box;
+            font-size: 62.5%; line-height: 1.15;
+            -ms-text-size-adjust: 100%; text-size-adjust: 100%;
+        }
+
+        *, *::before, *::after { -webkit-box-sizing: inherit; box-sizing: inherit; }
+
+        body {
+            background-color: #fcfcfc;
+            line-height: 1.6;
+            font-size: 1.6rem;
+            color: #333333;
+            font-family: -apple-system, blinkmacsystemfont, "Segoe UI", "Noto Sans", helvetica, arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-weight: 500; margin: 0.35em 0 0.7em; }
+
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.75em; }
+        h3 { font-size: 1.5em; }
+        h4 { font-size: 1.25em; }
+        h5 { font-size: 1em; }
+        h6 { font-size: 0.85em; }
+
+        a { color: #3e63ad; text-decoration: none; }
+        a:hover:not(.button) { opacity: 0.75; }
+        button { font-family: inherit; }
+        p { margin-top: 0; }
+
+        .text-center { text-align: center; }
+        .p-2 { padding: 2rem; }
+        .text-primary { color: #3e63ad !important; }
+        .text-dark-grey { color: #747681 !important; }
+        .text-red { color: #ba2828 !important; }
+    </style>
+    </head>
+    <body>
+        @RenderBody()
+    </body>
+</html>

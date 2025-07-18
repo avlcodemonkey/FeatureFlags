@@ -1,0 +1,43 @@
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Models
+@using FeatureFlags.Services
+@using System.Globalization
+@model UserModel
+@inject IRoleService _RoleService
+@inject ILanguageService _LanguageService
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@Users.ViewAll" controller="@nameof(UserController)" action="@nameof(UserController.Index)" />
+        <breadcrumb-item label="@(Model.Id == 0 ? Users.CreateUser : Users.EditUser)" controller="@nameof(UserController)"
+            action="@(Model.Id == 0 ? nameof(UserController.Create) : nameof(UserController.Edit))"
+            route-values="@(Model.Id == 0 ? null : new { Id = Model.Id })" active="true"
+        />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="row">
+        <div class="col col-6-lg">
+            <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
+                <input-group for="Name" autofocus />
+                <input-group for="Email" />
+                <select-group for="LanguageId" options="@(await _LanguageService.GetAllLanguagesAsync()).ToSelectList(x => x.Name, x => x.Id.ToString(CultureInfo.InvariantCulture))" />
+
+                <div class="mb-1">
+                    <label asp-for="RoleIds">@Users.Roles</label>
+                    @{
+                        var roles = await _RoleService.GetAllRolesAsync();
+                        foreach (var role in roles)
+                        {
+                            <form-checkbox name="RoleIds" value="@role.Id" label="@role.Name" checked="@Model.RoleIds?.Contains(role.Id) == true" />
+                        }
+                    }
+                </div>
+
+                <input class="button primary" type="submit" value="@Core.Save">
+            </form-content>
+        </div>
+    </div>
+</content>

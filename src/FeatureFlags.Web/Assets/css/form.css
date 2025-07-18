@@ -1,0 +1,49 @@
+form {
+    & input:invalid:not(.button) {
+        border-color: var(--color-error) !important;
+    }
+
+    & select:invalid:not(.button) {
+        border-color: var(--color-error) !important;
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+        display: flex;
+
+        > :not(:first-child) {
+            border-top-left-radius: 0 ;
+            border-bottom-left-radius: 0;
+
+            .button {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+
+        > :not(:last-child) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+
+            .button {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        }
+    }
+
+    & label input[type="checkbox"] {
+        margin-right: 1rem;
+    }
+}
+
+form.form-compact {
+    .input-group {
+        margin-bottom: 0;
+    }
+}
+
+input[type="text"]:read-only, input[type="text"]:read-only:hover, input[type="email"]:read-only, input[type="email"]:read-only:hover {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

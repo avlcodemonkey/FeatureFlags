@@ -1,0 +1,26 @@
+@using FeatureFlags.Resources
+@model DataTableModel;
+
+<div class="row">
+    @if (!Model.HideSearch)
+    {
+        <div class="col">
+            <form>
+                <div class="input-group">
+                    <label for="tableSearch" class="label-icon">
+                        <icon name="Search" label="@Core.Search" />
+                    </label>
+                    <input type="text" name="tableSearch" id="tableSearch" placeholder="@Core.StartTyping" data-table-search disabled>
+                </div>
+            </form>
+        </div>
+    }
+    <div class="col is-vertical-align">
+        <span data-table-max-results class="text-error is-hidden"><b>@Core.TableTooManyResults</b></span>
+    </div>
+    <div class="col is-right is-vertical-align">
+        <div>
+            <span data-table-start-row>0</span><span> @Core.TableTo </span><span data-table-end-row>0</span><span> @Core.TableOf </span><span data-table-filtered-rows>0</span>
+        </div>
+    </div>
+</div>

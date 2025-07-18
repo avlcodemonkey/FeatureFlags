@@ -1,0 +1,42 @@
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using System.Globalization
+@model UpdateAccountModel
+@inject ILanguageService _LanguageService
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@Account.Settings" controller="@nameof(AccountController)" action="@nameof(AccountController.Index)" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <table class="col striped">
+        <thead>
+            <tr>
+                <th>@Account.Settings</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <a href="@Url.Action(nameof(AccountController.UpdateAccount))">@Account.UpdateAccount</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="@Url.Action(nameof(AccountController.ToggleContextHelp))">@Account.ContextHelp</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <nilla-info data-dialog-content="@Html.ApplicationVersionName()" data-dialog-ok="@Core.Okay">
+                        <a href="#">@Core.About</a>
+                    </nilla-info>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</content>
+

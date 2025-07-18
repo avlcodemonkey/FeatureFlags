@@ -1,0 +1,28 @@
+@using FeatureFlags.Constants;
+@using FeatureFlags.Utils;
+@using FeatureFlags.Extensions;
+
+@{
+    string GetData(string key)
+    {
+        if (ViewData.ContainsKey(key))
+        {
+            return (ViewData[key] ?? "").ToString() ?? "";
+        }
+        if (TempData.ContainsKey(key))
+        {
+            return (TempData[key] ?? "").ToString() ?? "";
+        }
+
+        return "";
+    }
+}
+
+@if (!string.IsNullOrWhiteSpace(GetData(ViewProperties.Message)))
+{
+    <partial name="_Alert" model="new AlertModel { Content = GetData(ViewProperties.Message) }" />
+}
+@if (!string.IsNullOrWhiteSpace(GetData(ViewProperties.Error)))
+{
+    <partial name="_Alert" model="new AlertModel { Content = GetData(ViewProperties.Error), AlertType = AlertType.Error }" />
+}

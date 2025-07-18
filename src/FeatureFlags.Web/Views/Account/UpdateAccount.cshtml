@@ -1,0 +1,28 @@
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using System.Globalization
+@model UpdateAccountModel
+@inject ILanguageService _LanguageService
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@Account.Settings" controller="@nameof(AccountController)" action="@nameof(AccountController.Index)" />
+        <breadcrumb-item label="@Account.UpdateAccount" controller="@nameof(AccountController)" action="@nameof(AccountController.UpdateAccount)" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="row">
+        <div class="col col-6-lg">
+            <form-content controller="@nameof(AccountController)" action="@nameof(AccountController.UpdateAccount)">
+                <input-group for="Email" readonly />
+                <input-group for="Name" autofocus="true" />
+                <select-group for="LanguageId" options="@(await _LanguageService.GetAllLanguagesAsync()).ToSelectList(x => x.Name, x => x.Id.ToString(CultureInfo.InvariantCulture))" />
+
+                <input class="button primary" type="submit" value="@Core.Save">
+            </form-content>
+        </div>
+    </div>
+</content>
+

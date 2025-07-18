@@ -1,0 +1,60 @@
+@using FeatureFlags.Resources;
+@using FeatureFlags.Services
+@using FeatureFlags.Utils
+@model AuditLogModel
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@AuditLogs.ViewAll" controller="@nameof(AuditLogController)" action="@nameof(AuditLogController.Index)" />
+        <breadcrumb-item label="@AuditLogs.ViewAuditLog" controller="@nameof(AuditLogController)" action="@nameof(AuditLogController.View)"
+            route-values="@new { Id = Model.Id }" active="true"
+        />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="container">
+        <dl>
+            <dt>@AuditLogs.Date</dt>
+            @* @todo replace this date-format when a user setting is added*@
+            <dd><nilla-date data-date-format="MM/DD/YYYY hh:mm:ss A">@Model.Date.ToString("u")</nilla-date></dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.Name</dt>
+            <dd>@NameHelper.DisplayName(Model.Name, Model.Email)</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.State</dt>
+            <dd>@Model.State</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.Entity</dt>
+            <dd>@Model.Entity</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.Batch</dt>
+            <dd>@Model.BatchId</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.PrimaryKey</dt>
+            <dd>@Model.PrimaryKey</dd>
+        </dl>
+
+        <div class="row">
+            <dl class="col">
+                <dt>@AuditLogs.OldValues</dt>
+                <dd><nilla-json>@Model.OldValues</nilla-json></dd>
+            </dl>
+
+            <dl class="col">
+                <dt>@AuditLogs.NewValues</dt>
+                <dd><nilla-json>@Model.NewValues</nilla-json></dd>
+            </dl>
+        </div>
+    </div>
+</content>

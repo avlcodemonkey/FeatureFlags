@@ -1,0 +1,59 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Utils
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@Flags.ViewAll" controller="@nameof(FeatureFlagController)" action="@nameof(FeatureFlagController.Index)" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <data-table key="featureFlags" src-url="@Url.Action(nameof(FeatureFlagController.List), nameof(FeatureFlagController).StripController())">
+        <data-head>
+            <th style="width:@Html.Width(ColumnWidth.DoubleIcon)px">
+                <nilla-confirm authorize-roles="featureflag.refreshflags">
+                    <a href="@Url.Action(nameof(FeatureFlagController.RefreshFlags), nameof(FeatureFlagController).StripController())" class="button primary" title="@Flags.RefreshFlags"
+                       data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmRefreshFlags">
+                        <icon name="Refresh" label="@Flags.RefreshFlags" />
+                    </a>
+                </nilla-confirm>
+                <nilla-confirm authorize-roles="featureflag.clearcache">
+                    <a href="@Url.Action(nameof(FeatureFlagController.ClearCache), nameof(FeatureFlagController).StripController())" class="button primary" title="@Flags.ClearCache"
+                       data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmClearCache">
+                        <icon name="Ban" label="@Flags.ClearCache" />
+                    </a>
+                </nilla-confirm>
+            </th>
+            <th style="width:@Html.Width(ColumnWidth.Id)px" data-property="id">@Core.Id</th>
+            <th data-property="name">@Flags.Name</th>
+            <th data-property="name">@Flags.Status</th>
+        </data-head>
+        <data-body colspan="4">
+            <td>
+                {{#if isEnabled}}
+                <nilla-confirm authorize-roles="featureflag.disable">
+                    <a href="@Url.ActionForMustache(nameof(FeatureFlagController.Disable))" class="button dark" title="@Flags.Disable" data-pjax-method="patch"
+                       data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel"
+                       data-dialog-content="@Flags.ConfirmDisable">
+                        <icon name="ToggleOff" label="@Flags.Disable" />
+                    </a>
+                </nilla-confirm>
+                {{/if}}
+                {{#if !isEnabled}}
+                <nilla-confirm authorize-roles="featureflag.enable">
+                    <a href="@Url.ActionForMustache(nameof(FeatureFlagController.Enable))" class="button dark" title="@Flags.Enable" data-pjax-method="patch"
+                       data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel"
+                       data-dialog-content="@Flags.ConfirmEnable">
+                        <icon name="ToggleOn" label="@Flags.Enable" />
+                    </a>
+                </nilla-confirm>
+                {{/if}}
+            </td>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+            <td>{{statusText}}</td>
+        </data-body>
+    </data-table>
+</content>

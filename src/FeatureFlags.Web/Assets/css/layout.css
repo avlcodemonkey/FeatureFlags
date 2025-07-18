@@ -1,0 +1,56 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+
+    &.error-page {
+        height: auto;
+    }
+}
+
+#main {
+    padding: calc(var(--luxbar-height) + 1rem) var(--luxbar-height) var(--luxbar-height) var(--luxbar-height);
+}
+
+#content {
+    height: 100%;
+}
+
+#pjax-indicator {
+    display: none;
+
+    &.pjax-request {
+        background: rgb(0 0 0 / 50%);
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        z-index: 16777270;
+    }
+
+    &::after {
+        content: " ";
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid var(--color-primary);
+        border-color: var(--color-primary) transparent var(--color-primary) transparent;
+        animation: spinner 1.2s linear infinite;
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

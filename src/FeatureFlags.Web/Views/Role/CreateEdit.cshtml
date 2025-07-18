@@ -1,0 +1,45 @@
+@using FeatureFlags.Models
+@using FeatureFlags.Resources;
+@using FeatureFlags.Services
+@model RoleModel
+@inject IPermissionService _PermissionService
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@Roles.ViewAll" controller="@nameof(RoleController)" action="@nameof(RoleController.Index)" />
+        <breadcrumb-item label="@(Model.Id == 0 ? Roles.CreateRole : Roles.EditRole)" controller="@nameof(RoleController)"
+            action="@(Model.Id == 0 ? nameof(RoleController.Create) : nameof(RoleController.Edit))"
+            route-values="@(Model.Id == 0 ? null : new { Id = Model.Id })" active="true"
+        />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="row">
+        <div class="col col-6-lg">
+            <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
+                <input-group for="Name" autofocus />
+                <checkbox-group for="IsDefault" />
+
+                <div class="mb-1">
+                    <label>@Roles.Permissions</label>
+                    @{
+                        var permissions = await _PermissionService.GetControllerPermissionsAsync();
+                        foreach (var controller in permissions.Keys)
+                        {
+                            <details open>
+                                <summary>@controller</summary>
+                                @foreach (var permission in permissions[controller])
+                                {
+                                    <form-checkbox name="PermissionIds" value="@permission.Id" label="@permission.ActionName" checked="@Model.PermissionIds?.Contains(permission.Id) == true" />
+                                }
+                            </details>
+                        }
+                    }
+                </div>
+
+                <input class="button primary" type="submit" value="@Core.Save">
+            </form-content>
+        </div>
+    </div>
+</content>

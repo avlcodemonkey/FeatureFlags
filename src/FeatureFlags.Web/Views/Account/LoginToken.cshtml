@@ -1,0 +1,24 @@
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using System.Globalization
+@model LoginTokenModel
+@inject ILanguageService _LanguageService
+
+<content>
+    <partial name="_Alerts" />
+
+    <div class="row">
+        <div class="col col-6-lg">
+            <h3>@Account.Login</h3>
+            <form-content controller="@nameof(AccountController)" action="@nameof(AccountController.LoginToken)" data-pjax-no-follow>
+                <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+                <input-group for="Email" readonly />
+                <input-group for="Token" autofocus autofill="off" />
+
+                <input class="button primary" type="submit" value="@Account.Login">
+            </form-content>
+        </div>
+    </div>
+</content>
+

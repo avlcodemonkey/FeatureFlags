@@ -1,0 +1,6 @@
+@using FeatureFlags.Constants;
+@using FeatureFlags.Utils;
+
+@{
+    Layout = Context.Request.Headers.Any(x => x.Key.ToLowerInvariant() == PJax.Request) ? null : "_Layout";
+}

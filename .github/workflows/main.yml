@@ -1,0 +1,105 @@
+# Build, test, and scan solution
+name: Main
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+        cache-dependency-path: ./src/FeatureFlags.Web/package-lock.json
+
+    - name: Install Node Packages
+      working-directory: ./src/FeatureFlags.Web
+      run: npm ci --ignore-scripts
+
+    - name: Lint Javascript
+      working-directory: ./src/FeatureFlags.Web
+      run: npm run js:lint
+
+    - name: Lint Stylesheets
+      working-directory: ./src/FeatureFlags.Web
+      run: npm run css:lint
+
+    - name: Build Assets
+      working-directory: ./src/FeatureFlags.Web
+      run: npm run build
+
+    - name: Test Javascript
+      working-directory: ./src/FeatureFlags.Web
+      run: npm run test
+
+    - name: Setup DotNet
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.x
+        dotnet-quality: ga
+        cache: true
+        cache-dependency-path: src/**/packages.lock.json
+
+    - name: Restore DotNet dependencies
+      run: dotnet restore --locked-mode
+
+    - name: Build DotNet
+      run: dotnet build --no-restore
+
+    # Test projects sequentially to prevent database collisions
+    - name: Test DotNet Domain
+      run: dotnet test src/FeatureFlags.Domain.Tests --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+    - name: Test DotNet Web
+      run: dotnet test src/FeatureFlags.Web.Tests --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+  scan:
+    name: SonarQube Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v5
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # runs only when other jobs succeed and it's a push into `main`
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [build, scan]
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit version change
+      contents: write
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && success() }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Increment Version
+      shell: pwsh
+      run: |
+        ./scripts/incrementVersion.ps1
+
+    - name: Commit Version
+      run: |
+        git config user.email "avlcodemonkey@users.noreply.github.com"
+        git config user.name "avlcodemonkey"
+        # commit proj file that is being updated only
+        git add src/FeatureFlags.Web/FeatureFlags.Web.csproj
+        git commit -m "Automated version update [skip ci]"
+        git push

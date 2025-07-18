@@ -1,0 +1,85 @@
+@using System.Globalization;
+@using FeatureFlags.Constants
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources;
+@using FeatureFlags.Utils
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title id="page-title">@(ViewData[ViewProperties.Title] ?? Core.Brand)</title>
+
+        <link rel="icon" href="~/favicon.ico" />
+        <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+        <environment exclude="Development">
+            <partial name="_Rollbar" />
+        </environment>
+        <script src="~/js/index.js" asp-append-version="true" defer></script>
+    </head>
+
+    <body data-environment>
+        <nilla-pjax data-version="@Html.ApplicationVersionNumber()">
+            <header id="luxbar" class="luxbar">
+                <input type="checkbox" id="luxbar-checkbox" />
+                <div class="luxbar-menu">
+                    <ul class="luxbar-navigation">
+                        <li class="luxbar-header">
+                            @if (User.Identity?.IsAuthenticated == true) {
+                                <a asp-controller="@nameof(DashboardController).StripController()" asp-action="@nameof(DashboardController.Index)" class="luxbar-brand">
+                                    <icon name="Sun" label="@Core.Brand" show-label />
+                                </a>
+                            } else {
+                                <a asp-controller="@nameof(AccountController).StripController()" asp-action="@nameof(AccountController.Login)" class="luxbar-brand" data-pjax-no-follow>
+                                    <icon name="Sun" label="@Core.Brand" show-label />
+                                </a>
+                            }
+                            <label class="luxbar-hamburger" for="luxbar-checkbox"> <span></span> </label>
+                        </li>
+
+                        @if (User.Identity?.IsAuthenticated == true) {
+                            <li authorize-roles="role.index">
+                                <a asp-controller="@nameof(RoleController).StripController()" asp-action="@nameof(RoleController.Index)">
+                                    <icon name="Lock" label="@Roles.MenuItem" show-label />
+                                </a>
+                            </li>
+                            <li authorize-roles="user.index">
+                                <a asp-controller="@nameof(UserController).StripController()" asp-action="@nameof(UserController.Index)">
+                                    <icon name="Users" label="@Users.MenuItem" show-label />
+                                </a>
+                            </li>
+                            <li authorize-roles="featureflag.index">
+                                <a asp-controller="@nameof(FeatureFlagController).StripController()" asp-action="@nameof(FeatureFlagController.Index)">
+                                    <icon name="Flag" label="@Flags.MenuItem" show-label />
+                                </a>
+                            </li>
+                            <li authorize-roles="auditlog.index">
+                                <a asp-controller="@nameof(AuditLogController).StripController()" asp-action="@nameof(AuditLogController.Index)">
+                                    <icon name="DocumentEmpty" label="@AuditLogs.MenuItem" show-label />
+                                </a>
+                            </li>
+                            <li authorize-roles="account.index">
+                                <a asp-controller="@nameof(AccountController).StripController()" asp-action="@nameof(AccountController.Index)">
+                                    <icon name="Settings" label="@Account.Settings" show-label />
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="@nameof(AccountController).StripController()" asp-action="@nameof(AccountController.Logout)" data-pjax-no-follow>
+                                    <icon name="LogOut" label="@Account.Logout" show-label />
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </header>
+
+                <div id="main" data-pjax-target>
+                    @RenderBody()
+                </div>
+
+            <div id="pjax-indicator" data-pjax-loading-indicator></div>
+            <nilla-info id="pjax-info-dialog" data-pjax-info-dialog data-dialog-content="@Core.ErrorTryRefreshing" data-dialog-ok="@Core.Okay"></nilla-info>
+        </nilla-pjax>
+    </body>
+</html>

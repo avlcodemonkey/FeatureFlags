@@ -1,0 +1,23 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Resources;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Error - FeatureFlags</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/index.css" />
+</head>
+<body class="error-page">
+    <div class="container">
+        <div class="p-2 m-2">
+            <h1><icon name="Storm" class="text-error" /></h1>
+            <h2>@(ViewData[ViewProperties.Message] ?? @Core.ErrorGeneric)</h2>
+        </div>
+    </div>
+</body>
+</html>

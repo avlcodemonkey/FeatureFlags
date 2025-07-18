@@ -1,0 +1,31 @@
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using System.Globalization
+@model LoginModel
+@inject ILanguageService _LanguageService
+
+<content>
+    <partial name="_Alerts" />
+
+    <div class="row">
+        <div class="col">
+            <h3>@Account.Login</h3>
+            <form-content controller="@nameof(AccountController)" action="@nameof(AccountController.Login)" data-pjax-no-follow>
+                <input type="hidden" name="ReturnUrl" value="@Model?.ReturnUrl" />
+                <input-group for="Email" autofocus />
+
+                <input class="button primary" type="submit" value="@Account.Login">
+            </form-content>
+        </div>
+        <div class="col"></div>
+        <feature name="@nameof(FeatureFlags.Constants.FeatureFlags.UserRegistration)">
+            <div class="col">
+                <h3>@Account.NewHere</h3>
+                <p>@Account.RegisterNow</p>
+                <a href="@Url.Action(nameof(AccountController.Register))" class="button primary" data-pjax-no-follow>@Account.Register</a>
+            </div>
+        </feature>
+    </div>
+</content>
+

@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "lib": [ "DOM", "ES2017" ],
+        "noEmit": true,
+        "skipLibCheck": true,
+        "maxNodeModuleJsDepth": 0  // needed to disable type checking in node_modules. tsconfig defaults to zero but jsconfig default to 2
+    },
+    "include": [
+        "Assets/src/js"
+    ],
+    "exclude": [
+        "node_modules",
+        "wwwroot",
+        "Assets/external"
+    ],
+    "compileOnSave": false
+}

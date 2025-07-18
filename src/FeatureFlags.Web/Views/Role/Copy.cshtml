@@ -1,0 +1,23 @@
+@using FeatureFlags.Models
+@using FeatureFlags.Resources;
+@using FeatureFlags.Services
+@model CopyRoleModel
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@Roles.ViewAll" controller="@nameof(RoleController)" action="@nameof(RoleController.Index)" />
+        <breadcrumb-item label="@Roles.CopyRole" controller="@nameof(RoleController)" action="@nameof(RoleController.Copy)" route-values="@(new { Id = Model.Id })" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="row">
+        <div class="col col-6-lg">
+            <form-content controller="@nameof(RoleController)" action="@nameof(RoleController.Copy)">
+                <input-group for="Prompt" autofocus="true" />
+
+                <input class="button primary" type="submit" value="@Core.Copy">
+            </form-content>
+        </div>
+    </div>
+</content>

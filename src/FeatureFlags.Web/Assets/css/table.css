@@ -1,0 +1,57 @@
+.spinner {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}
+
+.spinner::after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid var(--color-primary);
+    border-color: var(--color-primary) transparent var(--color-primary) transparent;
+    animation: spinner 1.2s linear infinite;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+nilla-table {
+    & th {
+        min-width: 100px;
+        vertical-align: bottom;
+        user-select: none;
+
+        &[data-property] {
+            cursor: pointer;
+        }
+
+        .sort-icon {
+            & svg {
+                margin-top: -0.5rem;
+
+                & path {
+                    fill: currentcolor;
+                }
+            }
+        }
+    }
+
+    & td {
+        padding: .8rem .4rem;
+    }
+
+    .button {
+        padding: 1rem;
+    }
+}
