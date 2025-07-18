@@ -75,8 +75,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(current_timestamp)");
 
@@ -118,8 +117,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(current_timestamp)");
 
@@ -172,8 +170,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasDefaultValueSql("(current_timestamp)");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(current_timestamp)");
 
@@ -300,8 +297,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(current_timestamp)");
 
@@ -341,8 +337,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(current_timestamp)");
 
@@ -483,8 +478,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<DateTime>("UpdatedDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(current_timestamp)");
 
@@ -523,8 +517,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(current_timestamp)");
 

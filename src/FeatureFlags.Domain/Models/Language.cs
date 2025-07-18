@@ -35,7 +35,7 @@ public class Language : IAuditedEntity {
     /// <summary>
     /// When language was updated.
     /// </summary>
-    [Timestamp, DefaultValueSql("(current_timestamp)")]
+    [DefaultValueSql("(current_timestamp)")]
     public DateTime UpdatedDate { get; set; }
 
     [NotMapped]
