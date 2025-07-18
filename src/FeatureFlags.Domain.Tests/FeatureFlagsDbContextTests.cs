@@ -31,8 +31,6 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
     [Fact]
     public async Task SaveChangesAsync_UpdateLanguage_SetsUpdatedDate() {
         // arrange
-        var createUserId = _Fixture.UserForCreate.Id;
-        var updateUserId = _Fixture.UserForUpdate.Id;
         var newLanguageName = "new language name";
         var languageForUpdate = new Language { Id = -2, Name = "update language", CountryCode = "country2", LanguageCode = "lang2" };
         using (var dbContext = _Fixture.CreateContextForCreate()) {
