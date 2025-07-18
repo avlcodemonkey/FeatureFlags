@@ -76,7 +76,8 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, ILogg
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> RefreshFlags(CancellationToken cancellationToken = default) {
-        var featureFlags = Enum.GetNames<Constants.FeatureFlags>().ToDictionary(x => x.ToLower(), x => x);
+        // @todo refresh should should be removed now
+        var featureFlags = Enum.GetNames<Constants.InternalFeatureFlags>().ToDictionary(x => x.ToLower(), x => x);
         if (!await new FeatureFlagManager(_FeatureFlagService).RegisterAsync(featureFlags, cancellationToken)) {
             ViewData.AddError(Flags.ErrorRefreshingFlags);
             return IndexWithPushState();

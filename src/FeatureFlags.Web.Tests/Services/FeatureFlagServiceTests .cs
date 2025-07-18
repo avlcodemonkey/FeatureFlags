@@ -1,3 +1,4 @@
+using FeatureFlags.Constants;
 using FeatureFlags.Domain.Models;
 using FeatureFlags.Models;
 using FeatureFlags.Resources;
@@ -82,7 +83,7 @@ public class FeatureFlagServiceTests {
         // arrange
         var testFeatureFlag = _Fixture.TestFeatureFlag;
         var cacheEntry = new MockCacheEntry { Key = "" };
-        var lifeTime = TimeSpan.FromMinutes(Constants.FeatureFlagConstants.CacheLifeTime);
+        var lifeTime = TimeSpan.FromMinutes(Caching.FeatureFlagLifeTime);
         _MockMemoryCache.Setup(m => m.CreateEntry(It.IsAny<object>())).Returns(cacheEntry);
 
         // act
