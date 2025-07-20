@@ -102,4 +102,4 @@ jobs:
         # commit proj file that is being updated only
         git add src/FeatureFlags.Web/FeatureFlags.Web.csproj
         git commit -m "Automated version update [skip ci]"
-        git push -f
+        git push
