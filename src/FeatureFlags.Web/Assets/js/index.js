@@ -1,4 +1,7 @@
-// import custom elements first so they get defined as soon as possible.
+// import error handling first to try to log as many errors as possible
+import './utils/onError';
+
+// import custom elements next so they get defined as soon as possible.
 import './components/PJax';
 import './components/InfoDialog';
 import './components/ConfirmDialog';

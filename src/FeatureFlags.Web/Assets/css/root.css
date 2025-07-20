@@ -2,8 +2,8 @@
     /* chota properties */
     --bg-color: #fcfcfc;
     --bg-secondary-color: #f3f3f6;
-    --color-primary: #3e63ad;
-    --color-light-grey: #d2d6dd;
+    --color-primary: #386c9a;
+    --color-light-grey: #6b829a;
     --color-dark-grey: #ad3e63;
     --color-error: #ba2828;
     --color-success: #3e9a80;
@@ -13,7 +13,6 @@
     --font-color: #333;
     --font-family-sans: -apple-system, blinkmacsystemfont, "Segoe UI", "Noto Sans", helvetica, arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
-
     /* luxbar properties */
     --luxbar-color-bg: var(--color-primary);
     --luxbar-color-hl: #2d477d;

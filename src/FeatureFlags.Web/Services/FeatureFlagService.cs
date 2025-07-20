@@ -36,7 +36,7 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext, IMemoryC
             }
 
             // prevent concurrent changes
-            if (featureFlag.UpdatedDate > featureFlagModel.UpdatedDate) {
+            if ((featureFlag.UpdatedDate - featureFlagModel.UpdatedDate).Seconds > 0) {
                 return (false, Core.ErrorConcurrency);
             }
 

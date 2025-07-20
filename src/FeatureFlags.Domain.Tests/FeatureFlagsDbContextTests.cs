@@ -10,7 +10,6 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
     public async Task SaveChangesAsync_CreateLanguage_SetsCreatedAndUpdatedDate() {
         // arrange
         var createStartTime = DateTime.UtcNow.AddMinutes(-1);
-        var createUserId = _Fixture.UserForCreate.Id;
         var languageForCreate = new Language { Id = -1, Name = "create language", CountryCode = "country1", LanguageCode = "lang1" };
 
         // act
@@ -18,7 +17,7 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
         using (var dbContext = _Fixture.CreateContextForCreate()) {
             dbContext.Languages.Add(languageForCreate);
             await dbContext.SaveChangesAsync();
-            createdLanguage = dbContext.Languages.First(x => x.Id == languageForCreate.Id);
+            createdLanguage = await dbContext.Languages.FirstAsync(x => x.Id == languageForCreate.Id);
         }
 
         // assert
@@ -44,11 +43,11 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
         // act
         Language updatedLanguage;
         using (var dbContext = _Fixture.CreateContextForUpdate()) {
-            updatedLanguage = dbContext.Languages.First(x => x.Id == languageForUpdate.Id);
+            updatedLanguage = await dbContext.Languages.FirstAsync(x => x.Id == languageForUpdate.Id);
             updatedLanguage.Name = newLanguageName;
             dbContext.Languages.Update(updatedLanguage);
             await dbContext.SaveChangesAsync();
-            updatedLanguage = dbContext.Languages.First(x => x.Id == languageForUpdate.Id);
+            updatedLanguage = await dbContext.Languages.FirstAsync(x => x.Id == languageForUpdate.Id);
         }
 
         // assert
@@ -89,7 +88,6 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
     public async Task SaveChangesAsync_UpdateLanguage_CreatesAuditLog() {
         // arrange
         var updateStartTime = DateTime.UtcNow;
-        var createUserId = _Fixture.UserForCreate.Id;
         var updateUserId = _Fixture.UserForUpdate.Id;
         var newLanguageName = "new language name";
         var languageForUpdateAudit = new Language { Id = -4, Name = "audit update language", CountryCode = "country4", LanguageCode = "lang4" };
@@ -102,11 +100,10 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
         Language updatedLanguage;
         List<AuditLog> auditLogs;
         using (var dbContext = _Fixture.CreateContextForUpdate()) {
-            updatedLanguage = dbContext.Languages.First(x => x.Id == languageForUpdateAudit.Id);
+            updatedLanguage = await dbContext.Languages.FirstAsync(x => x.Id == languageForUpdateAudit.Id);
             updatedLanguage.Name = newLanguageName;
             dbContext.Languages.Update(updatedLanguage);
             await dbContext.SaveChangesAsync();
-            updatedLanguage = dbContext.Languages.First(x => x.Id == languageForUpdateAudit.Id);
             auditLogs = await dbContext.AuditLog
                 .Where(x => x.Entity == nameof(Language) && x.PrimaryKey == languageForUpdateAudit.Id && x.State == EntityState.Modified).ToListAsync();
         }
@@ -133,7 +130,7 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
         using (var dbContext = _Fixture.CreateContextForDelete()) {
             dbContext.Languages.Add(languageForDeleteAudit);
             await dbContext.SaveChangesAsync();
-            var deletedLanguage = dbContext.Languages.First(x => x.Id == languageForDeleteAudit.Id);
+            var deletedLanguage = await dbContext.Languages.FirstAsync(x => x.Id == languageForDeleteAudit.Id);
             dbContext.Languages.Remove(deletedLanguage);
             await dbContext.SaveChangesAsync();
             auditLogs = await dbContext.AuditLog
@@ -164,10 +161,9 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
         Language updatedLanguage;
         List<AuditLog> auditLogs;
         using (var dbContext = _Fixture.CreateContextForUpdate()) {
-            updatedLanguage = dbContext.Languages.First(x => x.Id == languageForNoOpAudit.Id);
+            updatedLanguage = await dbContext.Languages.FirstAsync(x => x.Id == languageForNoOpAudit.Id);
             dbContext.Languages.Update(updatedLanguage);
             await dbContext.SaveChangesAsync();
-            updatedLanguage = dbContext.Languages.First(x => x.Id == languageForNoOpAudit.Id);
             auditLogs = await dbContext.AuditLog
                 .Where(x => x.Entity == nameof(Language) && x.PrimaryKey == languageForNoOpAudit.Id && x.State == EntityState.Modified).ToListAsync();
         }
@@ -234,7 +230,7 @@ public class FeatureFlagsDbContextTests(DatabaseFixture fixture) : IClassFixture
         using (var dbContext = _Fixture.CreateContextForDelete()) {
             dbContext.Roles.Add(roleForDeleteAudit);
             await dbContext.SaveChangesAsync();
-            var createdRole = dbContext.Roles.Include(x => x.RolePermissions).First(x => x.Id == roleForDeleteAudit.Id);
+            var createdRole = await dbContext.Roles.Include(x => x.RolePermissions).FirstAsync(x => x.Id == roleForDeleteAudit.Id);
             dbContext.RolePermissions.RemoveRange(createdRole.RolePermissions);
             await dbContext.SaveChangesAsync();
 

@@ -63,7 +63,7 @@ public sealed class RoleService(FeatureFlagsDbContext dbContext) : IRoleService 
             }
 
             // prevent concurrent changes
-            if (role.UpdatedDate > roleModel.UpdatedDate) {
+            if ((role.UpdatedDate - roleModel.UpdatedDate).Seconds > 0) {
                 return (false, Core.ErrorConcurrency);
             }
 

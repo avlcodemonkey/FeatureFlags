@@ -41,7 +41,6 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
             .Select(x => new Claim(ClaimTypes.Role, $"{x.ControllerName}.{x.ActionName}".ToLower(CultureInfo.InvariantCulture)))
             .ToListAsync(cancellationToken);
 
-    // @todo why always include UserRoles?
     public async Task<UserModel?> GetUserByIdAsync(int id, CancellationToken cancellationToken = default)
         => await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == id && x.Status).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
@@ -56,7 +55,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
             }
 
             // prevent concurrent changes
-            if (user.UpdatedDate > userModel.UpdatedDate) {
+            if ((user.UpdatedDate - userModel.UpdatedDate).Seconds > 0) {
                 return (false, Core.ErrorConcurrency);
             }
 

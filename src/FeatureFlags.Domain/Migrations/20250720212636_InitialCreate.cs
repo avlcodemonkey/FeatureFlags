@@ -22,7 +22,7 @@ namespace FeatureFlags.Domain.Migrations
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     IsEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
-                    UpdatedDate = table.Column<DateTime>(type: "TEXT", rowVersion: true, nullable: false, defaultValueSql: "(current_timestamp)")
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -40,7 +40,7 @@ namespace FeatureFlags.Domain.Migrations
                     LanguageCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
-                    UpdatedDate = table.Column<DateTime>(type: "TEXT", rowVersion: true, nullable: false, defaultValueSql: "(current_timestamp)")
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,7 @@ namespace FeatureFlags.Domain.Migrations
                     ActionName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     ControllerName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
-                    UpdatedDate = table.Column<DateTime>(type: "TEXT", rowVersion: true, nullable: false, defaultValueSql: "(current_timestamp)")
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -72,7 +72,7 @@ namespace FeatureFlags.Domain.Migrations
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
-                    UpdatedDate = table.Column<DateTime>(type: "TEXT", rowVersion: true, nullable: false, defaultValueSql: "(current_timestamp)")
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -90,7 +90,7 @@ namespace FeatureFlags.Domain.Migrations
                     LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
-                    UpdatedDate = table.Column<DateTime>(type: "TEXT", rowVersion: true, nullable: false, defaultValueSql: "(current_timestamp)")
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -106,7 +106,7 @@ namespace FeatureFlags.Domain.Migrations
                     PermissionId = table.Column<int>(type: "INTEGER", nullable: false),
                     RoleId = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
-                    UpdatedDate = table.Column<DateTime>(type: "TEXT", rowVersion: true, nullable: false, defaultValueSql: "(current_timestamp)")
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -159,7 +159,7 @@ namespace FeatureFlags.Domain.Migrations
                     RoleId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
-                    UpdatedDate = table.Column<DateTime>(type: "TEXT", rowVersion: true, nullable: false, defaultValueSql: "(current_timestamp)")
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -201,6 +201,11 @@ namespace FeatureFlags.Domain.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "FeatureFlag",
+                columns: new[] { "Id", "IsEnabled", "Name" },
+                values: new object[] { 1, true, "UserRegistration" });
+
+            migrationBuilder.InsertData(
                 table: "Language",
                 columns: new[] { "Id", "CountryCode", "IsDefault", "LanguageCode", "Name" },
                 values: new object[,]
@@ -225,18 +230,18 @@ namespace FeatureFlags.Domain.Migrations
                     { 10, "Delete", "User" },
                     { 11, "RefreshPermissions", "Role" },
                     { 12, "Index", "AuditLog" },
-                    { 13, "View", "AuditLog" }
+                    { 13, "View", "AuditLog" },
+                    { 14, "Index", "FeatureFlag" },
+                    { 15, "Enable", "FeatureFlag" },
+                    { 16, "Disable", "FeatureFlag" },
+                    { 17, "RefreshFlags", "FeatureFlag" },
+                    { 18, "ClearCache", "FeatureFlag" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Role",
                 columns: new[] { "Id", "IsDefault", "Name" },
                 values: new object[] { 1, true, "Administrator" });
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "Email", "LanguageId", "Name", "Status" },
-                values: new object[] { 1, "cpittman@gmail.com", 1, "Chris", true });
 
             migrationBuilder.InsertData(
                 table: "RolePermission",
@@ -254,13 +259,13 @@ namespace FeatureFlags.Domain.Migrations
                     { 10, 10, 1 },
                     { 11, 11, 1 },
                     { 12, 12, 1 },
-                    { 13, 13, 1 }
+                    { 13, 13, 1 },
+                    { 14, 14, 1 },
+                    { 15, 15, 1 },
+                    { 16, 16, 1 },
+                    { 17, 17, 1 },
+                    { 18, 18, 1 }
                 });
-
-            migrationBuilder.InsertData(
-                table: "UserRole",
-                columns: new[] { "Id", "RoleId", "UserId" },
-                values: new object[] { 1, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLog_UserId",
