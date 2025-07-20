@@ -13,6 +13,7 @@
     --font-color: #333;
     --font-family-sans: -apple-system, blinkmacsystemfont, "Segoe UI", "Noto Sans", helvetica, arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
+
     /* luxbar properties */
     --luxbar-color-bg: var(--color-primary);
     --luxbar-color-hl: #2d477d;
