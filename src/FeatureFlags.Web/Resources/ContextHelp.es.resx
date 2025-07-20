@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -122,8 +122,5 @@
   </data>
   <data name="User_LanguageId" xml:space="preserve">
     <value>Este será el idioma predeterminado en el que este usuario verá el sitio.</value>
-  </data>
-  <data name="User_UserName" xml:space="preserve">
-    <value>El nombre de inicio de sesión para el usuario.</value>
   </data>
 </root>

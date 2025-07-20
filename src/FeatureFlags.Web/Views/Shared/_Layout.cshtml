@@ -13,9 +13,6 @@
 
         <link rel="icon" href="~/favicon.ico" />
         <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
-        <environment exclude="Development">
-            <partial name="_Rollbar" />
-        </environment>
         <script src="~/js/index.js" asp-append-version="true" defer></script>
     </head>
 
@@ -39,6 +36,11 @@
                         </li>
 
                         @if (User.Identity?.IsAuthenticated == true) {
+                            <li authorize-roles="featureflag.index">
+                                <a asp-controller="@nameof(FeatureFlagController).StripController()" asp-action="@nameof(FeatureFlagController.Index)">
+                                    <icon name="Flag" label="@Flags.MenuItem" show-label />
+                                </a>
+                            </li>
                             <li authorize-roles="role.index">
                                 <a asp-controller="@nameof(RoleController).StripController()" asp-action="@nameof(RoleController.Index)">
                                     <icon name="Lock" label="@Roles.MenuItem" show-label />
@@ -47,11 +49,6 @@
                             <li authorize-roles="user.index">
                                 <a asp-controller="@nameof(UserController).StripController()" asp-action="@nameof(UserController.Index)">
                                     <icon name="Users" label="@Users.MenuItem" show-label />
-                                </a>
-                            </li>
-                            <li authorize-roles="featureflag.index">
-                                <a asp-controller="@nameof(FeatureFlagController).StripController()" asp-action="@nameof(FeatureFlagController.Index)">
-                                    <icon name="Flag" label="@Flags.MenuItem" show-label />
                                 </a>
                             </li>
                             <li authorize-roles="auditlog.index">

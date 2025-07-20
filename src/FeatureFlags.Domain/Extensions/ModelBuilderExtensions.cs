@@ -59,8 +59,12 @@ public static class ModelBuilderExtensions {
             new Permission { Id = 10, ControllerName = "User", ActionName = "Delete", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 11, ControllerName = "Role", ActionName = "RefreshPermissions", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 12, ControllerName = "AuditLog", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 13, ControllerName = "AuditLog", ActionName = "View", CreatedDate = minDate, UpdatedDate = minDate }
-            // @todo add feature flag permissions
+            new Permission { Id = 13, ControllerName = "AuditLog", ActionName = "View", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 14, ControllerName = "FeatureFlag", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 15, ControllerName = "FeatureFlag", ActionName = "Enable", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 16, ControllerName = "FeatureFlag", ActionName = "Disable", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 17, ControllerName = "FeatureFlag", ActionName = "RefreshFlags", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 18, ControllerName = "FeatureFlag", ActionName = "ClearCache", CreatedDate = minDate, UpdatedDate = minDate }
         );
 
         modelBuilder.Entity<Role>().HasData(
@@ -78,18 +82,17 @@ public static class ModelBuilderExtensions {
             new RolePermission { Id = 10, PermissionId = 10, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
             new RolePermission { Id = 11, PermissionId = 11, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
             new RolePermission { Id = 12, PermissionId = 12, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
-            new RolePermission { Id = 13, PermissionId = 13, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate }
+            new RolePermission { Id = 13, PermissionId = 13, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
+            new RolePermission { Id = 14, PermissionId = 14, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
+            new RolePermission { Id = 15, PermissionId = 15, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
+            new RolePermission { Id = 16, PermissionId = 16, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
+            new RolePermission { Id = 17, PermissionId = 17, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
+            new RolePermission { Id = 18, PermissionId = 18, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate }
         );
 
-        // create a default user
-        modelBuilder.Entity<User>().HasData(
-            new User {
-                Id = 1, Email = "cpittman@gmail.com", Name = "Chris",
-                LanguageId = 1, Status = true, CreatedDate = minDate, UpdatedDate = minDate
-            }
-        );
-        modelBuilder.Entity<UserRole>().HasData(
-            new UserRole { Id = 1, RoleId = 1, UserId = 1, CreatedDate = minDate, UpdatedDate = minDate }
+        // enable user registration - feature flag name should match the value in Web.Constants.InternalFeatureFlags
+        modelBuilder.Entity<FeatureFlag>().HasData(
+            new FeatureFlag { Id = 1, Name = "UserRegistration", IsEnabled = true, CreatedDate = minDate, UpdatedDate = minDate }
         );
 
         return modelBuilder;

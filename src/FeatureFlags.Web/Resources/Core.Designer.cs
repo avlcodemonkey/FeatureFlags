@@ -241,15 +241,6 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There was a problem loading this chart..
-        /// </summary>
-        public static string ErrorChartLoad {
-            get {
-                return ResourceManager.GetString("ErrorChartLoad", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to There was a conflict during update.  Refresh and try again..
         /// </summary>
         public static string ErrorConcurrency {
@@ -318,15 +309,6 @@ namespace FeatureFlags.Resources {
         public static string ErrorNameRequired {
             get {
                 return ResourceManager.GetString("ErrorNameRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The report/chart you are viewing is out of sync. Please refresh the page..
-        /// </summary>
-        public static string ErrorRefresh {
-            get {
-                return ResourceManager.GetString("ErrorRefresh", resourceCulture);
             }
         }
         
@@ -633,15 +615,6 @@ namespace FeatureFlags.Resources {
         public static string User {
             get {
                 return ResourceManager.GetString("User", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to View Sql.
-        /// </summary>
-        public static string ViewSql {
-            get {
-                return ResourceManager.GetString("ViewSql", resourceCulture);
             }
         }
         

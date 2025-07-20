@@ -192,17 +192,11 @@
   <data name="TryAgain" xml:space="preserve">
     <value>Try Again</value>
   </data>
-  <data name="ErrorChartLoad" xml:space="preserve">
-    <value>There was a problem loading this chart.</value>
-  </data>
   <data name="MoveDown" xml:space="preserve">
     <value>Move Down</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>Move Up</value>
-  </data>
-  <data name="ViewSql" xml:space="preserve">
-    <value>View Sql</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>Role</value>
@@ -251,9 +245,6 @@
   </data>
   <data name="TableOf" xml:space="preserve">
     <value>of</value>
-  </data>
-  <data name="ErrorRefresh" xml:space="preserve">
-    <value>The report/chart you are viewing is out of sync. Please refresh the page.</value>
   </data>
   <data name="Reload" xml:space="preserve">
     <value>Reload</value>

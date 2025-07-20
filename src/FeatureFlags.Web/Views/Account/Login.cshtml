@@ -1,3 +1,4 @@
+@using FeatureFlags.Constants
 @using FeatureFlags.Extensions
 @using FeatureFlags.Resources
 @using FeatureFlags.Services
@@ -19,7 +20,7 @@
             </form-content>
         </div>
         <div class="col"></div>
-        <feature name="@nameof(FeatureFlags.Constants.FeatureFlags.UserRegistration)">
+        <feature name="@nameof(InternalFeatureFlags.UserRegistration)">
             <div class="col">
                 <h3>@Account.NewHere</h3>
                 <p>@Account.RegisterNow</p>

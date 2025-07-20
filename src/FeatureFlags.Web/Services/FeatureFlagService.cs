@@ -1,3 +1,4 @@
+using System.Data;
 using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Domain.Models;
@@ -23,7 +24,7 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext, IMemoryC
     /// </summary>
     public async Task<IEnumerable<FeatureFlagModel>> GetCachedFeatureFlagsAsync(CancellationToken cancellationToken = default)
         => await _MemoryCache.GetOrCreateAsync(_CacheKey, async (x) => {
-            x.SetAbsoluteExpiration(TimeSpan.FromMinutes(FeatureFlagConstants.CacheLifeTime));
+            x.SetAbsoluteExpiration(TimeSpan.FromMinutes(Caching.FeatureFlagLifeTime));
             return await GetAllFeatureFlagsAsync(cancellationToken);
         }) ?? new List<FeatureFlagModel>();
 
@@ -35,7 +36,7 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext, IMemoryC
             }
 
             // prevent concurrent changes
-            if (featureFlag.UpdatedDate > featureFlagModel.UpdatedDate) {
+            if ((featureFlag.UpdatedDate - featureFlagModel.UpdatedDate).Seconds > 0) {
                 return (false, Core.ErrorConcurrency);
             }
 

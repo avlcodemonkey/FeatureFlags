@@ -24,8 +24,9 @@
 }
 
 .label-icon {
-    background-color: var(--color-light-grey);
+    background-color: var(--bg-secondary-color);
     border-radius: 4px;
+    border: 1px solid var(--color-primary);
 
     .icon {
         width: auto;

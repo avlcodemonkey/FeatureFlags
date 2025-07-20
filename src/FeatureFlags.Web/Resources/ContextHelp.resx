@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -122,8 +122,5 @@
   </data>
   <data name="User_LanguageId" xml:space="preserve">
     <value>Default language in which this user will see the site.</value>
-  </data>
-  <data name="User_UserName" xml:space="preserve">
-    <value>Provide the correct "name identifier" created by Auth0 to use as the username.  Don't change username unless you have the correct value from Auth0.</value>
   </data>
 </root>

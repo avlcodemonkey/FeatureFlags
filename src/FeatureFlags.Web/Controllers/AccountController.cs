@@ -41,7 +41,7 @@ public class AccountController(IUserService userService, ILanguageService langua
     /// Renders the first page of the registration process where user enters an email.
     /// </summary>
     [HttpGet, AllowAnonymous]
-    [FeatureGate(Constants.FeatureFlags.UserRegistration)]
+    [FeatureGate(Constants.InternalFeatureFlags.UserRegistration)]
     public IActionResult Register() {
         if (IsAuthenticated) {
             return RedirectToDashboard;
@@ -54,7 +54,7 @@ public class AccountController(IUserService userService, ILanguageService langua
     /// Registers new user if valid. Renders first register page on error or login page.
     /// </summary>
     [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-    [FeatureGate(Constants.FeatureFlags.UserRegistration)]
+    [FeatureGate(Constants.InternalFeatureFlags.UserRegistration)]
     public async Task<IActionResult> Register(RegisterModel model, CancellationToken cancellationToken = default) {
         if (IsAuthenticated) {
             return RedirectToDashboard;

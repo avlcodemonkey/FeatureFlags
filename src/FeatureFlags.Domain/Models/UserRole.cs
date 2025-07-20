@@ -34,7 +34,7 @@ public class UserRole : IAuditedEntity {
     /// <remarks>
     /// SQLite specific default value will need to change if backing database is changed.
     /// </remarks>
-    [Timestamp, DefaultValueSql("(current_timestamp)")]
+    [DefaultValueSql("(current_timestamp)")]
     public DateTime UpdatedDate { get; set; }
 
     [NotMapped]
