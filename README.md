@@ -38,10 +38,10 @@ Github actions are used for continuous integration.  The repo is configured to o
     - Methods to
         - ~~Get all feature flags~~
         - ~~Get specific feature flag by name~~
-        - Get feature flag for user.
-    - Add caching for feature flag definitions in service, configurable with appSettings. Default 15 minutes.
-    - Add a clear cache method.
-    - Add appSettings for cache lifetime.
+        - Get feature flag value for user.
+    - ~~Add caching for feature flag definitions in client, configurable with appSettings. Default 15 minutes.~~
+    - ~~Add a clear cache method.~~
+    - ~~Add appSettings for cache lifetime.~~
 - ~~Add extension method in client project to register FeatureDefinitionProvider, client service, IMemoryCache, and httpClient.~~
     - ~~Use auth for httpClient. Add header with API key.~~
     - ~~Add api key in appsettings.~~

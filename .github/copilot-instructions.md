@@ -10,7 +10,7 @@ This repository is a .NET 9 MVC solution for feature flag management. It include
 - Use C# 13 features and idioms.
 - Prefer async/await for asynchronous operations.
 - Use dependency injection for all services and clients.
-- Follow .NET naming conventions (PascalCase for types/methods, camelCase for parameters/fields).
+- Follow conventions from the editorconfig file.
 - Use records for immutable models where appropriate.
 - Use sealed classes where inheritance is not needed.
 - Favor simple, expressive code over complex constructs.

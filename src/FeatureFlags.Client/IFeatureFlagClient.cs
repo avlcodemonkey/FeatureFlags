@@ -25,5 +25,5 @@ public interface IFeatureFlagClient {
     /// Clear the cache of feature definitions.
     /// </summary>
     /// <returns>True if successful, else false.</returns>
-    Task<bool> ClearCache();
+    bool ClearCache();
 }
