@@ -4,7 +4,6 @@ using FeatureFlags.Extensions;
 using FeatureFlags.Models;
 using FeatureFlags.Resources;
 using FeatureFlags.Services;
-using FeatureFlags.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Controllers;
@@ -74,27 +73,10 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
     }
 
     /// <summary>
-    /// Generates a list of all feature flags and sync's the database. Renders the index page.
-    /// </summary>
-    [HttpGet]
-    public async Task<IActionResult> RefreshFlags(CancellationToken cancellationToken = default) {
-        // @todo refresh should should be removed now
-        var featureFlags = Enum.GetNames<Constants.InternalFeatureFlags>().ToDictionary(x => x.ToLower(), x => x);
-        if (!await new FeatureFlagManager(_FeatureFlagService).RegisterAsync(featureFlags, cancellationToken)) {
-            ViewData.AddError(Flags.ErrorRefreshingFlags);
-            return IndexWithPushState();
-        }
-
-        ViewData.AddMessage(Flags.SuccessRefreshingFlags);
-        return IndexWithPushState();
-    }
-
-    /// <summary>
     /// Clears the feature flag cache. Renders the index page.
     /// </summary>
     [HttpGet]
     public IActionResult ClearCache() {
-        // @todo add tests for this
         _FeatureFlagClient.ClearCache();
         ViewData.AddMessage(Flags.SuccessClearingCache);
         return IndexWithPushState();

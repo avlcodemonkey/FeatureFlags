@@ -63,7 +63,7 @@ public static class ModelBuilderExtensions {
             new Permission { Id = 14, ControllerName = "FeatureFlag", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 15, ControllerName = "FeatureFlag", ActionName = "Enable", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 16, ControllerName = "FeatureFlag", ActionName = "Disable", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 17, ControllerName = "FeatureFlag", ActionName = "RefreshFlags", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 17, ControllerName = "FeatureFlag", ActionName = "Create", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 18, ControllerName = "FeatureFlag", ActionName = "ClearCache", CreatedDate = minDate, UpdatedDate = minDate }
         );
 

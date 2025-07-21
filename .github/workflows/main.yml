@@ -63,6 +63,10 @@ jobs:
     - name: Test DotNet Web
       run: dotnet test src/FeatureFlags.Web.Tests --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
 
+    - name: Test DotNet Client
+      run: dotnet test src/FeatureFlags.Client.Tests --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+
   scan:
     name: SonarQube Scan
     runs-on: ubuntu-latest

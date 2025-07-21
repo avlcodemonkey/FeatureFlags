@@ -97,15 +97,6 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This will add any missing flags, and delete any deprecated ones. Are you sure you want to continue?.
-        /// </summary>
-        public static string ConfirmRefreshFlags {
-            get {
-                return ResourceManager.GetString("ConfirmRefreshFlags", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Disable.
         /// </summary>
         public static string Disable {
@@ -187,15 +178,6 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error occurred refreshing flags..
-        /// </summary>
-        public static string ErrorRefreshingFlags {
-            get {
-                return ResourceManager.GetString("ErrorRefreshingFlags", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error occurred saving flag..
         /// </summary>
         public static string ErrorSavingFlag {
@@ -241,15 +223,6 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Refresh Flags.
-        /// </summary>
-        public static string RefreshFlags {
-            get {
-                return ResourceManager.GetString("RefreshFlags", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
         public static string Status {
@@ -273,15 +246,6 @@ namespace FeatureFlags.Resources {
         public static string SuccessDeletingFlag {
             get {
                 return ResourceManager.GetString("SuccessDeletingFlag", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Flags were refreshed successfully..
-        /// </summary>
-        public static string SuccessRefreshingFlags {
-            get {
-                return ResourceManager.GetString("SuccessRefreshingFlags", resourceCulture);
             }
         }
         

@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
 
 namespace FeatureFlags.Client;
@@ -20,10 +20,10 @@ public static class Extensions {
     /// If either value is missing or invalid, an <see cref="ArgumentException"/> is thrown.  The method registers an
     /// HTTP client with the specified base address and authorization header, as well as the required services for
     /// feature flag management, including memory caching and scoped feature management services.</remarks>
-    /// <param name="builder">The <see cref="WebApplicationBuilder"/> used to configure the application.</param>
-    /// <returns>The <see cref="WebApplicationBuilder"/> instance, allowing for method chaining.</returns>
+    /// <param name="builder">The <see cref="IHostApplicationBuilder"/> used to configure the application.</param>
+    /// <returns>The <see cref="IHostApplicationBuilder"/> instance, allowing for method chaining.</returns>
     /// <exception cref="ArgumentException">Thrown if configuration value for <c>FeatureFlags:ApiBaseEndpoint</c> or <c>FeatureFlags:ApiKey</c> is null, empty, or whitespace.</exception>
-    public static WebApplicationBuilder AddFeatureFlags(this WebApplicationBuilder builder) {
+    public static IHostApplicationBuilder AddFeatureFlags(this IHostApplicationBuilder builder) {
         var apiBaseEndpoint = builder.Configuration.GetValue<string>("FeatureFlags:ApiBaseEndpoint");
         if (string.IsNullOrWhiteSpace(apiBaseEndpoint)) {
             throw new ArgumentException("FeatureFlags:ApiBaseEndpoint is not configured.");
