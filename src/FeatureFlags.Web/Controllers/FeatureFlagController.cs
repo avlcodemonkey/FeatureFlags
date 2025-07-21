@@ -1,4 +1,5 @@
 using FeatureFlags.Attributes;
+using FeatureFlags.Client;
 using FeatureFlags.Extensions;
 using FeatureFlags.Models;
 using FeatureFlags.Resources;
@@ -8,10 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Controllers;
 
-public class FeatureFlagController(IFeatureFlagService featureFlagService, ILogger<FeatureFlagController> logger)
+public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeatureFlagClient featureFlagClient, ILogger<FeatureFlagController> logger)
     : BaseController(logger) {
 
     private readonly IFeatureFlagService _FeatureFlagService = featureFlagService;
+    private readonly IFeatureFlagClient _FeatureFlagClient = featureFlagClient;
 
     private const string _IndexView = "Index";
 
@@ -92,8 +94,8 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, ILogg
     /// </summary>
     [HttpGet]
     public IActionResult ClearCache() {
-        // @todo implement this in new client
-        //_FeatureFlagService.ClearCache();
+        // @todo add tests for this
+        _FeatureFlagClient.ClearCache();
         ViewData.AddMessage(Flags.SuccessClearingCache);
         return IndexWithPushState();
     }
