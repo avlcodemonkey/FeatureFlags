@@ -160,7 +160,7 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Role with this name already exists..
+        ///   Looks up a localized string similar to Flag with this name already exists..
         /// </summary>
         public static string ErrorDuplicateName {
             get {
@@ -174,6 +174,15 @@ namespace FeatureFlags.Resources {
         public static string ErrorNameRequired {
             get {
                 return ResourceManager.GetString("ErrorNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature flag not found..
+        /// </summary>
+        public static string ErrorNotFound {
+            get {
+                return ResourceManager.GetString("ErrorNotFound", resourceCulture);
             }
         }
         

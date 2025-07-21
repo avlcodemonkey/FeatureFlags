@@ -195,4 +195,7 @@
   <data name="ConfirmClearCache" xml:space="preserve">
     <value>¿Estás seguro de que quieres borrar el caché de la bandera de la función?</value>
   </data>
+  <data name="ErrorNotFound" xml:space="preserve">
+    <value />
+  </data>
 </root>

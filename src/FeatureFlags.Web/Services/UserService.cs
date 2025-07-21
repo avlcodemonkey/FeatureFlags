@@ -1,6 +1,5 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Security.Claims;
 using FeatureFlags.Constants;
 using FeatureFlags.Domain;
@@ -38,14 +37,15 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
                     .ThenInclude(x => x.Permission)
             .Where(x => x.UserId == id)
             .SelectMany(x => x.Role.RolePermissions.Select(y => y.Permission))
-            .Select(x => new Claim(ClaimTypes.Role, $"{x.ControllerName}.{x.ActionName}".ToLower(CultureInfo.InvariantCulture)))
+            .Select(x => new Claim(ClaimTypes.Role, $"{x.ControllerName}.{x.ActionName}".ToLower()))
             .ToListAsync(cancellationToken);
 
     public async Task<UserModel?> GetUserByIdAsync(int id, CancellationToken cancellationToken = default)
         => await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == id && x.Status).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
     public async Task<UserModel?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
-        => await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Email == email && x.Status).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
+        => await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Email.ToLower() == email.ToLower() && x.Status)
+            .SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
     public async Task<(bool success, string message)> SaveUserAsync(UserModel userModel, CancellationToken cancellationToken = default) {
         if (userModel.Id > 0) {
@@ -60,7 +60,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
             }
 
             // check that email is unique
-            var emailUser = await _DbContext.Users.FirstOrDefaultAsync(x => x.Email == userModel.Email, cancellationToken);
+            var emailUser = await _DbContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == userModel.Email.ToLower(), cancellationToken);
             if (emailUser != null && userModel.Id != emailUser.Id) {
                 return (false, Users.ErrorDuplicateEmail);
             }
@@ -70,7 +70,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
             _DbContext.Users.Update(user!);
         } else {
             // check that email is unique
-            var emailUser = await _DbContext.Users.FirstOrDefaultAsync(x => x.Email == userModel.Email, cancellationToken);
+            var emailUser = await _DbContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == userModel.Email.ToLower(), cancellationToken);
             if (emailUser != null) {
                 return (false, Users.ErrorDuplicateEmail);
             }
@@ -89,7 +89,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
             return (false, Core.ErrorGeneric);
         }
 
-        var user = await _DbContext.Users.FirstOrDefaultAsync(x => x.Email == email && x.Status, cancellationToken);
+        var user = await _DbContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower() && x.Status, cancellationToken);
         if (user == null) {
             return (false, Core.ErrorInvalidId);
         }
@@ -131,7 +131,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
     }
 
     public async Task<(bool success, string message)> VerifyUserTokenAsync(string email, string token, CancellationToken cancellationToken = default) {
-        var userToken = await _DbContext.UserTokens.FirstOrDefaultAsync(x => x.User.Email == email && x.User.Status, cancellationToken);
+        var userToken = await _DbContext.UserTokens.FirstOrDefaultAsync(x => x.User.Email.ToLower() == email.ToLower() && x.User.Status, cancellationToken);
         if (userToken == null) {
             return (false, Core.ErrorGeneric);
         }

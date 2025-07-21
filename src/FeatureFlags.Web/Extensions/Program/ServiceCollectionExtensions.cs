@@ -1,7 +1,7 @@
+using System.Reflection;
+using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Services;
-using FeatureFlags.Utils;
-using Microsoft.FeatureManagement;
 
 namespace FeatureFlags.Extensions.Program;
 
@@ -38,12 +38,14 @@ public static class ServiceCollectionExtensions {
     }
 
     /// <summary>
-    /// Register feature flag dependencies.
+    /// Register swagger dependencies.
     /// </summary>
-    public static IServiceCollection AddFeatureFlags(this IServiceCollection services) {
-        services.AddScoped<IFeatureDefinitionProvider, DbFeatureDefinitionProvider>()
-            .AddScopedFeatureManagement();
-
+    public static IServiceCollection AddSwagger(this IServiceCollection services) {
+        // Register Swagger limited to the public API endpoints group
+        services.AddSwaggerGen(options => {
+            options.DocInclusionPredicate((_, api) => api.GroupName == Swagger.GroupName);
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+        });
         return services;
     }
 }

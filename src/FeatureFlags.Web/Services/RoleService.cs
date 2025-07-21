@@ -18,7 +18,7 @@ public sealed class RoleService(FeatureFlagsDbContext dbContext) : IRoleService 
         }
 
         // check that name is unique
-        var nameRole = await _DbContext.Roles.FirstOrDefaultAsync(x => x.Name == copyRoleModel.Prompt, cancellationToken);
+        var nameRole = await _DbContext.Roles.FirstOrDefaultAsync(x => x.Name.ToLower() == copyRoleModel.Prompt.ToLower(), cancellationToken);
         if (nameRole != null) {
             return (false, Roles.ErrorDuplicateName);
         }
@@ -50,7 +50,7 @@ public sealed class RoleService(FeatureFlagsDbContext dbContext) : IRoleService 
         => await _DbContext.Roles.Where(x => x.IsDefault).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
     public async Task<RoleModel?> GetRoleByNameAsync(string name, CancellationToken cancellationToken = default)
-        => await _DbContext.Roles.Where(x => x.Name == name).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
+        => await _DbContext.Roles.Where(x => x.Name.ToLower() == name.ToLower()).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
     public async Task<RoleModel?> GetRoleByIdAsync(int id, CancellationToken cancellationToken = default)
         => await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == id).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
@@ -103,7 +103,7 @@ public sealed class RoleService(FeatureFlagsDbContext dbContext) : IRoleService 
     /// Validate that role has a unique name.
     /// </summary>
     private async Task<bool> IsUniqueNameAsync(RoleModel roleModel, CancellationToken cancellationToken = default) {
-        var nameRole = await _DbContext.Roles.FirstOrDefaultAsync(x => x.Name == roleModel.Name, cancellationToken);
+        var nameRole = await _DbContext.Roles.FirstOrDefaultAsync(x => x.Name.ToLower() == roleModel.Name.ToLower(), cancellationToken);
         return nameRole == null || roleModel.Id == nameRole.Id;
     }
 

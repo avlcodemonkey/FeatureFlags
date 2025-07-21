@@ -1,3 +1,4 @@
+using FeatureFlags.Client;
 using FeatureFlags.Constants;
 using FeatureFlags.Controllers;
 using FeatureFlags.Models;
@@ -14,6 +15,7 @@ namespace FeatureFlags.Web.Tests.Controllers;
 public class FeatureFlagControllerTests {
     private readonly Mock<IFeatureFlagService> _MockFeatureFlagService = new();
     private readonly Mock<ILogger<FeatureFlagController>> _MockLogger = new();
+    private readonly Mock<IFeatureFlagClient> _MockFeatureFlagClient = new();
     private readonly Mock<IUrlHelper> _MockUrlHelper = new();
 
     private readonly string _Url = "/test";
@@ -27,7 +29,7 @@ public class FeatureFlagControllerTests {
         _MockFeatureFlagService.Setup(x => x.SaveFeatureFlagAsync(_FlagForFailureDisabled, It.IsAny<CancellationToken>())).ReturnsAsync((false, "message"));
     }
 
-    private FeatureFlagController CreateController() => new(_MockFeatureFlagService.Object, _MockLogger.Object) {
+    private FeatureFlagController CreateController() => new(_MockFeatureFlagService.Object, _MockFeatureFlagClient.Object, _MockLogger.Object) {
         ControllerContext = new ControllerContext {
             HttpContext = new DefaultHttpContext()
         },

@@ -23,23 +23,29 @@ Github actions are used for continuous integration.  The repo is configured to o
 ## To Do
 
 - Add API endpoints for fetching feature flag configuration
-    - get all feature flags
-    - get specific feature flag by name
+    - ~~Get all feature flags~~
+    - ~~Get specific feature flag by name~~
+    - Get feature flag for user
     - GET requests authenticated with API key
+    - Add tests for new API endpoints
 - Add API key support for authentication
     - UI to create new API keys
     - New auth attribute to validate API keys
-- Move FeatureDefinitionProvider to client project.
+    - Add tests for API key authentication
+- ~~Move FeatureDefinitionProvider to client project.~~
+    - Add tests for client project.
 - Create client service for consuming feature flag API in client project with FeatureDefinitionProvider.
-    - Methods to get all feature flags, get specific feature flag by name, and get feature flag for user.
+    - Methods to
+        - ~~Get all feature flags~~
+        - ~~Get specific feature flag by name~~
+        - Get feature flag for user.
     - Add caching for feature flag definitions in service, configurable with appSettings. Default 15 minutes.
     - Add a clear cache method.
-    - AppSettings for cache lifetime and endpoint for API.
-- Add extension method in client project to register FeatureDefinitionProvider, client service, IMemoryCache, and httpClient.
-    - Use basic auth for httpClient. Add auth header with API key.
-    - Add api key in appsettings.
-    - Add cache lifetime in appsettings.
-- Use new feature definition provider in web project.
+    - Add appSettings for cache lifetime.
+- ~~Add extension method in client project to register FeatureDefinitionProvider, client service, IMemoryCache, and httpClient.~~
+    - ~~Use auth for httpClient. Add header with API key.~~
+    - ~~Add api key in appsettings.~~
+- ~~Use new feature definition provider in web project.~~
 - Add UI support for filters
     - User can pick one type of filter for each feature flag?
     - Percentage of users - just pick a percentage

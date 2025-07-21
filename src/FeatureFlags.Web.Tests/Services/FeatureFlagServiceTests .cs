@@ -1,21 +1,17 @@
-using FeatureFlags.Constants;
 using FeatureFlags.Domain.Models;
 using FeatureFlags.Models;
 using FeatureFlags.Resources;
 using FeatureFlags.Services;
 using FeatureFlags.Web.Tests.Fixtures;
-using Microsoft.Extensions.Caching.Memory;
-using Moq;
 
 namespace FeatureFlags.Web.Tests.Services;
 
 [Collection(nameof(DatabaseCollection))]
 public class FeatureFlagServiceTests {
     private readonly DatabaseFixture _Fixture;
-    private readonly Mock<IMemoryCache> _MockMemoryCache;
     private readonly FeatureFlagService _FeatureFlagService;
 
-    private FeatureFlagService GetNewFeatureFlagService() => new(_Fixture.CreateContext(), _MockMemoryCache.Object);
+    private FeatureFlagService GetNewFeatureFlagService() => new(_Fixture.CreateContext());
 
     /// <summary>
     /// Delete a feature flag so it doesn't interfere with other tests.
@@ -30,9 +26,6 @@ public class FeatureFlagServiceTests {
 
     public FeatureFlagServiceTests(DatabaseFixture fixture) {
         _Fixture = fixture;
-
-        _MockMemoryCache = new Mock<IMemoryCache>();
-
         _FeatureFlagService = GetNewFeatureFlagService();
     }
 
@@ -49,7 +42,6 @@ public class FeatureFlagServiceTests {
         Assert.IsType<IEnumerable<FeatureFlagModel>>(featureFlags, exactMatch: false);
         Assert.Contains(featureFlags, x => x.Id == testFeatureFlag.Id);
     }
-
 
     [Fact]
     public async Task GetFeatureFlagByIdAsync_ReturnsTestFeatureFlagModel() {
@@ -79,23 +71,46 @@ public class FeatureFlagServiceTests {
     }
 
     [Fact]
-    public async Task GetCachedFeatureFlagsAsync_ReturnsFlagsFromCache() {
+    public async Task GetFeatureFlagByNameAsync_ReturnsTestFeatureFlagModel() {
         // arrange
         var testFeatureFlag = _Fixture.TestFeatureFlag;
-        var cacheEntry = new MockCacheEntry { Key = "" };
-        var lifeTime = TimeSpan.FromMinutes(Caching.FeatureFlagLifeTime);
-        _MockMemoryCache.Setup(m => m.CreateEntry(It.IsAny<object>())).Returns(cacheEntry);
 
         // act
-        var result = await _FeatureFlagService.GetCachedFeatureFlagsAsync();
+        var featureFlag = await _FeatureFlagService.GetFeatureFlagByNameAsync(testFeatureFlag.Name);
 
         // assert
-        Assert.NotNull(result);
-        Assert.IsType<IEnumerable<FeatureFlagModel>>(result, exactMatch: false);
-        Assert.NotEmpty(result);
-        Assert.Contains(result, x => x.Id == testFeatureFlag.Id);
-        _MockMemoryCache.Verify(m => m.CreateEntry(It.IsAny<object>()), Times.Once);
-        Assert.Equal(lifeTime, cacheEntry.AbsoluteExpirationRelativeToNow);
+        Assert.NotNull(featureFlag);
+        Assert.IsType<FeatureFlagModel>(featureFlag);
+        Assert.Equal(testFeatureFlag.Name, featureFlag.Name);
+        Assert.Equal(testFeatureFlag.IsEnabled, featureFlag.IsEnabled);
+    }
+
+
+    [Fact]
+    public async Task GetFeatureFlagByNameAsync_ReturnsCaseInsensitiveTestFeatureFlagModel() {
+        // arrange
+        var testFeatureFlag = _Fixture.TestFeatureFlag;
+
+        // act
+        var featureFlag = await _FeatureFlagService.GetFeatureFlagByNameAsync(testFeatureFlag.Name.ToUpper());
+
+        // assert
+        Assert.NotNull(featureFlag);
+        Assert.IsType<FeatureFlagModel>(featureFlag);
+        Assert.Equal(testFeatureFlag.Name, featureFlag.Name);
+        Assert.Equal(testFeatureFlag.IsEnabled, featureFlag.IsEnabled);
+    }
+
+    [Fact]
+    public async Task GetFeatureFlagByNameAsync_WithInvalidFeatureFlagName_ReturnsNull() {
+        // arrange
+        var featureFlagNameToGet = "random flag that doesn't exist";
+
+        // act
+        var result = await _FeatureFlagService.GetFeatureFlagByNameAsync(featureFlagNameToGet);
+
+        // assert
+        Assert.Null(result);
     }
 
     [Fact]
@@ -308,14 +323,5 @@ public class FeatureFlagServiceTests {
 
         // assert
         Assert.False(result);
-    }
-
-    [Fact]
-    public void ClearCache_ClearsMemoryCache() {
-        // act
-        _FeatureFlagService.ClearCache();
-
-        // assert
-        _MockMemoryCache.Verify(x => x.Remove(It.IsAny<object>()), Times.Once);
     }
 }

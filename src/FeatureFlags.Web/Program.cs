@@ -1,3 +1,4 @@
+using FeatureFlags.Client;
 using FeatureFlags.Controllers;
 using FeatureFlags.Extensions;
 using FeatureFlags.Extensions.Program;
@@ -12,21 +13,22 @@ builder.ConfigureLogging();
 builder.Services
     .Configure<IISServerOptions>(options => options.AllowSynchronousIO = true)
     .AddCustomServices()
-    .AddFeatureFlags()
     .AddCustomHealthChecks()
     .AddSession()
     .AddCookieAuthentication()
     .AddAntiforgery()
-    .AddMemoryCache()
     .AddSingleton<IAssemblyService, AssemblyService>()
     .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
     .AddSingleton<IActionContextAccessor, ActionContextAccessor>()
     .AddLocalization(x => x.ResourcesPath = "Resources")
     .AddCustomResponseCompression()
+    .AddSwagger()
     .AddMvc(options => options.Filters.Add(new RequireHttpsAttribute()))
     .AddRazorRuntimeCompilation()
     .AddDataAnnotationsLocalization()
     .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
+
+builder.AddFeatureFlags();
 
 var app = builder.Build();
 
@@ -48,5 +50,10 @@ app
 
 app.MapControllerRoute("parentChild", "{controller}/{action}/{parentId:int}/{id:int}");
 app.MapControllerRoute("default", $"{{controller={nameof(DashboardController).StripController()}}}/{{action={nameof(DashboardController.Index)}}}/{{id:int?}}");
+
+if (app.Environment.IsDevelopment()) {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 await app.RunAsync();
