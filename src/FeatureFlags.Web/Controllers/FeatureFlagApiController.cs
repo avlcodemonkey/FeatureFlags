@@ -38,22 +38,4 @@ public class FeatureFlagApiController(IFeatureFlagService featureFlagService, IL
         });
         return Ok(definitions);
     }
-
-    /// <summary>
-    /// Get feature flag definition by name.
-    /// </summary>
-    /// <param name="name">Name of feature flag.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>JSON feature definition.</returns>
-    [HttpGet("feature/{name}")]
-    [ProducesResponseType(typeof(FeatureDefinition), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetFeatureDefinitionAsync(string name, CancellationToken cancellationToken = default) {
-        var featureFlag = await _FeatureFlagService.GetFeatureFlagByNameAsync(name, cancellationToken);
-        var definition = new FeatureDefinition {
-            Name = featureFlag?.Name ?? name,
-            EnabledFor = featureFlag?.IsEnabled == true ? new[] { new FeatureFilterConfiguration { Name = "AlwaysOn" } } : null
-        };
-        return Ok(definition);
-    }
 }

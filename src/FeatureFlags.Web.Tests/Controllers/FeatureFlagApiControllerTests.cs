@@ -59,40 +59,4 @@ public class FeatureFlagApiControllerTests {
         var definitions = Assert.IsAssignableFrom<IEnumerable<FeatureDefinition>>(okResult.Value);
         Assert.Empty(definitions);
     }
-
-    [Fact]
-    public async Task GetFeatureDefinitionAsync_ExistingFlag_ReturnsOkWithDefinition() {
-        // Arrange
-        var flag = new FeatureFlagModel { Id = 1, Name = "Flag1", IsEnabled = true };
-        _MockFeatureFlagService.Setup(s => s.GetFeatureFlagByNameAsync("Flag1", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(flag);
-        var controller = CreateController();
-
-        // Act
-        var result = await controller.GetFeatureDefinitionAsync("Flag1");
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        var definition = Assert.IsType<FeatureDefinition>(okResult.Value);
-        Assert.Equal("Flag1", definition.Name);
-        Assert.NotNull(definition.EnabledFor);
-        Assert.Equal("AlwaysOn", definition.EnabledFor.First().Name);
-    }
-
-    [Fact]
-    public async Task GetFeatureDefinitionAsync_NonExistingFlag_ReturnsEmptyDefinition() {
-        // Arrange
-        _MockFeatureFlagService.Setup(s => s.GetFeatureFlagByNameAsync("MissingFlag", It.IsAny<CancellationToken>()))
-            .ReturnsAsync((FeatureFlagModel?)null);
-        var controller = CreateController();
-
-        // Act
-        var result = await controller.GetFeatureDefinitionAsync("MissingFlag");
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        var definition = Assert.IsType<FeatureDefinition>(okResult.Value);
-        Assert.Equal("MissingFlag", definition.Name);
-        Assert.Null(definition.EnabledFor);
-    }
 }
