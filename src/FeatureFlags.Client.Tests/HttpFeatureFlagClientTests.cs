@@ -201,15 +201,15 @@ public class HttpFeatureFlagClientTests {
         });
         var memoryCache = new MemoryCache(new MemoryCacheOptions());
         memoryCache.Set(Constants.FeatureDefinitionsCacheKey, ""); // Ensure cache entry exists
-        var beforeCount = memoryCache.Count;
 
         // Act
+        var result1 = memoryCache.TryGetValue(Constants.FeatureDefinitionsCacheKey, out _);
         var client = new HttpFeatureFlagClient(httpClientFactoryMock.Object, configurationManager, memoryCache, loggerMock.Object);
         client.ClearCache();
-        var afterCount = memoryCache.Count;
+        var result2 = memoryCache.TryGetValue(Constants.FeatureDefinitionsCacheKey, out _);
 
         // Assert
-        Assert.Equal(1, beforeCount);
-        Assert.Equal(0, afterCount);
+        Assert.True(result1);
+        Assert.False(result2);
     }
 }
