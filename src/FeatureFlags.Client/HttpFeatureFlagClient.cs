@@ -1,56 +1,66 @@
 using System.Net.Http.Json;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 
 namespace FeatureFlags.Client;
 
 /// <inheritdoc />
-public class HttpFeatureFlagClient(IHttpClientFactory httpClientFactory, ILogger<HttpFeatureFlagClient> logger) : IFeatureFlagClient {
+public class HttpFeatureFlagClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IMemoryCache memoryCache, ILogger<HttpFeatureFlagClient> logger) : IFeatureFlagClient {
     private readonly IHttpClientFactory _HttpClientFactory = httpClientFactory;
+    private readonly IConfiguration _Configuration = configuration;
+    private readonly IMemoryCache _MemoryCache = memoryCache;
     private readonly ILogger<HttpFeatureFlagClient> _Logger = logger;
 
     /// <inheritdoc />
     public async Task<List<FeatureDefinition>> GetAllFeatureDefinitionsAsync(CancellationToken cancellationToken = default) {
-        var httpClient = _HttpClientFactory.CreateClient(Constants.HttpClientName);
-
-        // fetch the feature flag definitions from the API
         try {
-            using var response = await httpClient.GetAsync("features", cancellationToken);
-            response.EnsureSuccessStatusCode();
+            var definitions = await _MemoryCache.GetOrCreateAsync(Constants.FeatureDefinitionsCacheKey, async entry => {
+                entry.AbsoluteExpirationRelativeToNow = CacheTimeSpan;
+                return await FetchFeatureDefinitionsAsync(cancellationToken);
+            });
 
-            var featureFlags = await response.Content.ReadFromJsonAsync<List<CustomFeatureDefinition>>(cancellationToken) ?? [];
-            var featureDefinitions = featureFlags.Select(x => x.ToFeatureDefinition()).ToList();
-
-            // @todo add caching
-
-            return featureDefinitions;
+            return definitions ?? [];
         } catch (Exception ex) {
-            _Logger.LogError(ex, "Error fetching feature definitions");
+            _Logger.LogError(ex, "Error getting feature definitions");
             return [];
         }
     }
 
     /// <inheritdoc />
     public async Task<FeatureDefinition?> GetFeatureDefinitionByNameAsync(string name, CancellationToken cancellationToken = default) {
-        var httpClient = _HttpClientFactory.CreateClient(Constants.HttpClientName);
-
-        // fetch the feature flag definition from the API
         try {
-            using var response = await httpClient.GetAsync($"feature/{name}", cancellationToken);
-            response.EnsureSuccessStatusCode();
-
-            var featureFlag = await response.Content.ReadFromJsonAsync<CustomFeatureDefinition>(cancellationToken);
-            var featureDefinition = featureFlag?.ToFeatureDefinition();
-
-            // @todo add caching
-
-            return featureDefinition;
+            var definitions = await _MemoryCache.GetOrCreateAsync(Constants.FeatureDefinitionsCacheKey, async entry => {
+                entry.AbsoluteExpirationRelativeToNow = CacheTimeSpan;
+                return await FetchFeatureDefinitionsAsync(cancellationToken);
+            });
+            return definitions?.FirstOrDefault(x => x.Name.ToLower() == name.ToLower());
         } catch (Exception ex) {
-            _Logger.LogError(ex, "Error fetching feature definition for '{Name}'", name);
+            _Logger.LogError(ex, "Error getting feature definition for '{Name}'", name);
             return null;
         }
     }
 
     /// <inheritdoc />
-    public Task<bool> ClearCache() => throw new NotImplementedException();
+    public bool ClearCache() {
+        _MemoryCache.Remove(Constants.FeatureDefinitionsCacheKey);
+        return true;
+    }
+
+    private TimeSpan CacheTimeSpan => TimeSpan.FromMinutes(_Configuration.GetValue("FeatureFlags:CacheExpirationInMinutes", 15));
+
+    private async Task<List<FeatureDefinition>> FetchFeatureDefinitionsAsync(CancellationToken cancellationToken = default) {
+        try {
+            var httpClient = _HttpClientFactory.CreateClient(Constants.HttpClientName);
+            using var response = await httpClient.GetAsync("features", cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            var featureFlags = await response.Content.ReadFromJsonAsync<List<CustomFeatureDefinition>>(cancellationToken) ?? [];
+            return featureFlags.Select(x => x.ToFeatureDefinition()).ToList();
+        } catch (Exception ex) {
+            _Logger.LogError(ex, "Error fetching feature definitions");
+            return [];
+        }
+    }
 }

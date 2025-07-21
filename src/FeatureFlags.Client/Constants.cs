@@ -13,4 +13,9 @@ public static class Constants {
     /// Name of the authentication scheme used for feature flag requests.
     /// </summary>
     public const string Bearer = "Bearer";
+
+    /// <summary>
+    /// Represents the cache key used for storing feature definitions.
+    /// </summary>
+    public const string FeatureDefinitionsCacheKey = "FeatureDefinitionsCache";
 }
