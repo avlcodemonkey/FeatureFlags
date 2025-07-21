@@ -35,7 +35,7 @@ public class HttpFeatureFlagClient(IHttpClientFactory httpClientFactory, IConfig
                 entry.AbsoluteExpirationRelativeToNow = CacheTimeSpan;
                 return await FetchFeatureDefinitionsAsync(cancellationToken);
             });
-            return definitions?.FirstOrDefault(x => x.Name.ToLower() == name.ToLower());
+            return definitions?.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         } catch (Exception ex) {
             _Logger.LogError(ex, "Error getting feature definition for '{Name}'", name);
             return null;
