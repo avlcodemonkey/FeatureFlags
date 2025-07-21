@@ -1,3 +1,5 @@
+using System.Reflection;
+using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Services;
 using FeatureFlags.Utils;
@@ -34,6 +36,18 @@ public static class ServiceCollectionExtensions {
             options.MimeTypes = new List<string>() { "text/css", "application/javascript", "text/javascript", "font/woff2" };
         });
 
+        return services;
+    }
+
+    /// <summary>
+    /// Register swagger dependencies.
+    /// </summary>
+    public static IServiceCollection AddSwagger(this IServiceCollection services) {
+        // Register Swagger limited to the public API endpoints group
+        services.AddSwaggerGen(options => {
+            options.DocInclusionPredicate((_, api) => api.GroupName == Swagger.GroupName);
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+        });
         return services;
     }
 

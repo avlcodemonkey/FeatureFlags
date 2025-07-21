@@ -1,32 +1,22 @@
 using System.Data;
-using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Domain.Models;
 using FeatureFlags.Extensions.Services;
 using FeatureFlags.Models;
 using FeatureFlags.Resources;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace FeatureFlags.Services;
 
-public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext, IMemoryCache memoryCache) : IFeatureFlagService {
+public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatureFlagService {
     private readonly FeatureFlagsDbContext _DbContext = dbContext;
-    private readonly IMemoryCache _MemoryCache = memoryCache;
-
-    private const string _CacheKey = "FeatureFlags";
 
     public async Task<IEnumerable<FeatureFlagModel>> GetAllFeatureFlagsAsync(CancellationToken cancellationToken = default)
         => await _DbContext.FeatureFlags.SelectAsModel().ToListAsync(cancellationToken);
 
-    /// <summary>
-    /// Special endpoint for the feature definition provider to use.
-    /// </summary>
-    public async Task<IEnumerable<FeatureFlagModel>> GetCachedFeatureFlagsAsync(CancellationToken cancellationToken = default)
-        => await _MemoryCache.GetOrCreateAsync(_CacheKey, async (x) => {
-            x.SetAbsoluteExpiration(TimeSpan.FromMinutes(Caching.FeatureFlagLifeTime));
-            return await GetAllFeatureFlagsAsync(cancellationToken);
-        }) ?? new List<FeatureFlagModel>();
+    // @todo add tests for this method
+    public async Task<FeatureFlagModel?> GetFeatureFlagByNameAsync(string name, CancellationToken cancellationToken = default)
+        => await _DbContext.FeatureFlags.SelectAsModel().FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower(), cancellationToken);
 
     public async Task<(bool success, string message)> SaveFeatureFlagAsync(FeatureFlagModel featureFlagModel, CancellationToken cancellationToken = default) {
         if (featureFlagModel.Id > 0) {
@@ -63,7 +53,6 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext, IMemoryC
         }
 
         if (await _DbContext.SaveChangesAsync(cancellationToken) > 0) {
-            ClearCache();
             return (true, Flags.SuccessSavingFlag);
         }
         return (false, Core.ErrorGeneric);
@@ -73,7 +62,7 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext, IMemoryC
     /// Validate that feature flag has a unique name.
     /// </summary>
     private async Task<bool> IsUniqueNameAsync(FeatureFlagModel featureFlagModel, CancellationToken cancellationToken = default) {
-        var namedFlag = await _DbContext.FeatureFlags.FirstOrDefaultAsync(x => x.Name == featureFlagModel.Name, cancellationToken);
+        var namedFlag = await _DbContext.FeatureFlags.FirstOrDefaultAsync(x => x.Name.ToLower() == featureFlagModel.Name.ToLower(), cancellationToken);
         return namedFlag == null || featureFlagModel.Id == namedFlag.Id;
     }
 
@@ -96,15 +85,6 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext, IMemoryC
 
         _DbContext.FeatureFlags.Remove(feature);
 
-        if (await _DbContext.SaveChangesAsync(cancellationToken) > 0) {
-            ClearCache();
-            return true;
-        }
-        return false;
+        return await _DbContext.SaveChangesAsync(cancellationToken) > 0;
     }
-
-    /// <summary>
-    /// Clears the cache of feature flags.
-    /// </summary>
-    public void ClearCache() => _MemoryCache.Remove(_CacheKey);
 }

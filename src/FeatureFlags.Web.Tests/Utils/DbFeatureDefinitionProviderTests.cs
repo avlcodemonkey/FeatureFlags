@@ -22,7 +22,7 @@ public class DbFeatureDefinitionProviderTests {
             new() { Name = "Feature1", IsEnabled = true },
             new() { Name = "Feature2", IsEnabled = false }
         };
-        _FeatureFlagServiceMock.Setup(s => s.GetCachedFeatureFlagsAsync(default)).ReturnsAsync(featureFlags);
+        _FeatureFlagServiceMock.Setup(s => s.GetAllFeatureFlagsAsync(default)).ReturnsAsync(featureFlags);
 
         // Act
         var result = _Provider.GetAllFeatureDefinitionsAsync();
@@ -41,7 +41,7 @@ public class DbFeatureDefinitionProviderTests {
         // Arrange
         var featureFlag = new FeatureFlagModel { Name = "Feature1", IsEnabled = true };
         var featureFlags = new List<FeatureFlagModel> { featureFlag };
-        _FeatureFlagServiceMock.Setup(s => s.GetCachedFeatureFlagsAsync(default)).ReturnsAsync(featureFlags);
+        _FeatureFlagServiceMock.Setup(s => s.GetAllFeatureFlagsAsync(default)).ReturnsAsync(featureFlags);
 
         // Act
         var result = await _Provider.GetFeatureDefinitionAsync("Feature1");
@@ -55,7 +55,7 @@ public class DbFeatureDefinitionProviderTests {
     public async Task GetFeatureDefinitionAsync_ReturnsEmptyFeatureDefinition_WhenFeatureDoesNotExist() {
         // Arrange
         var featureFlags = new List<FeatureFlagModel>();
-        _FeatureFlagServiceMock.Setup(s => s.GetCachedFeatureFlagsAsync(default)).ReturnsAsync(featureFlags);
+        _FeatureFlagServiceMock.Setup(s => s.GetAllFeatureFlagsAsync(default)).ReturnsAsync(featureFlags);
 
         // Act
         var result = await _Provider.GetFeatureDefinitionAsync("NonExistentFeature");

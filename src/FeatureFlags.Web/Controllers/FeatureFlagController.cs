@@ -92,7 +92,8 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, ILogg
     /// </summary>
     [HttpGet]
     public IActionResult ClearCache() {
-        _FeatureFlagService.ClearCache();
+        // @todo implement this in new client
+        //_FeatureFlagService.ClearCache();
         ViewData.AddMessage(Flags.SuccessClearingCache);
         return IndexWithPushState();
     }

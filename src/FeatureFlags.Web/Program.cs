@@ -17,12 +17,12 @@ builder.Services
     .AddSession()
     .AddCookieAuthentication()
     .AddAntiforgery()
-    .AddMemoryCache()
     .AddSingleton<IAssemblyService, AssemblyService>()
     .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
     .AddSingleton<IActionContextAccessor, ActionContextAccessor>()
     .AddLocalization(x => x.ResourcesPath = "Resources")
     .AddCustomResponseCompression()
+    .AddSwagger()
     .AddMvc(options => options.Filters.Add(new RequireHttpsAttribute()))
     .AddRazorRuntimeCompilation()
     .AddDataAnnotationsLocalization()
@@ -48,5 +48,10 @@ app
 
 app.MapControllerRoute("parentChild", "{controller}/{action}/{parentId:int}/{id:int}");
 app.MapControllerRoute("default", $"{{controller={nameof(DashboardController).StripController()}}}/{{action={nameof(DashboardController.Index)}}}/{{id:int?}}");
+
+if (app.Environment.IsDevelopment()) {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 await app.RunAsync();

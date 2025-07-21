@@ -9,6 +9,7 @@
     <Product>FeatureFlags</Product>
     <AssemblyVersion>1.0.0.153</AssemblyVersion>
     <UserSecretsId>564f8f0d-f563-416d-8988-3966cb50fb7a</UserSecretsId>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TypeScriptTarget>ESNext</TypeScriptTarget>
@@ -33,6 +34,7 @@
     <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="4.2.1" />
     <PackageReference Include="MimeKit" Version="4.13.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="1.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
     <PackageReference Include="System.Text.Json" Version="9.0.7" />
   </ItemGroup>
   <ItemGroup>
