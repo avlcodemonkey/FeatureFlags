@@ -48,7 +48,8 @@ public class HttpFeatureFlagClient(IHttpClientFactory httpClientFactory, IConfig
         return true;
     }
 
-    private TimeSpan CacheTimeSpan => TimeSpan.FromMinutes(_Configuration.GetValue("FeatureFlags:CacheExpirationInMinutes", 15));
+    private TimeSpan? _CacheTimeSpan;
+    private TimeSpan CacheTimeSpan => _CacheTimeSpan ??= TimeSpan.FromMinutes(_Configuration.GetValue("FeatureFlags:CacheExpirationInMinutes", 15));
 
     private async Task<List<FeatureDefinition>> FetchFeatureDefinitionsAsync(CancellationToken cancellationToken = default) {
         try {
