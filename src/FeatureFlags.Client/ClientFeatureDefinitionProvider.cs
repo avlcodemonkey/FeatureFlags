@@ -32,8 +32,7 @@ public class ClientFeatureDefinitionProvider(IFeatureFlagClient featureFlagClien
     /// <remarks>This method queries the feature flag client to retrieve the definition of the specified
     /// feature. Ensure that the feature name provided is valid and corresponds to an existing feature.</remarks>
     /// <param name="featureName">The name of the feature to retrieve. Cannot be null or empty.</param>
-    /// <returns>A <see cref="FeatureDefinition"/> object representing the feature's definition if found;  otherwise, <see
-    /// langword="null"/>.</returns>
-    public async Task<FeatureDefinition?> GetFeatureDefinitionAsync(string featureName)
-        => await _FeatureFlagClient.GetFeatureDefinitionByNameAsync(featureName);
+    /// <returns>A <see cref="FeatureDefinition"/> object representing the feature's definition if found, else an empty one is created</returns>
+    public async Task<FeatureDefinition> GetFeatureDefinitionAsync(string featureName)
+        => await _FeatureFlagClient.GetFeatureDefinitionByNameAsync(featureName) ?? new FeatureDefinition { Name = featureName };
 }

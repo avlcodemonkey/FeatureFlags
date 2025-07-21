@@ -177,56 +177,6 @@ public class FeatureFlagControllerTests {
     }
 
     [Fact]
-    public async Task Get_RefreshFlags_ReturnsIndexWithSuccessMessage() {
-        // Arrange
-        var controller = CreateController();
-        var featureFlags = new List<FeatureFlagModel> {
-            new() { Id = 1, Name = "Flag1", IsEnabled = true },
-            new() { Id = 2, Name = "Flag2", IsEnabled = false }
-        };
-        _MockFeatureFlagService.Setup(service => service.GetAllFeatureFlagsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(featureFlags);
-        _MockFeatureFlagService.Setup(service => service.SaveFeatureFlagAsync(It.IsAny<FeatureFlagModel>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((true, "Success"));
-        _MockFeatureFlagService.Setup(service => service.DeleteFeatureFlagAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-
-        // Act
-        var result = await controller.RefreshFlags();
-
-        // Assert
-        var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Equal("Index", viewResult.ViewName);
-        Assert.NotNull(controller.ViewData[ViewProperties.Message]);
-        Assert.Equal(Flags.SuccessRefreshingFlags, controller.ViewData[ViewProperties.Message]!.ToString());
-    }
-
-    [Fact]
-    public async Task Get_RefreshFlags_WithServiceError_ReturnsIndexWithErrorMessage() {
-        // Arrange
-        var controller = CreateController();
-        var featureFlags = new List<FeatureFlagModel> {
-            new() { Id = 1, Name = "Flag1", IsEnabled = true },
-            new() { Id = 2, Name = "Flag2", IsEnabled = false }
-        };
-        _MockFeatureFlagService.Setup(service => service.GetAllFeatureFlagsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(featureFlags);
-        _MockFeatureFlagService.Setup(service => service.SaveFeatureFlagAsync(It.IsAny<FeatureFlagModel>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((false, "error"));
-        _MockFeatureFlagService.Setup(service => service.DeleteFeatureFlagAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-
-        // Act
-        var result = await controller.RefreshFlags();
-
-        // Assert
-        var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Equal("Index", viewResult.ViewName);
-        Assert.NotNull(controller.ViewData[ViewProperties.Error]);
-        Assert.Equal(Flags.ErrorRefreshingFlags, controller.ViewData[ViewProperties.Error]!.ToString());
-    }
-
-    [Fact]
     public void Get_ClearCache_ReturnsIndexWithSuccessMessage() {
         // Arrange
         var controller = CreateController();
@@ -239,5 +189,6 @@ public class FeatureFlagControllerTests {
         Assert.Equal("Index", viewResult.ViewName);
         Assert.NotNull(controller.ViewData[ViewProperties.Message]);
         Assert.Equal(Flags.SuccessClearingCache, controller.ViewData[ViewProperties.Message]!.ToString());
+        _MockFeatureFlagClient.Verify(x => x.ClearCache(), Times.Once);
     }
 }

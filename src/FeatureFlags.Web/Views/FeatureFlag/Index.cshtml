@@ -12,13 +12,7 @@
 
     <data-table key="featureFlags" src-url="@Url.Action(nameof(FeatureFlagController.List), nameof(FeatureFlagController).StripController())">
         <data-head>
-            <th style="width:@Html.Width(ColumnWidth.DoubleIcon)px">
-                <nilla-confirm authorize-roles="featureflag.refreshflags">
-                    <a href="@Url.Action(nameof(FeatureFlagController.RefreshFlags), nameof(FeatureFlagController).StripController())" class="button primary" title="@Flags.RefreshFlags"
-                       data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmRefreshFlags">
-                        <icon name="Refresh" label="@Flags.RefreshFlags" />
-                    </a>
-                </nilla-confirm>
+            <th style="width:@Html.Width(ColumnWidth.SingleIcon)px">
                 <nilla-confirm authorize-roles="featureflag.clearcache">
                     <a href="@Url.Action(nameof(FeatureFlagController.ClearCache), nameof(FeatureFlagController).StripController())" class="button primary" title="@Flags.ClearCache"
                        data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmClearCache">

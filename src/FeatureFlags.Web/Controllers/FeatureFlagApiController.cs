@@ -1,5 +1,4 @@
 using FeatureFlags.Constants;
-using FeatureFlags.Resources;
 using FeatureFlags.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,13 +50,9 @@ public class FeatureFlagApiController(IFeatureFlagService featureFlagService, IL
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetFeatureDefinitionAsync(string name, CancellationToken cancellationToken = default) {
         var featureFlag = await _FeatureFlagService.GetFeatureFlagByNameAsync(name, cancellationToken);
-        if (featureFlag == null) {
-            return NotFound(new { message = Flags.ErrorNotFound });
-        }
-
         var definition = new FeatureDefinition {
-            Name = featureFlag.Name,
-            EnabledFor = featureFlag.IsEnabled ? new[] { new FeatureFilterConfiguration { Name = "AlwaysOn" } } : null
+            Name = featureFlag?.Name ?? name,
+            EnabledFor = featureFlag?.IsEnabled == true ? new[] { new FeatureFilterConfiguration { Name = "AlwaysOn" } } : null
         };
         return Ok(definition);
     }

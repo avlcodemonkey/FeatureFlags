@@ -150,23 +150,11 @@
   <data name="Enable" xml:space="preserve">
     <value>Permitir</value>
   </data>
-  <data name="SuccessRefreshingFlags" xml:space="preserve">
-    <value>Las banderas se actualizaron con éxito.</value>
-  </data>
-  <data name="RefreshFlags" xml:space="preserve">
-    <value>Actualizar banderas</value>
-  </data>
-  <data name="ConfirmRefreshFlags" xml:space="preserve">
-    <value>Esto agregará cualquier bandera faltante y eliminará cualquiera de los desapercibidos. ¿Estás seguro de que quieres continuar?</value>
-  </data>
   <data name="ErrorSavingFlag" xml:space="preserve">
     <value>Se produjo un error guardando el indicador.</value>
   </data>
   <data name="ErrorDeletingFlag" xml:space="preserve">
     <value>Se produjo un error eliminar la bandera.</value>
-  </data>
-  <data name="ErrorRefreshingFlags" xml:space="preserve">
-    <value>Se produjo un error refrescante banderas.</value>
   </data>
   <data name="ConfirmEnable" xml:space="preserve">
     <value>¿Estás seguro de que quieres habilitar esta bandera?</value>

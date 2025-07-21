@@ -150,23 +150,11 @@
   <data name="Enable" xml:space="preserve">
     <value>Enable</value>
   </data>
-  <data name="SuccessRefreshingFlags" xml:space="preserve">
-    <value>Flags were refreshed successfully.</value>
-  </data>
-  <data name="RefreshFlags" xml:space="preserve">
-    <value>Refresh Flags</value>
-  </data>
-  <data name="ConfirmRefreshFlags" xml:space="preserve">
-    <value>This will add any missing flags, and delete any deprecated ones. Are you sure you want to continue?</value>
-  </data>
   <data name="ErrorSavingFlag" xml:space="preserve">
     <value>Error occurred saving flag.</value>
   </data>
   <data name="ErrorDeletingFlag" xml:space="preserve">
     <value>Error occurred deleting flag.</value>
-  </data>
-  <data name="ErrorRefreshingFlags" xml:space="preserve">
-    <value>Error occurred refreshing flags.</value>
   </data>
   <data name="ConfirmEnable" xml:space="preserve">
     <value>Are you sure you want to enable this flag?</value>

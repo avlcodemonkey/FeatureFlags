@@ -33,7 +33,7 @@ Github actions are used for continuous integration.  The repo is configured to o
     - New auth attribute to validate API keys
     - Add tests for API key authentication
 - ~~Move FeatureDefinitionProvider to client project.~~
-    - Add tests for client project.
+    - ~~Add tests for client project.~~
 - Create client service for consuming feature flag API in client project with FeatureDefinitionProvider.
     - Methods to
         - ~~Get all feature flags~~
