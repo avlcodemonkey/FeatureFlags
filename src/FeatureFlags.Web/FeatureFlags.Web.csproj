@@ -38,6 +38,7 @@
     <PackageReference Include="System.Text.Json" Version="9.0.7" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FeatureFlags.Client\FeatureFlags.Client.csproj" />
     <ProjectReference Include="..\FeatureFlags.Domain\FeatureFlags.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>

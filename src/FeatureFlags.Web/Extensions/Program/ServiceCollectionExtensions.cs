@@ -2,8 +2,6 @@ using System.Reflection;
 using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Services;
-using FeatureFlags.Utils;
-using Microsoft.FeatureManagement;
 
 namespace FeatureFlags.Extensions.Program;
 
@@ -48,16 +46,6 @@ public static class ServiceCollectionExtensions {
             options.DocInclusionPredicate((_, api) => api.GroupName == Swagger.GroupName);
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
         });
-        return services;
-    }
-
-    /// <summary>
-    /// Register feature flag dependencies.
-    /// </summary>
-    public static IServiceCollection AddFeatureFlags(this IServiceCollection services) {
-        services.AddScoped<IFeatureDefinitionProvider, DbFeatureDefinitionProvider>()
-            .AddScopedFeatureManagement();
-
         return services;
     }
 }

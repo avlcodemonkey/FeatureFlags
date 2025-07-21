@@ -8,16 +8,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlags.Services;
 
+/// <inheritdoc />
 public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatureFlagService {
     private readonly FeatureFlagsDbContext _DbContext = dbContext;
 
+    /// <inheritdoc />
     public async Task<IEnumerable<FeatureFlagModel>> GetAllFeatureFlagsAsync(CancellationToken cancellationToken = default)
         => await _DbContext.FeatureFlags.SelectAsModel().ToListAsync(cancellationToken);
 
-    // @todo add tests for this method
+    /// <inheritdoc />
     public async Task<FeatureFlagModel?> GetFeatureFlagByNameAsync(string name, CancellationToken cancellationToken = default)
         => await _DbContext.FeatureFlags.SelectAsModel().FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower(), cancellationToken);
 
+    /// <inheritdoc />
     public async Task<(bool success, string message)> SaveFeatureFlagAsync(FeatureFlagModel featureFlagModel, CancellationToken cancellationToken = default) {
         if (featureFlagModel.Id > 0) {
             var featureFlag = await _DbContext.FeatureFlags.Where(x => x.Id == featureFlagModel.Id).FirstOrDefaultAsync(cancellationToken);
@@ -66,16 +69,11 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatu
         return namedFlag == null || featureFlagModel.Id == namedFlag.Id;
     }
 
-    /// <summary>
-    /// Find a feature flag by id.
-    /// </summary>
-    /// <returns></returns>
+    /// <inheritdoc />
     public async Task<FeatureFlagModel?> GetFeatureFlagByIdAsync(int id, CancellationToken cancellationToken = default)
         => await _DbContext.FeatureFlags.Where(x => x.Id == id).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
-    /// <summary>
-    /// Delete a feature flag by id.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<bool> DeleteFeatureFlagAsync(int id, CancellationToken cancellationToken = default) {
         // load feature flag so auditLog tracks it being deleted
         var feature = await _DbContext.FeatureFlags.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);

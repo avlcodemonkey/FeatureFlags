@@ -1,3 +1,4 @@
+using FeatureFlags.Client;
 using FeatureFlags.Controllers;
 using FeatureFlags.Extensions;
 using FeatureFlags.Extensions.Program;
@@ -12,7 +13,6 @@ builder.ConfigureLogging();
 builder.Services
     .Configure<IISServerOptions>(options => options.AllowSynchronousIO = true)
     .AddCustomServices()
-    .AddFeatureFlags()
     .AddCustomHealthChecks()
     .AddSession()
     .AddCookieAuthentication()
@@ -27,6 +27,8 @@ builder.Services
     .AddRazorRuntimeCompilation()
     .AddDataAnnotationsLocalization()
     .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
+
+builder.AddFeatureFlags();
 
 var app = builder.Build();
 

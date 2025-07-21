@@ -587,6 +587,12 @@
           "xunit.extensibility.core": "[2.9.3]"
         }
       },
+      "featureflags.client": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.FeatureManagement.AspNetCore": "[4.2.1, )"
+        }
+      },
       "featureflags.domain": {
         "type": "Project",
         "dependencies": {
@@ -598,6 +604,7 @@
       "featureflags.web": {
         "type": "Project",
         "dependencies": {
+          "FeatureFlags.Client": "[1.0.0, )",
           "FeatureFlags.Domain": "[1.0.0, )",
           "MailKit": "[4.13.0, )",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "[9.0.7, )",
