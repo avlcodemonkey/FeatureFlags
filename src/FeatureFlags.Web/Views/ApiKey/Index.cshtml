@@ -1,0 +1,40 @@
+@using FeatureFlags.Constants;
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Utils
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@ApiKeys.ViewAll" controller="@nameof(ApiKeyController)" action="@nameof(ApiKeyController.Index)" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <data-table key="apiKeys" src-url="@Url.Action("List", "ApiKey")">
+        <data-head>
+            <th style="width:@Html.Width(ColumnWidth.DoubleIcon)px">
+                <a authorize-roles="apikey.create" href="@Url.Action("Create", "ApiKey")" class="button primary" title="@ApiKeys.CreateApiKey">
+                    <icon name="Add" label="@ApiKeys.CreateApiKey" />
+                </a>
+            </th>
+            <th data-property="name">@ApiKeys.Name</th>
+            <th data-property="key">@ApiKeys.Key</th>
+            <th data-property="createdDate">@ApiKeys.CreatedDate</th>
+        </data-head>
+        <data-body colspan="6">
+            <td>
+                <nilla-confirm authorize-roles="apikey.delete">
+                    <a href="@Url.ActionForMustache("Delete")" class="button dark" title="@Core.Delete" data-pjax-method="delete"
+                        data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel"
+                        data-dialog-content="@ApiKeys.ConfirmDelete"
+                    >
+                        <icon name="DeleteAlt" label="@Core.Delete" />
+                    </a>
+                </nilla-confirm>
+            </td>
+            <td>{{name}}</td>
+            <td>{{key}}</td>
+            <td><nilla-date data-date-format="YYYY-MM-DD hh:mm:ss A">{{createdDate}}</nilla-date></td>
+        </data-body>
+    </data-table>
+</content>

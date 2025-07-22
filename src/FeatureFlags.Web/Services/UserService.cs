@@ -120,7 +120,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
         var existingTokens = await _DbContext.UserTokens.Where(x => x.UserId == user.Id).ToListAsync(cancellationToken);
         _DbContext.UserTokens.RemoveRange(existingTokens);
 
-        var token = KeyGenerator.GetUniqueKey(Auth.TokenSize);
+        var token = KeyGenerator.GetUniqueToken(Auth.TokenSize);
         var userToken = new UserToken {
             UserId = user.Id, Token = token, ExpirationDate = DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Attempts = 0
         };

@@ -25,7 +25,7 @@
                         <li class="luxbar-header">
                             @if (User.Identity?.IsAuthenticated == true) {
                                 <a asp-controller="@nameof(DashboardController).StripController()" asp-action="@nameof(DashboardController.Index)" class="luxbar-brand">
-                                    <icon name="Sun" label="@Core.Brand" show-label />
+                                    @Core.Brand
                                 </a>
                             } else {
                                 <a asp-controller="@nameof(AccountController).StripController()" asp-action="@nameof(AccountController.Login)" class="luxbar-brand" data-pjax-no-follow>
@@ -39,6 +39,11 @@
                             <li authorize-roles="featureflag.index">
                                 <a asp-controller="@nameof(FeatureFlagController).StripController()" asp-action="@nameof(FeatureFlagController.Index)">
                                     <icon name="Flag" label="@Flags.MenuItem" show-label />
+                                </a>
+                            </li>
+                            <li authorize-roles="apikey.index">
+                                <a asp-controller="@nameof(ApiKeyController).StripController()" asp-action="@nameof(ApiKeyController.Index)">
+                                    <icon name="Cloud" label="@ApiKeys.MenuItem" show-label />
                                 </a>
                             </li>
                             <li authorize-roles="role.index">
