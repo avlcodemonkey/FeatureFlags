@@ -1,4 +1,6 @@
+using System.Reflection;
 using System.Text.Json;
+using FeatureFlags.Domain.Attributes;
 using FeatureFlags.Domain.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -15,6 +17,11 @@ public static class DbContextExtensions {
     }
 
     public static string ToAuditJson(this IEnumerable<PropertyEntry> properties, bool currentValues = true)
-        => JsonSerializer.Serialize(properties.Where(x => !_UnauditedProperties.Contains(x.Metadata.Name))
+        => JsonSerializer.Serialize(properties.Where(x => !_UnauditedProperties.Contains(x.Metadata.Name) && CanBeAudited(x))
             .ToDictionary(x => x.Metadata.Name, x => (currentValues ? x.CurrentValue : x.OriginalValue)?.ToString()));
+
+    private static bool CanBeAudited(PropertyEntry propertyEntry) {
+        var propertyInfo = propertyEntry.Metadata.PropertyInfo;
+        return propertyInfo?.GetCustomAttribute<NoAuditAttribute>() == null;
+    }
 }
