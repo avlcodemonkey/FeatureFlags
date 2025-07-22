@@ -13,7 +13,6 @@ public static class KeyGenerator {
     private const int _NumberOfSecureBytesToGenerate = 32;
     private const int _LengthOfKey = 32;
 
-
     /// <summary>
     /// Generates a unique token of the specified size using cryptographic random numbers.
     /// </summary>

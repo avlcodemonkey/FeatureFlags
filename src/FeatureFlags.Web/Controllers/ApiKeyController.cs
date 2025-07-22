@@ -30,7 +30,9 @@ public class ApiKeyController(IApiKeyService apiKeyService, ILogger<ApiKeyContro
     /// </summary>
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> List(CancellationToken cancellationToken = default)
-        => Ok(await _ApiKeyService.GetAllApiKeysAsync(cancellationToken));
+        => Ok((await _ApiKeyService.GetAllApiKeysAsync(cancellationToken)).Select(x =>
+            new ApiKeyListResultModel { Id = x.Id, Name = x.Name, Key = x.Key, CreatedDate = x.CreatedDate }
+        ));
 
     /// <summary>
     /// Renders the form to create an API key.
