@@ -3,10 +3,25 @@ using System.Text;
 
 namespace FeatureFlags.Utils;
 
+/// <summary>
+/// Provides methods for generating unique keys.
+/// </summary>
 public static class KeyGenerator {
     internal static readonly char[] _Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
 
-    public static string GetUniqueKey(int size) {
+    private const string _Prefix = "FF-";
+    private const int _NumberOfSecureBytesToGenerate = 32;
+    private const int _LengthOfKey = 32;
+
+
+    /// <summary>
+    /// Generates a unique token of the specified size using cryptographic random numbers.
+    /// </summary>
+    /// <remarks>The method uses a cryptographic random number generator to ensure the uniqueness and
+    /// unpredictability of the key. The generated key consists of characters from a predefined set.</remarks>
+    /// <param name="size">The length of the key to generate. Must be a positive integer.</param>
+    /// <returns>A string representing the unique key composed of randomly selected characters.</returns>
+    public static string GetUniqueToken(int size) {
         var data = new byte[4 * size];
         using (var crypto = RandomNumberGenerator.Create()) {
             crypto.GetBytes(data);
@@ -20,5 +35,20 @@ public static class KeyGenerator {
         }
 
         return result.ToString();
+    }
+
+    /// <summary>
+    /// Generates an API key using cryptographic random numbers.
+    /// </summary>
+    /// <remarks>The method uses a cryptographic random number generator to ensure the uniqueness and
+    /// unpredictability of the key. The generated key consists of characters from a predefined set.</remarks>
+    /// <returns>A string representing the unique key composed of randomly selected characters.</returns>
+    public static string GetApiKey() {
+        var bytes = RandomNumberGenerator.GetBytes(_NumberOfSecureBytesToGenerate);
+        var base64String = Convert.ToBase64String(bytes)
+            .Replace("+", "-")
+            .Replace("/", "_");
+        var keyLength = _LengthOfKey - _Prefix.Length;
+        return _Prefix + base64String[..keyLength];
     }
 }

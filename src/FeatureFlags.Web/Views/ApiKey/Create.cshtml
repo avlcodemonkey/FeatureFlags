@@ -1,0 +1,27 @@
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Models
+@using FeatureFlags.Services
+@using System.Globalization
+@model ApiKeyModel
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@ApiKeys.ViewAll" controller="@nameof(ApiKeyController)" action="@nameof(ApiKeyController.Index)" />
+        <breadcrumb-item label="@ApiKeys.CreateApiKey" controller="@nameof(ApiKeyController)" action="@nameof(ApiKeyController.Create)" active="true"
+        />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="row">
+        <div class="col col-6-lg">
+            <form-content for="Model" action="Create">
+                <input-group for="Name" autofocus />
+                <input-group for="Key" readonly />
+
+                <input class="button primary" type="submit" value="@Core.Save">
+            </form-content>
+        </div>
+    </div>
+</content>

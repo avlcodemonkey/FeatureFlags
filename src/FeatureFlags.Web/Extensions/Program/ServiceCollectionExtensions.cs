@@ -5,6 +5,9 @@ using FeatureFlags.Services;
 
 namespace FeatureFlags.Extensions.Program;
 
+/// <summary>
+/// Provides extension methods for registering custom services and dependencies in an <see cref="IServiceCollection"/>.
+/// </summary>
 public static class ServiceCollectionExtensions {
     /// <summary>
     /// Registers dbContext and application specific services.
@@ -12,6 +15,7 @@ public static class ServiceCollectionExtensions {
     public static IServiceCollection AddCustomServices(this IServiceCollection services) {
         services.AddDbContext<FeatureFlagsDbContext>();
 
+        services.AddScoped<IApiKeyService, ApiKeyService>();
         services.AddScoped<IAuditLogService, AuditLogService>();
         services.AddScoped<IEmailService, MailtrapService>();
         services.AddScoped<IFeatureFlagService, FeatureFlagService>();
