@@ -14,7 +14,7 @@ public interface IApiKeyService {
     Task<IEnumerable<ApiKeyModel>> GetAllApiKeysAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Retrieves an API key by its key asynchronously.
+    /// Retrieves an API key by its key.
     /// </summary>
     /// <param name="key">The key of the API key to retrieve. This value cannot be null or empty.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> that can be used to cancel the operation. Default value is <see cref="CancellationToken.None"/>.</param>
@@ -22,7 +22,7 @@ public interface IApiKeyService {
     Task<ApiKeyModel?> GetApiKeyByKeyAsync(string key, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Saves the specified API key asynchronously.
+    /// Saves the specified API key.
     /// </summary>
     /// <param name="apiKeyModel">The API key model to be saved. This parameter cannot be null.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> that can be used to cancel the operation. Default value is <see cref="CancellationToken.None"/>.</param>
