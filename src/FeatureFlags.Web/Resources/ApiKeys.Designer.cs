@@ -196,6 +196,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Swagger.
+        /// </summary>
+        public static string Swagger {
+            get {
+                return ResourceManager.GetString("Swagger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View All API Keys.
         /// </summary>
         public static string ViewAll {

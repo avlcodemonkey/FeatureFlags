@@ -15,6 +15,7 @@ This repository is a .NET 9 MVC solution for feature flag management. It include
 - Use sealed classes where inheritance is not needed.
 - Favor simple, expressive code over complex constructs.
 - Keep performance in mind, but prioritize readability and maintainability.
+- Keep code comments concise and relevant.
 
 ## MVC Guidance
 - Prioritize MVC patterns over Blazor or Razor Pages.

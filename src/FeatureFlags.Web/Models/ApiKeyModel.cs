@@ -9,7 +9,7 @@ namespace FeatureFlags.Models;
 /// </summary>
 public sealed record ApiKeyModel : IAuditedModel {
     /// <summary>
-    /// Gets the unique identifier for the entity.
+    /// Gets the unique identifier for the API key.
     /// </summary>
     [IsRequired]
     public int Id { get; init; }
@@ -29,12 +29,12 @@ public sealed record ApiKeyModel : IAuditedModel {
     public string Key { get; init; } = "";
 
     /// <summary>
-    /// Gets the date and time when the entity was created.
+    /// Gets the date and time when the API key was created.
     /// </summary>
     public DateTime CreatedDate { get; init; }
 
     /// <summary>
-    /// Gets the date and time when the entity was last updated.
+    /// Gets the date and time when the API key was last updated.
     /// </summary>
     public DateTime UpdatedDate { get; init; }
 }

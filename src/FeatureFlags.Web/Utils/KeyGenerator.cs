@@ -50,4 +50,18 @@ public static class KeyGenerator {
         var keyLength = _LengthOfKey - _Prefix.Length;
         return _Prefix + base64String[..keyLength];
     }
+
+    /// <summary>
+    /// Computes the SHA-512 hash of the specified input string.
+    /// </summary>
+    /// <param name="input">The input string to compute the hash for. Cannot be <see langword="null"/>.</param>
+    /// <returns>A string representation of the SHA-512 hash in hexadecimal format.</returns>
+    public static string GetSha512Hash(string input) {
+        var bytes = SHA512.HashData(Encoding.UTF8.GetBytes(input));
+        var builder = new StringBuilder();
+        for (var i = 0; i < bytes.Length; i++) {
+            builder.Append(bytes[i].ToString("x2"));
+        }
+        return builder.ToString();
+    }
 }

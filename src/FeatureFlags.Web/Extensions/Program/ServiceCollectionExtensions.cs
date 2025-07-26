@@ -2,6 +2,8 @@ using System.Reflection;
 using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Services;
+using FeatureFlags.Utils;
+using Microsoft.OpenApi.Models;
 
 namespace FeatureFlags.Extensions.Program;
 
@@ -24,6 +26,8 @@ public static class ServiceCollectionExtensions {
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IViewService, ViewService>();
+
+        services.AddScoped<ApiKeyAuthenticationHandler>();
 
         return services;
     }
@@ -49,6 +53,16 @@ public static class ServiceCollectionExtensions {
         services.AddSwaggerGen(options => {
             options.DocInclusionPredicate((_, api) => api.GroupName == Swagger.GroupName);
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+
+            options.AddSecurityDefinition(ApiKeyAuthenticationOptions.AuthenticationScheme, new OpenApiSecurityScheme {
+                In = ParameterLocation.Header,
+                Name = ApiKeyAuthenticationOptions.HeaderName,
+                Type = SecuritySchemeType.ApiKey
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = ApiKeyAuthenticationOptions.AuthenticationScheme }
+            }, Array.Empty<string>() } });
         });
         return services;
     }

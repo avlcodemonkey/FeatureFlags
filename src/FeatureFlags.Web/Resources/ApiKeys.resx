@@ -165,4 +165,7 @@
   <data name="CreatedDate" xml:space="preserve">
     <value>Created</value>
   </data>
+  <data name="Swagger" xml:space="preserve">
+    <value>Swagger</value>
+  </data>
 </root>

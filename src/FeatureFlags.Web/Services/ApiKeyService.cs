@@ -3,6 +3,7 @@ using FeatureFlags.Domain.Models;
 using FeatureFlags.Extensions.Services;
 using FeatureFlags.Models;
 using FeatureFlags.Resources;
+using FeatureFlags.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlags.Services;
@@ -16,8 +17,17 @@ public sealed class ApiKeyService(FeatureFlagsDbContext dbContext) : IApiKeyServ
         => await _DbContext.ApiKeys.SelectAsModel().ToListAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<ApiKeyModel?> GetApiKeyByKeyAsync(string key, CancellationToken cancellationToken = default)
-        => await _DbContext.ApiKeys.SelectAsModel().FirstOrDefaultAsync(x => x.Key == key, cancellationToken);
+    public async Task<ApiKeyModel?> GetApiKeyByKeyAsync(string key, CancellationToken cancellationToken = default) {
+        var hashedKey = KeyGenerator.GetSha512Hash(key);
+        var apiKey = await _DbContext.ApiKeys.FirstOrDefaultAsync(x => x.Key == hashedKey, cancellationToken);
+        if (apiKey == null) {
+            return null;
+        }
+        return new ApiKeyModel {
+            Id = apiKey.Id, Name = apiKey.Name, Key = new string('x', 32),
+            CreatedDate = apiKey.CreatedDate, UpdatedDate = apiKey.UpdatedDate
+        };
+    }
 
     /// <inheritdoc />
     public async Task<(bool success, string message)> SaveApiKeyAsync(ApiKeyModel apiKeyModel, CancellationToken cancellationToken = default) {
@@ -29,9 +39,10 @@ public sealed class ApiKeyService(FeatureFlagsDbContext dbContext) : IApiKeyServ
                 return (false, ApiKeys.ErrorDuplicateName);
             }
 
+            var hashedKey = KeyGenerator.GetSha512Hash(apiKeyModel.Key);
             var apiKey = new ApiKey {
                 Name = apiKeyModel.Name,
-                Key = apiKeyModel.Key
+                Key = hashedKey
             };
             _DbContext.ApiKeys.Add(apiKey);
         }

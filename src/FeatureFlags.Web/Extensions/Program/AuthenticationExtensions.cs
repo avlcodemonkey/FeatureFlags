@@ -1,17 +1,22 @@
 using FeatureFlags.Constants;
 using FeatureFlags.Controllers;
 using FeatureFlags.Utils;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 
 namespace FeatureFlags.Extensions.Program;
 
+/// <summary>
+/// Provides extension methods for configuring authentication and session management using Auth0.
+/// </summary>
 public static class AuthenticationExtensions {
     /// <summary>
     /// Configure authentication and session for app using Auth0.
     /// </summary>
     public static IServiceCollection AddCookieAuthentication(this IServiceCollection services) {
-        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        services.AddAuthentication()
+            // register the API key authentication scheme for API access
+            .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.AuthenticationScheme, null)
+            // register the cookie authentication scheme for web access
             .AddCookie(options => {
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(Auth.RollingCookieLifeTime);
                 options.SlidingExpiration = true;

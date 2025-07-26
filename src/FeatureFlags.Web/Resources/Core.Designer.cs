@@ -232,6 +232,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access denied..
+        /// </summary>
+        public static string ErrorAccessDenied {
+            get {
+                return ResourceManager.GetString("ErrorAccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t do that when you are already logged in..
         /// </summary>
         public static string ErrorAlreadyLoggedIn {

@@ -306,4 +306,7 @@
   <data name="ErrorConcurrency" xml:space="preserve">
     <value>Hubo un conflicto durante la actualización.  Actualice y vuelva a intentarlo.</value>
   </data>
+  <data name="ErrorAccessDenied" xml:space="preserve">
+    <value />
+  </data>
 </root>

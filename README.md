@@ -26,11 +26,11 @@ Github actions are used for continuous integration.  The repo is configured to o
     - ~~Get all feature flags~~
     - ~~Get specific feature flag by name~~
     - Get feature flag for user
-    - GET requests authenticated with API key
+    - ~~GET requests authenticated with API key~~
     - Add tests for new API endpoints
 - Add API key support for authentication
-    - UI to create new API keys
-    - New auth attribute to validate API keys
+    - ~~UI to create new API keys~~
+    - ~~New auth attribute to validate API keys~~
     - Add tests for API key authentication
 - ~~Move FeatureDefinitionProvider to client project.~~
     - ~~Add tests for client project.~~

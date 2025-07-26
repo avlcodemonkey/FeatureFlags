@@ -16,6 +16,9 @@
                 <a authorize-roles="apikey.create" href="@Url.Action("Create", "ApiKey")" class="button primary" title="@ApiKeys.CreateApiKey">
                     <icon name="Add" label="@ApiKeys.CreateApiKey" />
                 </a>
+                <a href="~/swagger/index.html" class="button primary" title="@ApiKeys.Swagger" target="_blank" rel="noreferrer" data-pjax-no-follow>
+                    <icon name="Swagger" label="@ApiKeys.Swagger" />
+                </a>
             </th>
             <th data-property="name">@ApiKeys.Name</th>
             <th data-property="key">@ApiKeys.Key</th>
