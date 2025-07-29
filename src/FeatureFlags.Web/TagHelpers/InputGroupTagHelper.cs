@@ -38,7 +38,7 @@ public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHe
 
         var input = new TagBuilder("input");
         // add any attributes passed in first. we'll overwrite ones we need as we build
-        attributes.ToList().ForEach(x => input.MergeAttribute(x.Name, x.Value.ToString()));
+        attributes.ToList().ForEach(x => input.MergeAttribute(x.Name, x.Value?.ToString()));
 
         input.MergeAttribute("id", FieldName, true);
         input.MergeAttribute("name", FieldName, true);

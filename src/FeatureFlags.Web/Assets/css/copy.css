@@ -1,0 +1,9 @@
+nilla-copy {
+    [data-copy-button] {
+        cursor: pointer;
+
+        &.is-copied {
+            color: slategray;
+        }
+    }
+}
