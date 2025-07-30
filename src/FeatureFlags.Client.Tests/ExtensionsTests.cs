@@ -70,9 +70,8 @@ public class ExtensionsTests {
 
         // Assert
         Assert.Equal(new Uri("https://api.example.com/"), client.BaseAddress);
-        Assert.NotNull(client.DefaultRequestHeaders.Authorization);
-        Assert.Equal("Bearer", client.DefaultRequestHeaders.Authorization.Scheme);
-        Assert.Equal("valid-key", client.DefaultRequestHeaders.Authorization.Parameter);
+        var header = client.DefaultRequestHeaders.FirstOrDefault(h => h.Key == Constants.HeaderName);
+        Assert.Equal("valid-key", header.Value.First());
     }
 
     [Fact]

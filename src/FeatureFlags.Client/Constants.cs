@@ -18,4 +18,9 @@ public static class Constants {
     /// Represents the cache key used for storing feature definitions.
     /// </summary>
     public const string FeatureDefinitionsCacheKey = "FeatureDefinitionsCache";
+
+    /// <summary>
+    /// Represents the name of the HTTP header used for API key authentication.
+    /// </summary>
+    public const string HeaderName = "x-api-key";
 }

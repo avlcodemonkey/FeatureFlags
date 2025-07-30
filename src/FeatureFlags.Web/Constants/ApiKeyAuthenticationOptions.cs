@@ -10,9 +10,4 @@ public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions {
     /// Represents the default authentication scheme used for API key authentication.
     /// </summary>
     public const string AuthenticationScheme = "ApiKey";
-
-    /// <summary>
-    /// Represents the name of the HTTP header used for API key authentication.
-    /// </summary>
-    public const string HeaderName = "x-api-key";
 }

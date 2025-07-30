@@ -26,7 +26,7 @@ public class ApiKeyAuthenticationHandler(IApiKeyService apiKeyService, IOptionsM
     /// a claims identity and returns a successful authentication result. Otherwise, it returns a failure result.</remarks>
     /// <returns>An <see cref="AuthenticateResult"/> indicating the success or failure of the authentication process.</returns>
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync() {
-        if (!Request.Headers.TryGetValue(ApiKeyAuthenticationOptions.HeaderName, out var apiKeyHeaders) || apiKeyHeaders.Count != 1) {
+        if (!Request.Headers.TryGetValue(Client.Constants.HeaderName, out var apiKeyHeaders) || apiKeyHeaders.Count != 1) {
             return AuthenticateResult.Fail("Invalid parameters");
         }
 
