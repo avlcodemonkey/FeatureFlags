@@ -8,9 +8,26 @@ A self hosted feature flag solution.
 
 - Visual Studio is required for building and running the application.
 
-#### Create
+#### Setup
 
-Create the database schema and seed data using Entity Framework.  Run `dotnet ef database update` to apply all migrations to the newly created database.
+Create the SQLite database and seed data using Entity Framework.  Run `dotnet ef database update` in `src/FeatureFlags.Domain` to apply all migrations to the newly created database.
+
+The application uses a feature flag to control access to public user registration.  The `UserRegistration` feature flag is enabled by default, allowing you to create an admin user for your application.  The admin user can then disable the `UserRegistration` feature flag to disable public registration.
+
+A default API key is created named `Default Key` with the value `replace_me_with_a_real_key`.  Add that key to your appSettings or user secrets to use the API key authentication.  You need this to enable user registration.
+```json
+    "FeatureFlags": {
+        "ApiKey": "replace_me_with_a_real_key"
+    }
+```
+
+Start the application and register yourself as a new user.  You will be assigned the `Administrator` role, which has full access to the application.  You can then log in and manage feature flags, users, and API keys.
+
+To secure your application:
+- After creating your admin user, delete the `Default Key` API key and create a new one with a secure value.  The default key is only for initial setup.  Update your appSettings or user secrets with the new key value.
+- You can disable the `UserRegistration` feature flag after creating your admin user.  This will prevent new users from registering - you'll need to create new users yourself in the UI.
+- You may also want to add additional roles with limited permissions for other users to manage feature flags.
+- If you leave public registration enabled, new users will be given the default role which is initially set to `Administrator`. Create a new role with limited permissions and set it as the default role for new users.
 
 ## CI
 
