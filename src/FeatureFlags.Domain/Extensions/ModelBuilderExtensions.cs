@@ -53,18 +53,21 @@ public static class ModelBuilderExtensions {
             new Permission { Id = 4, ControllerName = "Role", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 5, ControllerName = "Role", ActionName = "Edit", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 6, ControllerName = "Role", ActionName = "Delete", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 7, ControllerName = "User", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 8, ControllerName = "User", ActionName = "Create", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 9, ControllerName = "User", ActionName = "Edit", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 10, ControllerName = "User", ActionName = "Delete", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 11, ControllerName = "Role", ActionName = "RefreshPermissions", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 7, ControllerName = "Role", ActionName = "RefreshPermissions", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 8, ControllerName = "User", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 9, ControllerName = "User", ActionName = "Create", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 10, ControllerName = "User", ActionName = "Edit", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 11, ControllerName = "User", ActionName = "Delete", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 12, ControllerName = "AuditLog", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 13, ControllerName = "AuditLog", ActionName = "View", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 14, ControllerName = "FeatureFlag", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 15, ControllerName = "FeatureFlag", ActionName = "Enable", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 16, ControllerName = "FeatureFlag", ActionName = "Disable", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 17, ControllerName = "FeatureFlag", ActionName = "Create", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 18, ControllerName = "FeatureFlag", ActionName = "ClearCache", CreatedDate = minDate, UpdatedDate = minDate }
+            new Permission { Id = 18, ControllerName = "FeatureFlag", ActionName = "ClearCache", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 19, ControllerName = "ApiKey", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 20, ControllerName = "ApiKey", ActionName = "Create", CreatedDate = minDate, UpdatedDate = minDate },
+            new Permission { Id = 21, ControllerName = "ApiKey", ActionName = "Delete", CreatedDate = minDate, UpdatedDate = minDate }
         );
 
         modelBuilder.Entity<Role>().HasData(
@@ -87,7 +90,10 @@ public static class ModelBuilderExtensions {
             new RolePermission { Id = 15, PermissionId = 15, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
             new RolePermission { Id = 16, PermissionId = 16, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
             new RolePermission { Id = 17, PermissionId = 17, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
-            new RolePermission { Id = 18, PermissionId = 18, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate }
+            new RolePermission { Id = 18, PermissionId = 18, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
+            new RolePermission { Id = 19, PermissionId = 19, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
+            new RolePermission { Id = 20, PermissionId = 20, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate },
+            new RolePermission { Id = 21, PermissionId = 21, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate }
         );
 
         // enable user registration - feature flag name should match the value in Web.Constants.InternalFeatureFlags

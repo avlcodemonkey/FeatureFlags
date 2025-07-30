@@ -266,6 +266,14 @@ namespace FeatureFlags.Domain.Migrations
                         new
                         {
                             Id = 7,
+                            ActionName = "RefreshPermissions",
+                            ControllerName = "Role",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
                             ActionName = "Index",
                             ControllerName = "User",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -273,7 +281,7 @@ namespace FeatureFlags.Domain.Migrations
                         },
                         new
                         {
-                            Id = 8,
+                            Id = 9,
                             ActionName = "Create",
                             ControllerName = "User",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -281,7 +289,7 @@ namespace FeatureFlags.Domain.Migrations
                         },
                         new
                         {
-                            Id = 9,
+                            Id = 10,
                             ActionName = "Edit",
                             ControllerName = "User",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -289,17 +297,9 @@ namespace FeatureFlags.Domain.Migrations
                         },
                         new
                         {
-                            Id = 10,
+                            Id = 11,
                             ActionName = "Delete",
                             ControllerName = "User",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ActionName = "RefreshPermissions",
-                            ControllerName = "Role",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -356,6 +356,30 @@ namespace FeatureFlags.Domain.Migrations
                             Id = 18,
                             ActionName = "ClearCache",
                             ControllerName = "FeatureFlag",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ActionName = "Index",
+                            ControllerName = "ApiKey",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ActionName = "Create",
+                            ControllerName = "ApiKey",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 21,
+                            ActionName = "Delete",
+                            ControllerName = "ApiKey",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -567,6 +591,30 @@ namespace FeatureFlags.Domain.Migrations
                             Id = 18,
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PermissionId = 18,
+                            RoleId = 1,
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PermissionId = 19,
+                            RoleId = 1,
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PermissionId = 20,
+                            RoleId = 1,
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PermissionId = 21,
                             RoleId = 1,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
