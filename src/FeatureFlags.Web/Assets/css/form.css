@@ -37,7 +37,6 @@ form {
         }
 
         .input-group-button:active:not(:disabled) {
-            -webkit-transform: scale(0.98);
             transform: scale(0.98);
         }
     }
