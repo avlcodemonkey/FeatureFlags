@@ -16,19 +16,11 @@ class CopyToClipboard extends HTMLElement {
      */
     async handleEvent() {
         const contentInput = this.querySelector('[data-copy-content]');
-        const btn = this.querySelector('[data-copy-button]');
-
         if (contentInput) {
             const textToCopy = contentInput.value || contentInput.textContent;
             if (textToCopy) {
                 try {
                     await navigator.clipboard.writeText(textToCopy);
-                    if (btn) {
-                        btn.classList.add('is-copied');
-                        setTimeout(() => {
-                            btn.classList.remove('is-copied');
-                        }, 1000);
-                    }
                 } catch {
                     // do nothing if clipboard write fails
                 }
