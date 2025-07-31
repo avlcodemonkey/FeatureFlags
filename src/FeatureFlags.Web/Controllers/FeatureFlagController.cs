@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Controllers;
 
+/// <summary>
+/// Provides functionality for managing feature flags, including rendering views, enabling or disabling flags,
+/// and clearing the feature flag cache.
+/// </summary>
 public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeatureFlagClient featureFlagClient, ILogger<FeatureFlagController> logger)
     : BaseController(logger) {
 

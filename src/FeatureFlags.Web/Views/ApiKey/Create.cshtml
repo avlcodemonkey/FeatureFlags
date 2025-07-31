@@ -1,0 +1,33 @@
+@using FeatureFlags.Extensions
+@using FeatureFlags.Resources
+@using FeatureFlags.Models
+@using FeatureFlags.Services
+@using System.Globalization
+@model ApiKeyModel
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@ApiKeys.ViewAll" controller="@nameof(ApiKeyController)" action="@nameof(ApiKeyController.Index)" />
+        <breadcrumb-item label="@ApiKeys.CreateApiKey" controller="@nameof(ApiKeyController)" action="@nameof(ApiKeyController.Create)" active="true" />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="row">
+        <div class="col col-6-lg">
+            <form-content for="Model" action="Create">
+                <input-group for="Name" autofocus />
+
+                <nilla-copy>
+                    <input-group for="Key" readonly data-copy-content>
+                        <span class="label-icon input-group-button" title="@Core.Copy">
+                            <icon name="Copy" label="@Core.Copy" data-copy-button />
+                        </span>
+                    </input-group>
+                </nilla-copy>
+
+                <input class="button primary" type="submit" value="@Core.Save">
+            </form-content>
+        </div>
+    </div>
+</content>

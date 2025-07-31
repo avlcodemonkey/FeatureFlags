@@ -30,6 +30,15 @@ form {
                 border-bottom-right-radius: 0;
             }
         }
+
+        .input-group-button {
+            cursor: pointer;
+
+        }
+
+        .input-group-button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
     }
 
     & label input[type="checkbox"] {

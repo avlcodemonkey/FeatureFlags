@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,9 +36,8 @@ public static class Extensions {
         builder.Services.AddHttpClient(Constants.HttpClientName, client => {
             // Set the base address of the named client.
             client.BaseAddress = new Uri(apiBaseEndpoint);
-
-            // Add a user-agent default request header.
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Constants.Bearer, apiKey);
+            // Add the api key header for authentication.
+            client.DefaultRequestHeaders.Add(Constants.HeaderName, apiKey);
         });
 
         // Register the feature management services

@@ -56,16 +56,8 @@ jobs:
     - name: Build DotNet
       run: dotnet build --no-restore
 
-    # Test projects sequentially to prevent database collisions
-    - name: Test DotNet Domain
-      run: dotnet test src/FeatureFlags.Domain.Tests --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
-
-    - name: Test DotNet Web
-      run: dotnet test src/FeatureFlags.Web.Tests --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
-
-    - name: Test DotNet Client
-      run: dotnet test src/FeatureFlags.Client.Tests --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
-
+    - name: Test DotNet
+      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
 
   scan:
     name: SonarQube Scan

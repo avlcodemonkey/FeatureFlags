@@ -1,14 +1,22 @@
 using FeatureFlags.Constants;
 using FeatureFlags.Extensions;
 using FeatureFlags.Utils;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FeatureFlags.Controllers;
 
-[Authorize(Policy = PermissionRequirementHandler.PolicyName)]
+/// <summary>
+/// Serves as the base class for controllers in the application, providing common functionality  for handling logging,
+/// managing response headers, and rendering views with additional context.
+/// </summary>
+[Authorize(Policy = PermissionRequirementHandler.PolicyName, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public abstract class BaseController(ILogger<Controller> logger) : Controller {
+    /// <summary>
+    /// Gets or sets the logger instance used for logging messages within the controller.
+    /// </summary>
     protected ILogger<Controller> Logger { get; set; } = logger;
 
     /// <summary>

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Controllers;
 
+/// <summary>
+/// Provides actions for managing users, including user creation, editing, and deleting.
+/// </summary>
 public class UserController(IUserService userService, ILogger<UserController> logger) : BaseController(logger) {
     private readonly IUserService _UserService = userService;
 

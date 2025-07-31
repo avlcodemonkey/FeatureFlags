@@ -8,11 +8,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FeatureFlags.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ApiKey",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Key = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApiKey", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "FeatureFlag",
                 columns: table => new
@@ -224,18 +240,21 @@ namespace FeatureFlags.Domain.Migrations
                     { 4, "Index", "Role" },
                     { 5, "Edit", "Role" },
                     { 6, "Delete", "Role" },
-                    { 7, "Index", "User" },
-                    { 8, "Create", "User" },
-                    { 9, "Edit", "User" },
-                    { 10, "Delete", "User" },
-                    { 11, "RefreshPermissions", "Role" },
+                    { 7, "RefreshPermissions", "Role" },
+                    { 8, "Index", "User" },
+                    { 9, "Create", "User" },
+                    { 10, "Edit", "User" },
+                    { 11, "Delete", "User" },
                     { 12, "Index", "AuditLog" },
                     { 13, "View", "AuditLog" },
                     { 14, "Index", "FeatureFlag" },
                     { 15, "Enable", "FeatureFlag" },
                     { 16, "Disable", "FeatureFlag" },
-                    { 17, "RefreshFlags", "FeatureFlag" },
-                    { 18, "ClearCache", "FeatureFlag" }
+                    { 17, "Create", "FeatureFlag" },
+                    { 18, "ClearCache", "FeatureFlag" },
+                    { 19, "Index", "ApiKey" },
+                    { 20, "Create", "ApiKey" },
+                    { 21, "Delete", "ApiKey" }
                 });
 
             migrationBuilder.InsertData(
@@ -264,8 +283,17 @@ namespace FeatureFlags.Domain.Migrations
                     { 15, 15, 1 },
                     { 16, 16, 1 },
                     { 17, 17, 1 },
-                    { 18, 18, 1 }
+                    { 18, 18, 1 },
+                    { 19, 19, 1 },
+                    { 20, 20, 1 },
+                    { 21, 21, 1 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApiKey_Name",
+                table: "ApiKey",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLog_UserId",
@@ -320,6 +348,9 @@ namespace FeatureFlags.Domain.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApiKey");
+
             migrationBuilder.DropTable(
                 name: "AuditLog");
 

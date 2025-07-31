@@ -3,7 +3,6 @@ using FeatureFlags.Models;
 using FeatureFlags.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Moq;
 
@@ -11,9 +10,8 @@ namespace FeatureFlags.Web.Tests.Controllers;
 
 public class FeatureFlagApiControllerTests {
     private readonly Mock<IFeatureFlagService> _MockFeatureFlagService = new();
-    private readonly Mock<ILogger<FeatureFlagApiController>> _MockLogger = new();
 
-    private FeatureFlagApiController CreateController() => new(_MockFeatureFlagService.Object, _MockLogger.Object) {
+    private FeatureFlagApiController CreateController() => new(_MockFeatureFlagService.Object) {
         ControllerContext = new ControllerContext {
             HttpContext = new DefaultHttpContext()
         }

@@ -11,8 +11,7 @@ public class FeatureFlag : IAuditedEntity, IVersionedEntity {
     [Key]
     public int Id { get; set; }
 
-    [StringLength(100)]
-    [Required]
+    [Required, StringLength(100)]
     public string Name { get; set; } = null!;
 
     public bool IsEnabled { get; set; }

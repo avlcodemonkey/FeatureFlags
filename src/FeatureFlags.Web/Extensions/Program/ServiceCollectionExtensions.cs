@@ -2,9 +2,14 @@ using System.Reflection;
 using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Services;
+using FeatureFlags.Utils;
+using Microsoft.OpenApi.Models;
 
 namespace FeatureFlags.Extensions.Program;
 
+/// <summary>
+/// Provides extension methods for registering custom services and dependencies in an <see cref="IServiceCollection"/>.
+/// </summary>
 public static class ServiceCollectionExtensions {
     /// <summary>
     /// Registers dbContext and application specific services.
@@ -12,6 +17,7 @@ public static class ServiceCollectionExtensions {
     public static IServiceCollection AddCustomServices(this IServiceCollection services) {
         services.AddDbContext<FeatureFlagsDbContext>();
 
+        services.AddScoped<IApiKeyService, ApiKeyService>();
         services.AddScoped<IAuditLogService, AuditLogService>();
         services.AddScoped<IEmailService, MailtrapService>();
         services.AddScoped<IFeatureFlagService, FeatureFlagService>();
@@ -20,6 +26,8 @@ public static class ServiceCollectionExtensions {
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IViewService, ViewService>();
+
+        services.AddScoped<ApiKeyAuthenticationHandler>();
 
         return services;
     }
@@ -45,6 +53,16 @@ public static class ServiceCollectionExtensions {
         services.AddSwaggerGen(options => {
             options.DocInclusionPredicate((_, api) => api.GroupName == Swagger.GroupName);
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+
+            options.AddSecurityDefinition(ApiKeyAuthenticationOptions.AuthenticationScheme, new OpenApiSecurityScheme {
+                In = ParameterLocation.Header,
+                Name = Client.Constants.HeaderName,
+                Type = SecuritySchemeType.ApiKey
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = ApiKeyAuthenticationOptions.AuthenticationScheme }
+            }, Array.Empty<string>() } });
         });
         return services;
     }

@@ -1,5 +1,6 @@
 namespace FeatureFlags.Constants;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public enum AlertType {
     Success,
     Error
@@ -164,6 +165,7 @@ public enum Icon {
     Sunrise1,
     Sunrise,
     Sunset,
+    Swagger,
     Switch,
     Table,
     Tablet,
@@ -199,3 +201,4 @@ public enum ColumnWidth {
     TripleIcon = 240,
     Id = 120
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

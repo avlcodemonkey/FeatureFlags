@@ -15,6 +15,9 @@ using Microsoft.FeatureManagement.Mvc;
 
 namespace FeatureFlags.Controllers;
 
+/// <summary>
+/// Provides functionality for managing user accounts, including registration, login, account updates, and logout.
+/// </summary>
 public class AccountController(IUserService userService, ILanguageService languageService, IEmailService emailService,
     IViewService viewService, IRoleService roleService, ILogger<AccountController> logger) : BaseController(logger) {
 
@@ -41,7 +44,7 @@ public class AccountController(IUserService userService, ILanguageService langua
     /// Renders the first page of the registration process where user enters an email.
     /// </summary>
     [HttpGet, AllowAnonymous]
-    [FeatureGate(Constants.InternalFeatureFlags.UserRegistration)]
+    [FeatureGate(InternalFeatureFlags.UserRegistration)]
     public IActionResult Register() {
         if (IsAuthenticated) {
             return RedirectToDashboard;
@@ -54,7 +57,7 @@ public class AccountController(IUserService userService, ILanguageService langua
     /// Registers new user if valid. Renders first register page on error or login page.
     /// </summary>
     [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-    [FeatureGate(Constants.InternalFeatureFlags.UserRegistration)]
+    [FeatureGate(InternalFeatureFlags.UserRegistration)]
     public async Task<IActionResult> Register(RegisterModel model, CancellationToken cancellationToken = default) {
         if (IsAuthenticated) {
             return RedirectToDashboard;
@@ -222,9 +225,14 @@ public class AccountController(IUserService userService, ILanguageService langua
     /// <summary>
     /// Renders the account landing page.
     /// </summary>
+    /// <returns>An <see cref="IActionResult"/> representing the account landing page.</returns>
     [HttpGet]
     public IActionResult Index() => View(_IndexView);
 
+    /// <summary>
+    /// Toggles the visibility of context-sensitive help for the current user session.
+    /// </summary>
+    /// <returns>An <see cref="IActionResult"/> representing the view associated with the updated context help state.</returns>
     [HttpGet, ParentAction(nameof(Index))]
     public IActionResult ToggleContextHelp() {
         HttpContext.Session.ToggleSetting(SessionProperties.Help);
@@ -234,6 +242,7 @@ public class AccountController(IUserService userService, ILanguageService langua
     /// <summary>
     /// Renders the update account page.
     /// </summary>
+    /// <returns>Account view with the user's current information for updating.</returns>
     [HttpGet, ParentAction(nameof(Index))]
     public async Task<IActionResult> UpdateAccount(CancellationToken cancellationToken = default) {
         var user = await _UserService.GetUserByEmailAsync(User.Identity!.Name!, cancellationToken);
@@ -247,9 +256,7 @@ public class AccountController(IUserService userService, ILanguageService langua
     /// <summary>
     /// Save account changes and renders the update account page.
     /// </summary>
-    /// <param name="model"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <returns>Account view with success or error message.</returns>
     [HttpPost, ParentAction(nameof(Index))]
     public async Task<IActionResult> UpdateAccount(UpdateAccountModel model, CancellationToken cancellationToken = default) {
         if (!ModelState.IsValid) {
@@ -274,6 +281,7 @@ public class AccountController(IUserService userService, ILanguageService langua
     /// <summary>
     /// Log out user and redirect back to login page.
     /// </summary>
+    /// <returns>Redirects to the login page after signing out the user.</returns>
     [HttpGet, ParentAction(nameof(Index))]
     public async Task<IActionResult> Logout() {
         // Clear the existing cookie

@@ -13,6 +13,7 @@ public sealed class FeatureFlagsDbContext : DbContext {
     private IConfiguration? _Configuration;
     private readonly IHttpContextAccessor? _HttpContextAccessor;
 
+    public DbSet<ApiKey> ApiKeys { get; set; } = null!;
     public DbSet<AuditLog> AuditLog { get; set; } = null!;
     public DbSet<FeatureFlag> FeatureFlags { get; set; } = null!;
     public DbSet<Language> Languages { get; set; } = null!;
