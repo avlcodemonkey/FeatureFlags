@@ -9,7 +9,6 @@ namespace FeatureFlags.Controllers;
 /// <summary>
 /// Provides API endpoints for retrieving feature flag definitions.
 /// </summary>
-/// <param name="featureFlagService">Service to load feature flags.</param>
 [Authorize(AuthenticationSchemes = ApiKeyAuthenticationOptions.AuthenticationScheme)]
 [ApiController, Route("api"), ApiExplorerSettings(GroupName = Swagger.GroupName)]
 public class FeatureFlagApiController(IFeatureFlagService featureFlagService) : ControllerBase {
@@ -19,8 +18,6 @@ public class FeatureFlagApiController(IFeatureFlagService featureFlagService) : 
     /// <summary>
     /// Get all feature flag definitions.
     /// </summary>
-    /// <param name="cancellationToken">Cancellation token,</param>
-    /// <returns>JSON feature definitions.</returns>
     [HttpGet("features")]
     [ProducesResponseType(typeof(IEnumerable<FeatureDefinition>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllFeatureDefinitionsAsync(CancellationToken cancellationToken = default) {

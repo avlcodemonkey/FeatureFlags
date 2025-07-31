@@ -14,7 +14,6 @@ namespace FeatureFlags.Controllers;
 /// </summary>
 /// <remarks>This controller is accessible without authentication and includes actions for displaying error views
 /// and logging JavaScript errors from client-side applications.</remarks>
-/// <param name="logger">Logger</param>
 [AllowAnonymous]
 public class ErrorController(ILogger<ErrorController> logger) : BaseController(logger) {
     private const string _ErrorView = "Error";

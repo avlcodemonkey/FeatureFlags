@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Controllers;
 
+/// <summary>
+/// Provides functionality for managing roles and permissions within the application.
+/// </summary>
 public class RoleController(IRoleService roleService, IPermissionService permissionService, IAssemblyService assemblyService, ILogger<RoleController> logger)
     : BaseController(logger) {
 

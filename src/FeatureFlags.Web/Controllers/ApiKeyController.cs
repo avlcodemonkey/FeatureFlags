@@ -11,8 +11,6 @@ namespace FeatureFlags.Controllers;
 /// <summary>
 /// Provides actions for managing API keys, including listing, creating, and deleting keys.
 /// </summary>
-/// <param name="apiKeyService">Service for API key data.</param>
-/// <param name="logger">ILogger for logging.</param>
 public class ApiKeyController(IApiKeyService apiKeyService, ILogger<ApiKeyController> logger) : BaseController(logger) {
     private readonly IApiKeyService _ApiKeyService = apiKeyService;
 
