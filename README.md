@@ -31,7 +31,7 @@ To secure your application:
 
 ## CI
 
-Github actions are used for continuous integration.  The repo is configured to only use verified actions, with minimal permissions, for security.  There is some room for improvement.  Since this is a private repo but not part of an organization, it isn't allowed to have branch protection rules.  There's also no pretty reporting for test results.
+Github actions are used for continuous integration.  The repo is configured to only use verified actions, with minimal permissions, for security.
 
 ## Logging
 
@@ -77,3 +77,4 @@ Github actions are used for continuous integration.  The repo is configured to o
 - Build out readme to explain how to use the feature flag solution
 - Release package to nuget for client project
     - Add instructions for using the package in readme
+- Add serilog with appSetting configuration for structured logging
