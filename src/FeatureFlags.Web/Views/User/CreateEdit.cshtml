@@ -26,7 +26,7 @@
                 <select-group for="LanguageId" options="@(await _LanguageService.GetAllLanguagesAsync()).ToSelectList(x => x.Name, x => x.Id.ToString(CultureInfo.InvariantCulture))" />
 
                 <div class="mb-1">
-                    <label asp-for="RoleIds">@Users.Roles</label>
+                    <div>@Users.Roles</div>
                     @{
                         var roles = await _RoleService.GetAllRolesAsync();
                         foreach (var role in roles)

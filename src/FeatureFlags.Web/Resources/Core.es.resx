@@ -309,4 +309,7 @@
   <data name="ErrorAccessDenied" xml:space="preserve">
     <value />
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value />
+  </data>
 </root>

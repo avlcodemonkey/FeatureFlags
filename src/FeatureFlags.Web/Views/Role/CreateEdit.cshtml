@@ -22,7 +22,7 @@
                 <checkbox-group for="IsDefault" />
 
                 <div class="mb-1">
-                    <label>@Roles.Permissions</label>
+                    <div>@Roles.Permissions</div>
                     @{
                         var permissions = await _PermissionService.GetControllerPermissionsAsync();
                         foreach (var controller in permissions.Keys)
