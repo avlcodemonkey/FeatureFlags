@@ -31,7 +31,7 @@ To secure your application:
 
 ## CI
 
-Github actions are used for continuous integration.  The repo is configured to only use verified actions, with minimal permissions, for security.  There is some room for improvement.  Since this is a private repo but not part of an organization, it isn't allowed to have branch protection rules.  There's also no pretty reporting for test results.
+Github actions are used for continuous integration.  The repo is configured to only use verified actions, with minimal permissions, for security.
 
 ## Logging
 
@@ -42,9 +42,8 @@ Github actions are used for continuous integration.  The repo is configured to o
 - Add API endpoints for fetching feature flag configuration
     - ~~Get all feature flags~~
     - ~~Get specific feature flag by name~~
-    - Get feature flag for user
+    - Get feature flag for user, with unit tests
     - ~~GET requests authenticated with API key~~
-    - Add tests for new API endpoints
 - ~~Add API key support for authentication~~
     - ~~UI to create new API keys~~
     - ~~New auth attribute to validate API keys~~
@@ -55,7 +54,7 @@ Github actions are used for continuous integration.  The repo is configured to o
     - Methods to
         - ~~Get all feature flags~~
         - ~~Get specific feature flag by name~~
-        - Get feature flag value for user.
+        - Get feature flag value for user, with unit tests
     - ~~Add caching for feature flag definitions in client, configurable with appSettings. Default 15 minutes.~~
     - ~~Add a clear cache method.~~
     - ~~Add appSettings for cache lifetime.~~
@@ -78,3 +77,4 @@ Github actions are used for continuous integration.  The repo is configured to o
 - Build out readme to explain how to use the feature flag solution
 - Release package to nuget for client project
     - Add instructions for using the package in readme
+- Add serilog with appSetting configuration for structured logging

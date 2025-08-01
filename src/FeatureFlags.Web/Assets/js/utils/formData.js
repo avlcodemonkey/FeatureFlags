@@ -7,7 +7,7 @@ function formToObject(formElement) {
     const result = {};
 
     new FormData(formElement)?.forEach((value, key) => {
-        if (!Object.prototype.hasOwnProperty.call(result, key)) {
+        if (!Object.hasOwn(result, key)) {
             result[key] = value;
             return;
         }
