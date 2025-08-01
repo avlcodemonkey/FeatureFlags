@@ -42,9 +42,8 @@ Github actions are used for continuous integration.  The repo is configured to o
 - Add API endpoints for fetching feature flag configuration
     - ~~Get all feature flags~~
     - ~~Get specific feature flag by name~~
-    - Get feature flag for user
+    - Get feature flag for user, with unit tests
     - ~~GET requests authenticated with API key~~
-    - Add tests for new API endpoints
 - ~~Add API key support for authentication~~
     - ~~UI to create new API keys~~
     - ~~New auth attribute to validate API keys~~
@@ -55,7 +54,7 @@ Github actions are used for continuous integration.  The repo is configured to o
     - Methods to
         - ~~Get all feature flags~~
         - ~~Get specific feature flag by name~~
-        - Get feature flag value for user.
+        - Get feature flag value for user, with unit tests
     - ~~Add caching for feature flag definitions in client, configurable with appSettings. Default 15 minutes.~~
     - ~~Add a clear cache method.~~
     - ~~Add appSettings for cache lifetime.~~
