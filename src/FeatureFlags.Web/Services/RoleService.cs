@@ -1,4 +1,5 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using FeatureFlags.Domain;
 using FeatureFlags.Domain.Models;
 using FeatureFlags.Extensions.Services;
@@ -8,9 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlags.Services;
 
+/// <inheritdoc />
+[SuppressMessage("Performance", "CA1862:Use the 'StringComparison' method overloads to perform case-insensitive string comparisons",
+    Justification = "Linq can't translate stringComparison methods to sql.")
+]
 public sealed class RoleService(FeatureFlagsDbContext dbContext) : IRoleService {
     private readonly FeatureFlagsDbContext _DbContext = dbContext;
 
+    /// <inheritdoc />
     public async Task<(bool success, string message)> CopyRoleAsync(CopyRoleModel copyRoleModel, CancellationToken cancellationToken = default) {
         var role = await _DbContext.Roles.Include(x => x.RolePermissions).FirstOrDefaultAsync(x => x.Id == copyRoleModel.Id, cancellationToken);
         if (role == null) {
@@ -31,6 +37,7 @@ public sealed class RoleService(FeatureFlagsDbContext dbContext) : IRoleService 
         return await _DbContext.SaveChangesAsync(cancellationToken) > 0 ? (true, Roles.SuccessCopyingRole) : (false, Core.ErrorGeneric);
     }
 
+    /// <inheritdoc />
     public async Task<bool> DeleteRoleAsync(int id, CancellationToken cancellationToken = default) {
         // load role with rolePermissions so auditLog tracks them being deleted
         var role = await _DbContext.Roles.Include(x => x.RolePermissions).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -43,18 +50,23 @@ public sealed class RoleService(FeatureFlagsDbContext dbContext) : IRoleService 
         return await _DbContext.SaveChangesAsync(cancellationToken) > 0;
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<RoleModel>> GetAllRolesAsync(CancellationToken cancellationToken = default)
         => await _DbContext.Roles.SelectAsModel().ToListAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<RoleModel?> GetDefaultRoleAsync(CancellationToken cancellationToken = default)
         => await _DbContext.Roles.Where(x => x.IsDefault).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<RoleModel?> GetRoleByNameAsync(string name, CancellationToken cancellationToken = default)
         => await _DbContext.Roles.Where(x => x.Name.ToLower() == name.ToLower()).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<RoleModel?> GetRoleByIdAsync(int id, CancellationToken cancellationToken = default)
         => await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == id).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<(bool success, string message)> SaveRoleAsync(RoleModel roleModel, CancellationToken cancellationToken = default) {
         if (roleModel.Id > 0) {
             var role = await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == roleModel.Id).FirstOrDefaultAsync(cancellationToken);
@@ -119,6 +131,7 @@ public sealed class RoleService(FeatureFlagsDbContext dbContext) : IRoleService 
         return defaultRole == null || roleModel.Id == defaultRole.Id;
     }
 
+    /// <inheritdoc />
     public async Task<bool> AddPermissionsToDefaultRoleAsync(IEnumerable<int> permissionIds, CancellationToken cancellationToken = default) {
         var defaultRole = await _DbContext.Roles.FirstOrDefaultAsync(x => x.IsDefault, cancellationToken);
         if (defaultRole == null) {

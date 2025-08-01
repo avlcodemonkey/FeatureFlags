@@ -6,13 +6,42 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace FeatureFlags.TagHelpers;
 
+/// <summary>
+/// Renders a breadcrumb navigation item, supporting active and linked states.
+/// </summary>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class BreadcrumbItemTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
+    /// <summary>
+    /// Gets or sets the action name for the breadcrumb link.
+    /// </summary>
     public string? Action { get; set; }
+
+    /// <summary>
+    /// Gets or sets the controller name for the breadcrumb link.
+    /// </summary>
     public string? Controller { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the breadcrumb item is active.
+    /// </summary>
     public bool Active { get; set; }
+
+    /// <summary>
+    /// Gets or sets the label text for the breadcrumb item.
+    /// </summary>
     public string Label { get; set; } = "";
+
+    /// <summary>
+    /// Gets or sets the route values for the breadcrumb link.
+    /// </summary>
     public object? RouteValues { get; set; }
 
+    /// <summary>
+    /// Processes the tag helper and generates the breadcrumb item output.
+    /// </summary>
+    /// <param name="context">Context for tag helper execution.</param>
+    /// <param name="output">Output for tag helper content.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 

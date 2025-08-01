@@ -10,6 +10,11 @@ namespace FeatureFlags.TagHelpers;
 /// </summary>
 /// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class TextareaGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
+    /// <summary>
+    /// Builds the textarea input element with appropriate attributes.
+    /// </summary>
+    /// <param name="attributes">Attributes to apply to the textarea element.</param>
+    /// <returns>HTML content representing the textarea input.</returns>
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
@@ -41,6 +46,12 @@ public sealed class TextareaGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTa
         return textarea;
     }
 
+    /// <summary>
+    /// Processes the tag helper and generates the textarea group output.
+    /// </summary>
+    /// <param name="context">Context for the tag helper execution.</param>
+    /// <param name="output">Output for the tag helper content.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 

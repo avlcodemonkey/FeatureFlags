@@ -6,9 +6,21 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace FeatureFlags.Utils;
 
+/// <summary>
+/// Handles authorization for permission-based requirements using controller action metadata.
+/// </summary>
 public sealed class PermissionRequirementHandler : AuthorizationHandler<PermissionRequirement> {
+    /// <summary>
+    /// Policy name for permission-based authorization.
+    /// </summary>
     public const string PolicyName = "HasPermission";
 
+    /// <summary>
+    /// Evaluates whether the current user meets the specified permission requirement.
+    /// </summary>
+    /// <param name="context">Authorization context containing user and resource information.</param>
+    /// <param name="requirement">Permission requirement to evaluate.</param>
+    /// <returns>A completed task when evaluation is finished.</returns>
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement) {
         Endpoint? endpoint = null;
         if (context.Resource is HttpContext httpContext) {
@@ -38,6 +50,12 @@ public sealed class PermissionRequirementHandler : AuthorizationHandler<Permissi
     }
 }
 
+/// <summary>
+/// Represents a permission requirement for authorization.
+/// </summary>
 public sealed class PermissionRequirement : IAuthorizationRequirement {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PermissionRequirement"/> class.
+    /// </summary>
     public PermissionRequirement() { }
 }

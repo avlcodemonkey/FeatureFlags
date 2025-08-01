@@ -3,10 +3,12 @@ using System.Net.Mail;
 
 namespace FeatureFlags.Services;
 
+/// <inheritdoc />
 public sealed class MailtrapService(IConfiguration configuration, ILogger<MailtrapService> logger) : IEmailService {
     private readonly IConfiguration _Configuration = configuration;
     private readonly ILogger<MailtrapService> _Logger = logger;
 
+    /// <inheritdoc />
     public async Task<bool> SendEmailAsync(string toEmail, string toName, string subject, string html, CancellationToken cancellationToken = default) {
         var settings = _Configuration.GetSection("Mail");
 

@@ -10,15 +10,45 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace FeatureFlags.TagHelpers;
 
+/// <summary>
+/// Renders a form element with support for model binding, HTTP method selection, and hidden fields for versioned and audited models.
+/// </summary>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
+/// <param name="urlHelperFactory">Factory for creating URL helpers.</param>
 public sealed class FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFactory urlHelperFactory) : BaseTagHelper(htmlHelper) {
     private readonly IUrlHelperFactory _UrlHelperFactory = urlHelperFactory;
 
+    /// <summary>
+    /// Gets or sets the action name for the form submission.
+    /// </summary>
     public string? Action { get; set; }
+
+    /// <summary>
+    /// Gets or sets the controller name for the form submission.
+    /// </summary>
     public string? Controller { get; set; }
+
+    /// <summary>
+    /// Gets or sets the model object for the form.
+    /// </summary>
     public object? For { get; set; }
+
+    /// <summary>
+    /// Gets or sets the HTTP method for the form submission.
+    /// </summary>
     public HttpMethod Method { get; set; } = HttpMethod.Post;
+
+    /// <summary>
+    /// Gets or sets the route values for the form action.
+    /// </summary>
     public object? RouteValues { get; set; }
 
+    /// <summary>
+    /// Processes the tag helper and generates the form output.
+    /// </summary>
+    /// <param name="context">Context for tag helper execution.</param>
+    /// <param name="output">Output for tag helper content.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 

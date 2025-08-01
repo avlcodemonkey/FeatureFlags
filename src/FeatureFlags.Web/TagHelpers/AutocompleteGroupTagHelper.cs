@@ -11,8 +11,16 @@ namespace FeatureFlags.TagHelpers;
 /// </summary>
 /// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
+    /// <summary>
+    /// Gets the name for the autocomplete input element.
+    /// </summary>
     private string AutoCompleteName => $"{FieldName}_AutoComplete";
 
+    /// <summary>
+    /// Builds the autocomplete input element with appropriate attributes.
+    /// </summary>
+    /// <param name="attributes">Attributes to apply to the input element.</param>
+    /// <returns>HTML content representing the autocomplete input.</returns>
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
@@ -32,6 +40,10 @@ public sealed class AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : GroupBa
         return input;
     }
 
+    /// <summary>
+    /// Builds the hidden input element to store the selected value.
+    /// </summary>
+    /// <returns>TagBuilder representing the hidden input element.</returns>
     private TagBuilder BuildHidden() {
         var input = new TagBuilder("input");
         input.MergeAttribute("id", FieldName);
@@ -58,8 +70,17 @@ public sealed class AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : GroupBa
         return input;
     }
 
+    /// <summary>
+    /// Gets or sets the URL to fetch autocomplete data.
+    /// </summary>
     public string SrcUrl { get; set; } = "";
 
+    /// <summary>
+    /// Processes the tag helper and generates the autocomplete group output.
+    /// </summary>
+    /// <param name="context">Context for tag helper execution.</param>
+    /// <param name="output">Output for tag helper content.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 

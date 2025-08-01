@@ -1,5 +1,8 @@
 namespace FeatureFlags.Extensions;
 
+/// <summary>
+/// Provides extension methods for string manipulation, including conversions and keyword stripping.
+/// </summary>
 public static class StringExtensions {
     /// <summary>
     /// Converts a string value to a boolean. Default to false.

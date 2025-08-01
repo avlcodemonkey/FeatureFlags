@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FeatureFlags.Domain;
 using FeatureFlags.Extensions.Services;
 using FeatureFlags.Models;
@@ -6,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FeatureFlags.Services;
 
 /// <inheritdoc />
+[SuppressMessage("Performance", "CA1862:Use the 'StringComparison' method overloads to perform case-insensitive string comparisons",
+    Justification = "Linq can't translate stringComparison methods to sql.")
+]
 public sealed class AuditLogService(FeatureFlagsDbContext dbContext) : IAuditLogService {
     private readonly FeatureFlagsDbContext _DbContext = dbContext;
 

@@ -6,14 +6,23 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace FeatureFlags.TagHelpers;
 
 /// <summary>
-/// Creates an input group for a input with label.
+/// Creates an input group for an input with label.
 /// </summary>
 /// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
     private static readonly Type[] _NumberTypes = [typeof(int), typeof(long), typeof(decimal), typeof(double), typeof(int?), typeof(long?), typeof(decimal?), typeof(double?)];
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the input is readonly.
+    /// </summary>
     public bool Readonly { get; set; } = false;
 
+    /// <summary>
+    /// Processes the tag helper and generates the input group output.
+    /// </summary>
+    /// <param name="context">Context for tag helper execution.</param>
+    /// <param name="output">Output for tag helper content.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
@@ -31,6 +40,11 @@ public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHe
         await base.ProcessAsync(context, output);
     }
 
+    /// <summary>
+    /// Builds the input element with appropriate attributes.
+    /// </summary>
+    /// <param name="attributes">Attributes to apply to the input element.</param>
+    /// <returns>HTML content representing the input element.</returns>
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
@@ -76,9 +90,9 @@ public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHe
     }
 
     /// <summary>
-    /// Uses the field name to determine what type of input should be created.
+    /// Uses field name to determine what type of input should be created.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Input type as a string.</returns>
     private string ParseInputType() {
         var type = "text";
         if (string.IsNullOrWhiteSpace(FieldName)) {

@@ -12,10 +12,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlags.Services;
 
+/// <inheritdoc />
+[SuppressMessage("Performance", "CA1862:Use the 'StringComparison' method overloads to perform case-insensitive string comparisons",
+    Justification = "Linq can't translate stringComparison methods to sql.")
+]
 public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAccessor httpContextAccessor) : IUserService {
     private readonly FeatureFlagsDbContext _DbContext = dbContext;
     private readonly IHttpContextAccessor _HttpContextAccessor = httpContextAccessor;
 
+    /// <inheritdoc />
     public async Task<bool> DeleteUserAsync(int id, CancellationToken cancellationToken = default) {
         var user = await _DbContext.Users.FirstOrDefaultAsync(x => x.Id == id && x.Status, cancellationToken);
         if (user == null) {
@@ -27,9 +32,11 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
         return await _DbContext.SaveChangesAsync(cancellationToken) > 0;
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<UserModel>> GetAllUsersAsync(CancellationToken cancellationToken = default)
         => await _DbContext.Users.Where(x => x.Status).SelectAsModel().ToListAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<IEnumerable<Claim>> GetClaimsByUserIdAsync(int id, CancellationToken cancellationToken = default)
         => await _DbContext.UserRoles
             .Include(x => x.Role)
@@ -40,13 +47,16 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
             .Select(x => new Claim(ClaimTypes.Role, $"{x.ControllerName}.{x.ActionName}".ToLower()))
             .ToListAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<UserModel?> GetUserByIdAsync(int id, CancellationToken cancellationToken = default)
         => await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == id && x.Status).SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<UserModel?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
         => await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Email.ToLower() == email.ToLower() && x.Status)
             .SelectAsModel().FirstOrDefaultAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<(bool success, string message)> SaveUserAsync(UserModel userModel, CancellationToken cancellationToken = default) {
         if (userModel.Id > 0) {
             var user = await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == userModel.Id).FirstOrDefaultAsync(cancellationToken);
@@ -83,6 +93,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
         return await _DbContext.SaveChangesAsync(cancellationToken) > 0 ? (true, Users.SuccessSavingUser) : (false, Core.ErrorGeneric);
     }
 
+    /// <inheritdoc />
     public async Task<(bool success, string message)> UpdateAccountAsync(UpdateAccountModel updateAccountModel, CancellationToken cancellationToken = default) {
         var email = _HttpContextAccessor.HttpContext?.User?.Identity?.Name;
         if (string.IsNullOrWhiteSpace(email)) {
@@ -101,9 +112,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
         return (await _DbContext.SaveChangesAsync(cancellationToken) > 0) ? (true, Account.AccountUpdated) : (false, Core.ErrorGeneric);
     }
 
-    [SuppressMessage("Performance", "CA1862:Use the 'StringComparison' method overloads to perform case-insensitive string comparisons",
-        Justification = "Linq can't translate stringComparison methods to sql.")
-    ]
+    /// <inheritdoc />
     public async Task<IEnumerable<AutocompleteUserModel>> FindAutocompleteUsersByNameAsync(string name, CancellationToken cancellationToken = default) {
         var lowerName = (name ?? "").ToLower();
         return await _DbContext.Users
@@ -111,6 +120,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
             .SelectAsAuditLogUserModel().OrderBy(x => x.Value).ToListAsync(cancellationToken);
     }
 
+    /// <inheritdoc />
     public async Task<(bool success, string? token)> CreateUserTokenAsync(int id, CancellationToken cancellationToken = default) {
         var user = await _DbContext.Users.FirstOrDefaultAsync(x => x.Id == id && x.Status, cancellationToken);
         if (user == null) {
@@ -130,6 +140,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
         return (await _DbContext.SaveChangesAsync(cancellationToken) > 0) ? (true, token) : (false, null);
     }
 
+    /// <inheritdoc />
     public async Task<(bool success, string message)> VerifyUserTokenAsync(string email, string token, CancellationToken cancellationToken = default) {
         var userToken = await _DbContext.UserTokens.FirstOrDefaultAsync(x => x.User.Email.ToLower() == email.ToLower() && x.User.Status, cancellationToken);
         if (userToken == null) {

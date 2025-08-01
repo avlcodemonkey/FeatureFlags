@@ -23,5 +23,4 @@ public sealed record ApiKeyListResultModel : IAuditedModel {
     /// Gets the date and time when the API key was created.
     /// </summary>
     public DateTime CreatedDate { get; init; }
-
 }
