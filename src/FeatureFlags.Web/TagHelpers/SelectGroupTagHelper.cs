@@ -9,6 +9,11 @@ namespace FeatureFlags.TagHelpers;
 /// </summary>
 /// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class SelectGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
+    /// <summary>
+    /// Builds the select input element with appropriate attributes and options.
+    /// </summary>
+    /// <param name="attributes">Attributes to apply to the select element.</param>
+    /// <returns>HTML content representing the select input.</returns>
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
@@ -40,8 +45,17 @@ public sealed class SelectGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagH
         return input;
     }
 
+    /// <summary>
+    /// Gets or sets the list of options to display in the select element.
+    /// </summary>
     public IEnumerable<SelectListItem> Options { get; set; } = Enumerable.Empty<SelectListItem>();
 
+    /// <summary>
+    /// Processes the tag helper and generates the select group output.
+    /// </summary>
+    /// <param name="context">Context for tag helper execution.</param>
+    /// <param name="output">Output for tag helper content.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 

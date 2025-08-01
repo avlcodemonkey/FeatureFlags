@@ -5,9 +5,6 @@ namespace FeatureFlags.Services;
 /// <summary>
 /// Provides methods for managing feature flags, including retrieving, saving, and deleting feature flags.
 /// </summary>
-/// <remarks>This service is designed to handle operations related to feature flags, such as retrieving all
-/// feature flags, fetching a specific feature flag by its ID or name, saving feature flag data, and deleting feature
-/// flags. It supports asynchronous operations and allows cancellation through <see cref="CancellationToken"/>.</remarks>
 public interface IFeatureFlagService {
     /// <summary>
     /// Retrieves all feature flags available in the system.

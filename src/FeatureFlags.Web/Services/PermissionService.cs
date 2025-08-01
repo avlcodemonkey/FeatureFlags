@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlags.Services;
 
+/// <inheritdoc />
 public sealed class PermissionService(FeatureFlagsDbContext dbContext) : IPermissionService {
     private readonly FeatureFlagsDbContext _DbContext = dbContext;
 
+    /// <inheritdoc />
     public async Task<bool> DeletePermissionAsync(int permissionId, CancellationToken cancellationToken = default) {
         var permission = await _DbContext.Permissions.FirstOrDefaultAsync(x => x.Id == permissionId, cancellationToken);
         if (permission == null) {
@@ -19,9 +21,11 @@ public sealed class PermissionService(FeatureFlagsDbContext dbContext) : IPermis
         return await _DbContext.SaveChangesAsync(cancellationToken) > 0;
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<PermissionModel>> GetAllPermissionsAsync(CancellationToken cancellationToken = default)
         => await _DbContext.Permissions.SelectAsModel().ToListAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<bool> SavePermissionAsync(PermissionModel permissionModel, CancellationToken cancellationToken = default) {
         if (permissionModel.Id > 0) {
             var permission = await _DbContext.Permissions.Where(x => x.Id == permissionModel.Id).FirstOrDefaultAsync(cancellationToken);
@@ -40,6 +44,7 @@ public sealed class PermissionService(FeatureFlagsDbContext dbContext) : IPermis
         return await _DbContext.SaveChangesAsync(cancellationToken) > 0;
     }
 
+    /// <inheritdoc />
     public async Task<Dictionary<string, List<PermissionModel>>> GetControllerPermissionsAsync(CancellationToken cancellationToken = default) {
         var controllerPermissions = new Dictionary<string, List<PermissionModel>>();
         var permissions = await GetAllPermissionsAsync(cancellationToken);

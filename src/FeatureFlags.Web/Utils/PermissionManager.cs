@@ -4,6 +4,10 @@ using FeatureFlags.Services;
 
 namespace FeatureFlags.Utils;
 
+/// <summary>
+/// Provides functionality for managing permissions within the application, including registering available actions and
+/// synchronizing them with the permissions database.
+/// </summary>
 public sealed class PermissionManager(IAssemblyService assemblyService, IPermissionService permissionService, IRoleService roleService) {
     private readonly IAssemblyService _AssemblyService = assemblyService;
     private readonly IPermissionService _PermissionService = permissionService;

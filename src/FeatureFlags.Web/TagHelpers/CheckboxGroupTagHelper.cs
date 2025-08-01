@@ -10,6 +10,11 @@ namespace FeatureFlags.TagHelpers;
 /// </summary>
 /// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class CheckboxGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
+    /// <summary>
+    /// Builds the checkbox input element with appropriate attributes and label.
+    /// </summary>
+    /// <param name="attributes">Attributes to apply to the checkbox element.</param>
+    /// <returns>HTML content representing the checkbox input group.</returns>
     private IHtmlContent BuildCheckbox(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
@@ -39,6 +44,12 @@ public sealed class CheckboxGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTa
         return label;
     }
 
+    /// <summary>
+    /// Processes the tag helper and generates the checkbox group output.
+    /// </summary>
+    /// <param name="context">Context for tag helper execution.</param>
+    /// <param name="output">Output for tag helper content.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 

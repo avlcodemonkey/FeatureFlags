@@ -5,15 +5,37 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace FeatureFlags.TagHelpers;
 
+/// <summary>
+/// Renders a data table with sorting, search, and customizable data source options.
+/// </summary>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
+    /// <summary>
+    /// Gets or sets the unique key for the data table instance.
+    /// </summary>
     public string? Key { get; set; }
 
+    /// <summary>
+    /// Gets or sets the URL to fetch data for the table.
+    /// </summary>
     public string? SrcUrl { get; set; }
 
+    /// <summary>
+    /// Gets or sets the form selector or name to use as a data source.
+    /// </summary>
     public string? SrcForm { get; set; }
 
+    /// <summary>
+    /// Gets or sets the maximum number of results to display.
+    /// </summary>
     public int MaxResults { get; set; }
 
+    /// <summary>
+    /// Processes the tag helper and generates the data table output.
+    /// </summary>
+    /// <param name="context">Context for tag helper execution.</param>
+    /// <param name="output">Output for tag helper content.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 

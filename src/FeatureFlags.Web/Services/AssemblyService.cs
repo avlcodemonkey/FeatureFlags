@@ -8,15 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Services;
 
-/// <summary>
-/// Creates a dictionary of actions using reflection.
-/// </summary>
-/// <remarks>
-/// Used to create/delete permissions.
-/// </remarks>
+/// <inheritdoc />
 [SuppressMessage("Minor Code Smell", "S6608:Prefer indexing instead of \"Enumerable\" methods on types implementing \"IList\"",
     Justification = "Using Last() in a lambda is simpler.")]
 public sealed class AssemblyService() : IAssemblyService {
+    /// <inheritdoc />
     public Dictionary<string, string> GetActionList() => Assembly.GetExecutingAssembly().GetTypes()
         .Where(x => typeof(Controller).IsAssignableFrom(x)) // filter to controllers only
         .SelectMany(x => x.GetMethods())

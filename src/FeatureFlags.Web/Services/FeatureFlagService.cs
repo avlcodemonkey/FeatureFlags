@@ -1,4 +1,5 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using FeatureFlags.Domain;
 using FeatureFlags.Domain.Models;
 using FeatureFlags.Extensions.Services;
@@ -9,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FeatureFlags.Services;
 
 /// <inheritdoc />
+[SuppressMessage("Performance", "CA1862:Use the 'StringComparison' method overloads to perform case-insensitive string comparisons",
+    Justification = "Linq can't translate stringComparison methods to sql.")
+]
 public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatureFlagService {
     private readonly FeatureFlagsDbContext _DbContext = dbContext;
 

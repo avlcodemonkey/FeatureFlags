@@ -1,5 +1,8 @@
 namespace FeatureFlags.Extensions.Program;
 
+/// <summary>
+/// Provides extension methods for configuring a <see cref="WebApplicationBuilder"/>.
+/// </summary>
 public static class WebApplicationBuilderExtensions {
     /// <summary>
     /// Configures logging for the application.

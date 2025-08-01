@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace FeatureFlags.Extensions;
 
+/// <summary>
+/// Provides extension methods for common operations on <see cref="HttpRequest"/>, <see cref="IEnumerable{T}"/>,  and
+/// <see cref="ViewDataDictionary"/> objects.
+/// </summary>
 public static class ControllerExtensions {
     private const string _RequestedWithHeader = "X-Requested-With";
     private const string _XmlHttpRequest = "XMLHttpRequest";
@@ -38,7 +42,7 @@ public static class ControllerExtensions {
     /// Convert the ModelStateDictionary into a string of errors and adds the error message to the ViewData dictionary.
     /// </summary>
     /// <param name="viewData">ViewData to update.</param>
-    /// <param name="errorMsg">Error message to add.</param>
+    /// <param name="modelState">ModelState with error message(s) to add.</param>
     public static void AddError(this ViewDataDictionary viewData, ModelStateDictionary modelState) {
         ArgumentNullException.ThrowIfNull(modelState);
 

@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FeatureFlags.Extensions;
 
+/// <summary>
+/// Provides extension methods for the <see cref="IHtmlHelper"/> interface to assist with rendering HTML content.
+/// </summary>
 public static class HtmlHelperExtensions {
     /// <summary>
     /// Format the app version in a user friendly string.

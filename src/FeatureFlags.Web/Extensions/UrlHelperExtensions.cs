@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlags.Extensions;
 
+/// <summary>
+/// Provides extension methods for the <see cref="IUrlHelper"/> interface to assist with URL generation.
+/// </summary>
 public static class UrlHelperExtensions {
     /// <summary>
     /// Builds a URL for an action removing Id from route data and appending the id placeholder for mustache to use.

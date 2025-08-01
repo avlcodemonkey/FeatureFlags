@@ -2,6 +2,9 @@ using System.Data;
 
 namespace FeatureFlags.Extensions;
 
+/// <summary>
+/// Provides extension methods for managing boolean session settings in an <see cref="ISession"/>.
+/// </summary>
 public static class SessionExtensions {
     /// <summary>
     /// Check if a boolean session setting is true.
