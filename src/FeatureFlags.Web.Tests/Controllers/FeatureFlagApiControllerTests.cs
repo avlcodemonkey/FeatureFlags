@@ -22,8 +22,8 @@ public class FeatureFlagApiControllerTests {
         // Arrange
         var flags = new List<FeatureFlagModel>
         {
-            new() { Id = 1, Name = "Flag1", IsEnabled = true },
-            new() { Id = 2, Name = "Flag2", IsEnabled = false }
+            new() { Id = 1, Name = "Flag1", Status = true },
+            new() { Id = 2, Name = "Flag2", Status = true }
         };
         _MockFeatureFlagService.Setup(s => s.GetAllFeatureFlagsAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(flags);
@@ -39,7 +39,30 @@ public class FeatureFlagApiControllerTests {
         Assert.Equal("Flag1", definitions.First().Name);
         Assert.NotNull(definitions.First().EnabledFor);
         Assert.Equal("Flag2", definitions.Last().Name);
-        Assert.Null(definitions.Last().EnabledFor);
+        Assert.NotNull(definitions.Last().EnabledFor);
+    }
+
+    [Fact]
+    public async Task GetAllFeatureDefinitionsAsync_WithDisabled_ReturnsOkWithDefinitions() {
+        // Arrange
+        var flags = new List<FeatureFlagModel>
+        {
+            new() { Id = 1, Name = "Flag1", Status = false },
+            new() { Id = 2, Name = "Flag2", Status = true }
+        };
+        _MockFeatureFlagService.Setup(s => s.GetAllFeatureFlagsAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(flags);
+        var controller = CreateController();
+
+        // Act
+        var result = await controller.GetAllFeatureDefinitionsAsync();
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var definitions = Assert.IsType<IEnumerable<FeatureDefinition>>(okResult.Value, exactMatch: false);
+        var definition = Assert.Single(definitions);
+        Assert.Equal("Flag2", definition.Name);
+        Assert.NotNull(definition.EnabledFor);
     }
 
     [Fact]
@@ -54,7 +77,7 @@ public class FeatureFlagApiControllerTests {
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var definitions = Assert.IsAssignableFrom<IEnumerable<FeatureDefinition>>(okResult.Value);
+        var definitions = Assert.IsType<IEnumerable<FeatureDefinition>>(okResult.Value, exactMatch: false);
         Assert.Empty(definitions);
     }
 }

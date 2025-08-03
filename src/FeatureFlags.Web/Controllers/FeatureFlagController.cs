@@ -33,7 +33,7 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> List(CancellationToken cancellationToken = default)
         => Ok((await _FeatureFlagService.GetAllFeatureFlagsAsync(cancellationToken))
-            .Select(x => new FeatureFlagListResultModel { Id = x.Id, Name = x.Name, IsEnabled = x.IsEnabled }));
+            .Select(x => new FeatureFlagListResultModel { Id = x.Id, Name = x.Name, Status = x.Status }));
 
     /// <summary>
     /// Renders the form to create a feature flag.

@@ -19,8 +19,8 @@ public class FeatureFlagControllerTests {
     private readonly Mock<IUrlHelper> _MockUrlHelper = new();
 
     private readonly string _Url = "/test";
-    private readonly FeatureFlagModel _FlagForFailure = new() { Id = -101, Name = "failure", IsEnabled = true };
-    private readonly FeatureFlagModel _FlagForFailureDisabled = new() { Id = -101, Name = "failure", IsEnabled = false };
+    private readonly FeatureFlagModel _FlagForFailure = new() { Id = -101, Name = "failure", Status = true };
+    private readonly FeatureFlagModel _FlagForFailureDisabled = new() { Id = -101, Name = "failure", Status = false };
 
     public FeatureFlagControllerTests() {
         _MockUrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns(_Url);
@@ -54,8 +54,8 @@ public class FeatureFlagControllerTests {
         // Arrange
         var controller = CreateController();
         var featureFlags = new List<FeatureFlagModel> {
-            new() { Id = 1, Name = "Flag1", IsEnabled = true },
-            new() { Id = 2, Name = "Flag2", IsEnabled = false }
+            new() { Id = 1, Name = "Flag1", Status = true },
+            new() { Id = 2, Name = "Flag2", Status = false }
         };
         _MockFeatureFlagService.Setup(service => service.GetAllFeatureFlagsAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(featureFlags);
@@ -104,7 +104,7 @@ public class FeatureFlagControllerTests {
         var controller = CreateController();
         var model = new FeatureFlagModel {
             Name = "NewFlag",
-            IsEnabled = true,
+            Status = true,
             RequirementType = RequirementType.All
         };
         _MockFeatureFlagService.Setup(s => s.SaveFeatureFlagAsync(model, It.IsAny<CancellationToken>()))
@@ -126,7 +126,7 @@ public class FeatureFlagControllerTests {
         controller.ModelState.AddModelError("Name", "Required");
         var model = new FeatureFlagModel {
             Name = "",
-            IsEnabled = true,
+            Status = true,
             RequirementType = RequirementType.All
         };
 
@@ -161,7 +161,7 @@ public class FeatureFlagControllerTests {
         var model = new FeatureFlagModel {
             Id = 1,
             Name = "EditFlag",
-            IsEnabled = true,
+            Status = true,
             RequirementType = RequirementType.Any
         };
         _MockFeatureFlagService.Setup(s => s.GetFeatureFlagByIdAsync(1, It.IsAny<CancellationToken>()))
@@ -199,7 +199,7 @@ public class FeatureFlagControllerTests {
         var model = new FeatureFlagModel {
             Id = 1,
             Name = "EditFlag",
-            IsEnabled = false,
+            Status = false,
             RequirementType = RequirementType.Any
         };
         _MockFeatureFlagService.Setup(s => s.SaveFeatureFlagAsync(model, It.IsAny<CancellationToken>()))
@@ -222,7 +222,7 @@ public class FeatureFlagControllerTests {
         var model = new FeatureFlagModel {
             Id = 1,
             Name = "",
-            IsEnabled = false,
+            Status = false,
             RequirementType = RequirementType.Any
         };
 

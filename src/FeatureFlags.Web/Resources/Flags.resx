@@ -192,4 +192,7 @@
   <data name="RequirementType" xml:space="preserve">
     <value>Requirement Type</value>
   </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
 </root>
