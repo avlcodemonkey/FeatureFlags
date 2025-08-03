@@ -12,7 +12,11 @@
 
     <data-table key="featureFlags" src-url="@Url.Action(nameof(FeatureFlagController.List), nameof(FeatureFlagController).StripController())">
         <data-head>
-            <th style="width:@Html.Width(ColumnWidth.SingleIcon)px">
+            <th style="width:@Html.Width(ColumnWidth.DoubleIcon)px">
+                <a authorize-roles="featureflag.create" href="@Url.Action(nameof(FeatureFlagController.Create), nameof(FeatureFlagController).StripController())"
+                   class="button primary" title="@Flags.CreateFlag">
+                    <icon name="Add" label="@Flags.CreateFlag" />
+                </a>
                 <nilla-confirm authorize-roles="featureflag.clearcache">
                     <a href="@Url.Action(nameof(FeatureFlagController.ClearCache), nameof(FeatureFlagController).StripController())" class="button primary" title="@Flags.ClearCache"
                        data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmClearCache">
@@ -26,24 +30,16 @@
         </data-head>
         <data-body colspan="4">
             <td>
-                {{#if isEnabled}}
-                <nilla-confirm authorize-roles="featureflag.disable">
-                    <a href="@Url.ActionForMustache(nameof(FeatureFlagController.Disable))" class="button dark" title="@Flags.Disable" data-pjax-method="patch"
+                <a authorize-roles="featureflag.edit" href="@Url.ActionForMustache("Edit")" class="button primary" title="@Flags.EditFlag">
+                    <icon name="EditAlt" label="@Flags.EditFlag" />
+                </a>
+                <nilla-confirm authorize-roles="featureflag.delete">
+                    <a href="@Url.ActionForMustache("Delete")" class="button dark" title="@Core.Delete" data-pjax-method="delete"
                        data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel"
-                       data-dialog-content="@Flags.ConfirmDisable">
-                        <icon name="ToggleOff" label="@Flags.Disable" />
+                       data-dialog-content="@string.Format(Core.ConfirmDeleteBody, Flags.FlagLower)">
+                        <icon name="DeleteAlt" label="@Core.Delete" />
                     </a>
                 </nilla-confirm>
-                {{/if}}
-                {{#if !isEnabled}}
-                <nilla-confirm authorize-roles="featureflag.enable">
-                    <a href="@Url.ActionForMustache(nameof(FeatureFlagController.Enable))" class="button dark" title="@Flags.Enable" data-pjax-method="patch"
-                       data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel"
-                       data-dialog-content="@Flags.ConfirmEnable">
-                        <icon name="ToggleOn" label="@Flags.Enable" />
-                    </a>
-                </nilla-confirm>
-                {{/if}}
             </td>
             <td>{{id}}</td>
             <td>{{name}}</td>

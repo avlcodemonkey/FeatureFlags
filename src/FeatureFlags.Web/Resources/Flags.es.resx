@@ -186,4 +186,10 @@
   <data name="ErrorNotFound" xml:space="preserve">
     <value />
   </data>
+  <data name="CreateFlag" xml:space="preserve">
+    <value />
+  </data>
+  <data name="RequirementType" xml:space="preserve">
+    <value />
+  </data>
 </root>

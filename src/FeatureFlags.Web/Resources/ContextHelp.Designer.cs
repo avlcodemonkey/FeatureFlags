@@ -61,6 +61,24 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only enabled flags are evaluated.  Referencing a disabled flag will always return false..
+        /// </summary>
+        public static string FeatureFlag_IsEnabled {
+            get {
+                return ResourceManager.GetString("FeatureFlag_IsEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Require all filters to match or only one to match..
+        /// </summary>
+        public static string FeatureFlag_RequirementType {
+            get {
+                return ResourceManager.GetString("FeatureFlag_RequirementType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Give this role a unique name..
         /// </summary>
         public static string Role_Name {

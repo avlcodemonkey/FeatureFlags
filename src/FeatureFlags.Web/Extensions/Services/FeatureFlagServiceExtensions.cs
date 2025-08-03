@@ -13,5 +13,8 @@ public static class FeatureFlagServiceExtensions {
     /// <param name="query">Queryable collection of <see cref="FeatureFlag"/> entities to project.</param>
     /// <returns><see cref="IQueryable{T}"/> containing <see cref="FeatureFlagModel"/> objects.</returns>
     public static IQueryable<FeatureFlagModel> SelectAsModel(this IQueryable<FeatureFlag> query)
-        => query.Select(x => new FeatureFlagModel { Id = x.Id, Name = x.Name, IsEnabled = x.IsEnabled, UpdatedDate = x.UpdatedDate });
+        => query.Select(x => new FeatureFlagModel {
+            Id = x.Id, Name = x.Name, IsEnabled = x.IsEnabled,
+            RequirementType = (Constants.RequirementType)x.RequirementType, UpdatedDate = x.UpdatedDate
+        });
 }

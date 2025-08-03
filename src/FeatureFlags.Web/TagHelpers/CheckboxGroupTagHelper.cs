@@ -22,6 +22,7 @@ public sealed class CheckboxGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTa
 
         var label = new TagBuilder("label");
         label.MergeAttribute("for", FieldName);
+        label.AddCssClass("checkbox-label is-vertical-align");
 
         var input = new TagBuilder("input");
 
@@ -45,6 +46,20 @@ public sealed class CheckboxGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTa
     }
 
     /// <summary>
+    /// Builds a label element for the input group.
+    /// </summary>
+    /// <returns>HTML content for the label element.</returns>
+    public IHtmlContent BuildGroupLabel() {
+        if (string.IsNullOrWhiteSpace(FieldTitle)) {
+            return HtmlString.Empty;
+        }
+
+        var div = new TagBuilder("div");
+        div.InnerHtml.Append(FieldTitle);
+        return div;
+    }
+
+    /// <summary>
     /// Processes the tag helper and generates the checkbox group output.
     /// </summary>
     /// <param name="context">Context for tag helper execution.</param>
@@ -60,7 +75,7 @@ public sealed class CheckboxGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTa
         output.TagName = "div";
         output.TagMode = TagMode.StartTagAndEndTag;
         output.Attributes.Clear();
-        output.Content.AppendHtml(BuildLabel(""));
+        output.Content.AppendHtml(BuildGroupLabel());
         output.Content.AppendHtml(inputGroup);
 
         await base.ProcessAsync(context, output);

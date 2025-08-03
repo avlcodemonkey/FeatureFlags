@@ -19,6 +19,7 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
     private readonly IFeatureFlagClient _FeatureFlagClient = featureFlagClient;
 
     private const string _IndexView = "Index";
+    private const string _CreateEditView = "CreateEdit";
 
     /// <summary>
     /// Renders the feature flag landing page with the table of flags.
@@ -35,44 +36,49 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
             .Select(x => new FeatureFlagListResultModel { Id = x.Id, Name = x.Name, IsEnabled = x.IsEnabled }));
 
     /// <summary>
-    /// Enables a flag if valid. Renders the index page with error or success message.
+    /// Renders the form to create a feature flag.
     /// </summary>
-    [HttpPatch]
-    public async Task<IActionResult> Enable(int id, CancellationToken cancellationToken = default) {
-        var featureFlagModel = await _FeatureFlagService.GetFeatureFlagByIdAsync(id, cancellationToken);
-        if (featureFlagModel == null) {
-            ViewData.AddError(Core.ErrorInvalidId);
-            return IndexWithPushState();
-        }
+    [HttpGet]
+    public IActionResult Create() => View(_CreateEditView, new FeatureFlagModel());
 
-        var (success, message) = await _FeatureFlagService.SaveFeatureFlagAsync(featureFlagModel with { IsEnabled = true }, cancellationToken);
-        if (!success) {
-            ViewData.AddError(message);
-            return IndexWithPushState();
-        }
+    /// <summary>
+    /// Saves new feature flage if valid. Renders the create page on error, or redirects to index page.
+    /// </summary>
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(FeatureFlagModel model, CancellationToken cancellationToken = default) => await Save(model, cancellationToken);
 
-        ViewData.AddMessage(Flags.SuccessSavingFlag);
-        return IndexWithPushState();
+    /// <summary>
+    /// Renders the form to edit a feature flag, or index page on error.
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken = default) {
+        var model = await _FeatureFlagService.GetFeatureFlagByIdAsync(id, cancellationToken);
+        if (model == null) {
+            return ViewWithError(_IndexView, null, Core.ErrorInvalidId);
+        }
+        return View(_CreateEditView, model);
     }
 
     /// <summary>
-    /// Disables a flag if valid. Renders the index page with error or success message.
+    /// Saves updated feature falg if valid. Renders the edit page on error, or redirects to index page.
     /// </summary>
-    [HttpPatch]
-    public async Task<IActionResult> Disable(int id, CancellationToken cancellationToken = default) {
-        var featureFlagModel = await _FeatureFlagService.GetFeatureFlagByIdAsync(id, cancellationToken);
-        if (featureFlagModel == null) {
-            ViewData.AddError(Core.ErrorInvalidId);
-            return IndexWithPushState();
+    [HttpPut, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(FeatureFlagModel model, CancellationToken cancellationToken = default) => await Save(model, cancellationToken);
+
+    /// <summary>
+    /// Save the model using the feature flag service.  Used by Create and Edit.
+    /// </summary>
+    private async Task<IActionResult> Save(FeatureFlagModel model, CancellationToken cancellationToken = default) {
+        if (!ModelState.IsValid) {
+            return ViewWithError(_CreateEditView, model, ModelState);
         }
 
-        var (success, message) = await _FeatureFlagService.SaveFeatureFlagAsync(featureFlagModel with { IsEnabled = false }, cancellationToken);
+        (var success, var message) = await _FeatureFlagService.SaveFeatureFlagAsync(model, cancellationToken);
         if (!success) {
-            ViewData.AddError(message);
-            return IndexWithPushState();
+            return ViewWithError(_CreateEditView, model, message);
         }
 
-        ViewData.AddMessage(Flags.SuccessSavingFlag);
+        ViewData.AddMessage(message);
         return IndexWithPushState();
     }
 

@@ -3,6 +3,7 @@ using System;
 using FeatureFlags.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeatureFlags.Domain.Migrations
 {
     [DbContext(typeof(FeatureFlagsDbContext))]
-    partial class FeatureFlagsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250803161323_AddFeatureFlagRequirementType")]
+    partial class AddFeatureFlagRequirementType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
@@ -118,7 +121,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RequirementType")
+                    b.Property<int?>("RequirementType")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -140,7 +143,6 @@ namespace FeatureFlags.Domain.Migrations
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsEnabled = true,
                             Name = "UserRegistration",
-                            RequirementType = 0,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
