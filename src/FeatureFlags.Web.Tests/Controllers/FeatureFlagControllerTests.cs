@@ -104,7 +104,7 @@ public class FeatureFlagControllerTests {
         var controller = CreateController();
         var model = new FeatureFlagModel {
             Name = "NewFlag",
-            IsEnabled = true,
+            Status = true,
             RequirementType = RequirementType.All
         };
         _MockFeatureFlagService.Setup(s => s.SaveFeatureFlagAsync(model, It.IsAny<CancellationToken>()))
@@ -126,7 +126,7 @@ public class FeatureFlagControllerTests {
         controller.ModelState.AddModelError("Name", "Required");
         var model = new FeatureFlagModel {
             Name = "",
-            IsEnabled = true,
+            Status = true,
             RequirementType = RequirementType.All
         };
 
@@ -161,7 +161,7 @@ public class FeatureFlagControllerTests {
         var model = new FeatureFlagModel {
             Id = 1,
             Name = "EditFlag",
-            IsEnabled = true,
+            Status = true,
             RequirementType = RequirementType.Any
         };
         _MockFeatureFlagService.Setup(s => s.GetFeatureFlagByIdAsync(1, It.IsAny<CancellationToken>()))
@@ -199,7 +199,7 @@ public class FeatureFlagControllerTests {
         var model = new FeatureFlagModel {
             Id = 1,
             Name = "EditFlag",
-            IsEnabled = false,
+            Status = false,
             RequirementType = RequirementType.Any
         };
         _MockFeatureFlagService.Setup(s => s.SaveFeatureFlagAsync(model, It.IsAny<CancellationToken>()))
@@ -222,7 +222,7 @@ public class FeatureFlagControllerTests {
         var model = new FeatureFlagModel {
             Id = 1,
             Name = "",
-            IsEnabled = false,
+            Status = false,
             RequirementType = RequirementType.Any
         };
 
