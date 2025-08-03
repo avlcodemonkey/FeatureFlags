@@ -15,6 +15,12 @@ body {
     padding: calc(var(--luxbar-height) + 1rem) var(--luxbar-height) var(--luxbar-height) var(--luxbar-height);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+    #main {
+        view-transition-name: slide-up;
+    }
+}
+
 #content {
     height: 100%;
 }
@@ -52,5 +58,37 @@ body {
 
     100% {
         transform: rotate(360deg);
+    }
+}
+
+::view-transition-old(slide-up) {
+    animation: 250ms cubic-bezier(0.4, 0, 1, 1) both fade-out, 750ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-top;
+}
+
+::view-transition-new(slide-up) {
+    animation: 500ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in, 750ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-bottom;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slide-from-bottom {
+    from {
+        transform: translateY(90px);
+    }
+}
+
+@keyframes slide-to-top {
+    to {
+        transform: translateY(-90px);
     }
 }
