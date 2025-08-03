@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FeatureFlag_IsEnabled" xml:space="preserve">
+    <value>Only enabled flags are evaluated.  Referencing a disabled flag will always return false.</value>
+  </data>
+  <data name="FeatureFlag_RequirementType" xml:space="preserve">
+    <value>Require all filters to match or only one to match.</value>
+  </data>
   <data name="Role_Name" xml:space="preserve">
     <value>Give this role a unique name.</value>
   </data>

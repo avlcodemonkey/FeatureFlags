@@ -97,6 +97,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create Flag.
+        /// </summary>
+        public static string CreateFlag {
+            get {
+                return ResourceManager.GetString("CreateFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable.
         /// </summary>
         public static string Disable {
@@ -219,6 +228,15 @@ namespace FeatureFlags.Resources {
         public static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requirement Type.
+        /// </summary>
+        public static string RequirementType {
+            get {
+                return ResourceManager.GetString("RequirementType", resourceCulture);
             }
         }
         

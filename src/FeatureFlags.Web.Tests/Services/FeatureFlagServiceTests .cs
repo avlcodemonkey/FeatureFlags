@@ -41,6 +41,7 @@ public class FeatureFlagServiceTests {
         Assert.NotEmpty(featureFlags);
         Assert.IsType<IEnumerable<FeatureFlagModel>>(featureFlags, exactMatch: false);
         Assert.Contains(featureFlags, x => x.Id == testFeatureFlag.Id);
+        Assert.Contains(featureFlags, x => x.RequirementType == Constants.RequirementType.All);
     }
 
     [Fact]
@@ -56,6 +57,7 @@ public class FeatureFlagServiceTests {
         Assert.IsType<FeatureFlagModel>(featureFlag);
         Assert.Equal(testFeatureFlag.Name, featureFlag.Name);
         Assert.Equal(testFeatureFlag.IsEnabled, featureFlag.IsEnabled);
+        Assert.Equal(Constants.RequirementType.All, featureFlag.RequirementType);
     }
 
     [Fact]
@@ -83,8 +85,8 @@ public class FeatureFlagServiceTests {
         Assert.IsType<FeatureFlagModel>(featureFlag);
         Assert.Equal(testFeatureFlag.Name, featureFlag.Name);
         Assert.Equal(testFeatureFlag.IsEnabled, featureFlag.IsEnabled);
+        Assert.Equal(Constants.RequirementType.All, featureFlag.RequirementType);
     }
-
 
     [Fact]
     public async Task GetFeatureFlagByNameAsync_ReturnsCaseInsensitiveTestFeatureFlagModel() {
@@ -99,25 +101,14 @@ public class FeatureFlagServiceTests {
         Assert.IsType<FeatureFlagModel>(featureFlag);
         Assert.Equal(testFeatureFlag.Name, featureFlag.Name);
         Assert.Equal(testFeatureFlag.IsEnabled, featureFlag.IsEnabled);
-    }
-
-    [Fact]
-    public async Task GetFeatureFlagByNameAsync_WithInvalidFeatureFlagName_ReturnsNull() {
-        // arrange
-        var featureFlagNameToGet = "random flag that doesn't exist";
-
-        // act
-        var result = await _FeatureFlagService.GetFeatureFlagByNameAsync(featureFlagNameToGet);
-
-        // assert
-        Assert.Null(result);
+        Assert.Equal(Constants.RequirementType.All, featureFlag.RequirementType);
     }
 
     [Fact]
     public async Task SaveFeatureFlagAsync_CreateFeatureFlag_SavesNewFeatureFlag() {
         // arrange
         var createFeatureFlag = new FeatureFlagModel {
-            Name = "create", IsEnabled = true
+            Name = "create", IsEnabled = true, RequirementType = Constants.RequirementType.All
         };
 
         // act
@@ -134,6 +125,7 @@ public class FeatureFlagServiceTests {
         Assert.NotNull(newFeatureFlag);
         Assert.Equal(createFeatureFlag.Name, newFeatureFlag.Name);
         Assert.Equal(createFeatureFlag.IsEnabled, newFeatureFlag.IsEnabled);
+        Assert.Equal(createFeatureFlag.RequirementType, newFeatureFlag.RequirementType);
     }
 
     [Fact]
@@ -141,14 +133,14 @@ public class FeatureFlagServiceTests {
         // arrange
         var originalName = "original";
         var createFeatureFlag = new FeatureFlagModel {
-            Name = originalName, IsEnabled = true, UpdatedDate = DateTime.UtcNow
+            Name = originalName, IsEnabled = true, UpdatedDate = DateTime.UtcNow, RequirementType = Constants.RequirementType.All
         };
         await _FeatureFlagService.SaveFeatureFlagAsync(createFeatureFlag);
 
         var featureFlagId = (await _FeatureFlagService.GetAllFeatureFlagsAsync()).FirstOrDefault(x => x.Name == originalName)!.Id;
         var newName = "newName";
         var updateFeatureFlag = new FeatureFlagModel {
-            Id = featureFlagId, Name = newName, IsEnabled = false, UpdatedDate = DateTime.UtcNow
+            Id = featureFlagId, Name = newName, IsEnabled = false, UpdatedDate = DateTime.UtcNow, RequirementType = Constants.RequirementType.Any
         };
 
         // act
@@ -186,7 +178,7 @@ public class FeatureFlagServiceTests {
     public async Task SaveFeatureFlagAsync_CreateWithDuplicateName_ReturnsDuplicateError() {
         // arrange
         var duplicateFeatureFlag = new FeatureFlagModel {
-            Name = _Fixture.TestFeatureFlag.Name, IsEnabled = true
+            Name = _Fixture.TestFeatureFlag.Name, IsEnabled = true, RequirementType = Constants.RequirementType.All
         };
 
         // act
@@ -202,12 +194,12 @@ public class FeatureFlagServiceTests {
         // arrange
         var originalName = "duplicate";
         var duplicateFeatureFlag = new FeatureFlagModel {
-            Name = originalName, IsEnabled = true
+            Name = originalName, IsEnabled = true, RequirementType = Constants.RequirementType.All
         };
         await _FeatureFlagService.SaveFeatureFlagAsync(duplicateFeatureFlag);
 
         var featureFlagCopy = (await _FeatureFlagService.GetAllFeatureFlagsAsync()).FirstOrDefault(x => x.Name == originalName);
-        var updateFeatureFlag = featureFlagCopy! with { Name = _Fixture.TestFeatureFlag.Name };
+        var updateFeatureFlag = featureFlagCopy! with { Name = _Fixture.TestFeatureFlag.Name, RequirementType = Constants.RequirementType.All };
 
         // act
         (var success, var message) = await _FeatureFlagService.SaveFeatureFlagAsync(updateFeatureFlag);

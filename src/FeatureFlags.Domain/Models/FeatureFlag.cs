@@ -17,6 +17,14 @@ public class FeatureFlag : IAuditedEntity, IVersionedEntity {
     public bool IsEnabled { get; set; }
 
     /// <summary>
+    /// Gets or sets the type of requirement associated with the current entity.
+    /// </summary>
+    /// <remarks>
+    /// Maps to the <see cref="FeatureFlags.Web.Constants.RequirementType"/> enum.
+    /// </remarks>
+    public int RequirementType { get; set; }
+
+    /// <summary>
     /// When flag was created.
     /// </summary>
     /// <remarks>

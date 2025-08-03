@@ -1,4 +1,5 @@
 using System.Security.Principal;
+using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -93,7 +94,7 @@ public class DatabaseFixture : IDisposable {
     };
 
     public FeatureFlag TestFeatureFlag { get; } = new() {
-        Id = -1, Name = "name", IsEnabled = true
+        Id = -1, Name = "name", IsEnabled = true, RequirementType = (int)RequirementType.All
     };
 
     public void Dispose() {

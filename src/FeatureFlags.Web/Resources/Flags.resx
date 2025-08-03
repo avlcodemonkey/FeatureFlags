@@ -186,4 +186,10 @@
   <data name="ErrorNotFound" xml:space="preserve">
     <value>Feature flag not found.</value>
   </data>
+  <data name="CreateFlag" xml:space="preserve">
+    <value>Create Flag</value>
+  </data>
+  <data name="RequirementType" xml:space="preserve">
+    <value>Requirement Type</value>
+  </data>
 </root>

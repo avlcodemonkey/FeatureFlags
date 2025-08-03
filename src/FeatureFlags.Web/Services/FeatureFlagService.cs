@@ -42,8 +42,7 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatu
                 return (false, Flags.ErrorDuplicateName);
             }
 
-            featureFlag.Name = featureFlagModel.Name;
-            featureFlag.IsEnabled = featureFlagModel.IsEnabled;
+            await MapToEntity(featureFlagModel, featureFlag, cancellationToken);
 
             _DbContext.FeatureFlags.Update(featureFlag);
         } else {
@@ -52,10 +51,8 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatu
                 return (false, Flags.ErrorDuplicateName);
             }
 
-            var featureFlag = new FeatureFlag {
-                Name = featureFlagModel.Name,
-                IsEnabled = featureFlagModel.IsEnabled
-            };
+            var featureFlag = new FeatureFlag();
+            await MapToEntity(featureFlagModel, featureFlag, cancellationToken);
             _DbContext.FeatureFlags.Add(featureFlag);
         }
 
@@ -63,6 +60,17 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatu
             return (true, Flags.SuccessSavingFlag);
         }
         return (false, Core.ErrorGeneric);
+    }
+
+    /// <summary>
+    /// Maps data from the feature flag model onto the feature flag entity.
+    /// </summary>
+    private async Task MapToEntity(FeatureFlagModel featureFlagModel, FeatureFlag featureFlag, CancellationToken cancellationToken = default) {
+        featureFlag.Name = featureFlagModel.Name;
+        featureFlag.IsEnabled = featureFlagModel.IsEnabled;
+        featureFlag.RequirementType = (int)featureFlagModel.RequirementType;
+
+        // @todo add support for zero to many filters
     }
 
     /// <summary>

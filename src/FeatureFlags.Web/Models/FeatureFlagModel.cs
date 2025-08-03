@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using FeatureFlags.Constants;
 using FeatureFlags.Resources;
 using FeatureFlags.Validators;
 
@@ -7,7 +8,7 @@ namespace FeatureFlags.Models;
 /// <summary>
 /// Represents a system feature flag.
 /// </summary>
-public sealed record FeatureFlagModel : IAuditedModel {
+public sealed record FeatureFlagModel : IAuditedModel, IVersionedModel {
     /// <summary>
     /// Gets the unique identifier for the feature flag.
     /// </summary>
@@ -24,7 +25,15 @@ public sealed record FeatureFlagModel : IAuditedModel {
     /// <summary>
     /// Gets a value indicating whether the feature flag is enabled.
     /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.Enabled))]
     public bool IsEnabled { get; init; }
+
+    /// <summary>
+    /// Gets a value indicating whether any or all requirements must be met.
+    /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.RequirementType))]
+    [IsRequired]
+    public RequirementType RequirementType { get; init; }
 
     /// <summary>
     /// Gets the date and time when the feature flag was last updated.
