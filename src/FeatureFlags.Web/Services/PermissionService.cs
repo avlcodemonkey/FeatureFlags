@@ -47,7 +47,7 @@ public sealed class PermissionService(FeatureFlagsDbContext dbContext) : IPermis
     /// <inheritdoc />
     public async Task<Dictionary<string, List<PermissionModel>>> GetControllerPermissionsAsync(CancellationToken cancellationToken = default) {
         var controllerPermissions = new Dictionary<string, List<PermissionModel>>();
-        var permissions = await GetAllPermissionsAsync(cancellationToken);
+        var permissions = (await GetAllPermissionsAsync(cancellationToken)).OrderBy(x => x.ControllerName).ThenBy(x => x.ActionName);
 
         foreach (var permission in permissions) {
             if (!controllerPermissions.TryGetValue(permission.ControllerName, out _)) {

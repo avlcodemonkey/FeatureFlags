@@ -84,4 +84,201 @@ public class FeatureFlagControllerTests {
         Assert.Equal(Flags.SuccessClearingCache, controller.ViewData[ViewProperties.Message]!.ToString());
         _MockFeatureFlagClient.Verify(x => x.ClearCache(), Times.Once);
     }
+
+    [Fact]
+    public void Get_Create_ReturnsViewResult() {
+        // Arrange
+        var controller = CreateController();
+
+        // Act
+        var result = controller.Create();
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+    }
+
+    [Fact]
+    public async Task Post_Create_WithValidModel_Success_RedirectsToIndex() {
+        // Arrange
+        var controller = CreateController();
+        var model = new FeatureFlagModel {
+            Name = "NewFlag",
+            IsEnabled = true,
+            RequirementType = RequirementType.All
+        };
+        _MockFeatureFlagService.Setup(s => s.SaveFeatureFlagAsync(model, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((true, Flags.SuccessSavingFlag));
+
+        // Act
+        var result = await controller.Create(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Index", viewResult.ViewName);
+        Assert.Contains(Flags.SuccessSavingFlag, viewResult.ViewData[ViewProperties.Message]?.ToString());
+    }
+
+    [Fact]
+    public async Task Post_Create_WithInvalidModel_ReturnsViewWithError() {
+        // Arrange
+        var controller = CreateController();
+        controller.ModelState.AddModelError("Name", "Required");
+        var model = new FeatureFlagModel {
+            Name = "",
+            IsEnabled = true,
+            RequirementType = RequirementType.All
+        };
+
+        // Act
+        var result = await controller.Create(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.False(controller.ModelState.IsValid);
+    }
+
+    [Fact]
+    public async Task Post_Create_ServiceFailure_ReturnsViewWithError() {
+        // Arrange
+        var controller = CreateController();
+        var model = _FlagForFailure;
+
+        // Act
+        var result = await controller.Create(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.Equal("message", controller.ViewData[ViewProperties.Error]);
+    }
+
+    [Fact]
+    public async Task Get_Edit_WithValidId_ReturnsViewResult() {
+        // Arrange
+        var controller = CreateController();
+        var model = new FeatureFlagModel {
+            Id = 1,
+            Name = "EditFlag",
+            IsEnabled = true,
+            RequirementType = RequirementType.Any
+        };
+        _MockFeatureFlagService.Setup(s => s.GetFeatureFlagByIdAsync(1, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(model);
+
+        // Act
+        var result = await controller.Edit(1);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.Equal(model, viewResult.Model);
+    }
+
+    [Fact]
+    public async Task Get_Edit_WithInvalidId_RedirectsToIndex() {
+        // Arrange
+        var controller = CreateController();
+        _MockFeatureFlagService.Setup(s => s.GetFeatureFlagByIdAsync(999, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((FeatureFlagModel?)null);
+
+        // Act
+        var result = await controller.Edit(999);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Index", viewResult.ViewName);
+        Assert.Equal(Core.ErrorInvalidId, controller.ViewData[ViewProperties.Error]);
+    }
+
+    [Fact]
+    public async Task Put_Edit_WithValidModel_Success_RedirectsToIndex() {
+        // Arrange
+        var controller = CreateController();
+        var model = new FeatureFlagModel {
+            Id = 1,
+            Name = "EditFlag",
+            IsEnabled = false,
+            RequirementType = RequirementType.Any
+        };
+        _MockFeatureFlagService.Setup(s => s.SaveFeatureFlagAsync(model, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((true, Flags.SuccessSavingFlag));
+
+        // Act
+        var result = await controller.Edit(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Index", viewResult.ViewName);
+        Assert.Contains(Flags.SuccessSavingFlag, viewResult.ViewData[ViewProperties.Message]?.ToString());
+    }
+
+    [Fact]
+    public async Task Put_Edit_WithInvalidModel_ReturnsViewWithError() {
+        // Arrange
+        var controller = CreateController();
+        controller.ModelState.AddModelError("Name", "Required");
+        var model = new FeatureFlagModel {
+            Id = 1,
+            Name = "",
+            IsEnabled = false,
+            RequirementType = RequirementType.Any
+        };
+
+        // Act
+        var result = await controller.Edit(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.False(controller.ModelState.IsValid);
+    }
+
+    [Fact]
+    public async Task Put_Edit_ServiceFailure_ReturnsViewWithError() {
+        // Arrange
+        var controller = CreateController();
+        var model = _FlagForFailureDisabled;
+
+        // Act
+        var result = await controller.Edit(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.Equal("message", controller.ViewData[ViewProperties.Error]);
+    }
+
+    [Fact]
+    public async Task Delete_WithValidId_Success_RedirectsToIndex() {
+        // Arrange
+        var controller = CreateController();
+        _MockFeatureFlagService.Setup(s => s.DeleteFeatureFlagAsync(1, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await controller.Delete(1);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Index", viewResult.ViewName);
+        Assert.Equal(Flags.SuccessDeletingFlag, controller.ViewData[ViewProperties.Message]);
+    }
+
+    [Fact]
+    public async Task Delete_WithInvalidId_ReturnsViewWithError() {
+        // Arrange
+        var controller = CreateController();
+        _MockFeatureFlagService.Setup(s => s.DeleteFeatureFlagAsync(999, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await controller.Delete(999);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Index", viewResult.ViewName);
+        Assert.Equal(Flags.ErrorDeletingFlag, controller.ViewData[ViewProperties.Error]);
+    }
 }

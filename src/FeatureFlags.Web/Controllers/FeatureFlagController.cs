@@ -83,6 +83,19 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
     }
 
     /// <summary>
+    /// Deletes the feature flag if valid, and renders the index page.
+    /// </summary>
+    [HttpDelete]
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default) {
+        if (!await _FeatureFlagService.DeleteFeatureFlagAsync(id, cancellationToken)) {
+            return ViewWithError(_IndexView, null, Flags.ErrorDeletingFlag);
+        }
+
+        ViewData.AddMessage(Flags.SuccessDeletingFlag);
+        return IndexWithPushState();
+    }
+
+    /// <summary>
     /// Clears the feature flag cache. Renders the index page.
     /// </summary>
     [HttpGet]
