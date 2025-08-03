@@ -335,7 +335,14 @@ class PJax extends BaseComponent {
         // update the DOM with the new content
         const targetElement = this.getElement(Elements.Target);
         if (targetElement) {
-            targetElement.innerHTML = body;
+            // if the browser supports view transitions, use them to update the content
+            if (document.startViewTransition) {
+                document.startViewTransition(() => {
+                    targetElement.innerHTML = body;
+                });
+            } else {
+                targetElement.innerHTML = body;
+            }
         }
 
         // set the document title if title header exists
