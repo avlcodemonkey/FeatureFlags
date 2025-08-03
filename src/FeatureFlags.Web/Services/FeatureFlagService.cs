@@ -67,7 +67,7 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatu
     /// </summary>
     private async Task MapToEntity(FeatureFlagModel featureFlagModel, FeatureFlag featureFlag, CancellationToken cancellationToken = default) {
         featureFlag.Name = featureFlagModel.Name;
-        featureFlag.IsEnabled = featureFlagModel.IsEnabled;
+        featureFlag.Status = featureFlagModel.Status;
         featureFlag.RequirementType = (int)featureFlagModel.RequirementType;
 
         // @todo add support for zero to many filters

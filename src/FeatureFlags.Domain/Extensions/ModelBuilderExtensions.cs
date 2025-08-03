@@ -98,7 +98,7 @@ public static class ModelBuilderExtensions {
 
         // enable user registration - feature flag name should match the value in Web.Constants.InternalFeatureFlags
         modelBuilder.Entity<FeatureFlag>().HasData(
-            new FeatureFlag { Id = 1, Name = "UserRegistration", IsEnabled = true, CreatedDate = minDate, UpdatedDate = minDate }
+            new FeatureFlag { Id = 1, Name = "UserRegistration", Status = true, CreatedDate = minDate, UpdatedDate = minDate }
         );
 
         modelBuilder.Entity<ApiKey>().HasData(

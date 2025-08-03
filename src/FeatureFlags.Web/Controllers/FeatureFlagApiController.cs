@@ -21,10 +21,10 @@ public class FeatureFlagApiController(IFeatureFlagService featureFlagService) : 
     [HttpGet("features")]
     [ProducesResponseType(typeof(IEnumerable<FeatureDefinition>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllFeatureDefinitionsAsync(CancellationToken cancellationToken = default) {
-        var featureFlags = await _FeatureFlagService.GetAllFeatureFlagsAsync(cancellationToken);
+        var featureFlags = (await _FeatureFlagService.GetAllFeatureFlagsAsync(cancellationToken)).Where(x => x.Status);
         var definitions = featureFlags.Select(x => new FeatureDefinition {
             Name = x.Name,
-            EnabledFor = x.IsEnabled ? new[] { new FeatureFilterConfiguration { Name = "AlwaysOn" } } : null
+            EnabledFor = new[] { new FeatureFilterConfiguration { Name = "AlwaysOn" } }
         });
         return Ok(definitions);
     }

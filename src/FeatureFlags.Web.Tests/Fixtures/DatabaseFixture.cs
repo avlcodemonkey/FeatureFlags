@@ -94,7 +94,7 @@ public class DatabaseFixture : IDisposable {
     };
 
     public FeatureFlag TestFeatureFlag { get; } = new() {
-        Id = -1, Name = "name", IsEnabled = true, RequirementType = (int)RequirementType.All
+        Id = -1, Name = "name", Status = true, RequirementType = (int)RequirementType.All
     };
 
     public void Dispose() {

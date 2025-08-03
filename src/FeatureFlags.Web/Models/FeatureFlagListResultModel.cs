@@ -17,12 +17,12 @@ public sealed record FeatureFlagListResultModel : IAuditedModel {
     public string Name { get; init; } = "";
 
     /// <summary>
-    /// Gets a value indicating whether the feature flag is enabled.
+    /// Gets a value indicating whether the feature flag is active.
     /// </summary>
-    public bool IsEnabled { get; init; }
+    public bool Status { get; init; }
 
     /// <summary>
     /// Gets the localized status text for the feature flag.
     /// </summary>
-    public string StatusText => IsEnabled ? Flags.Enabled : Flags.Disabled;
+    public string StatusText => Status ? Flags.Active : Flags.Disabled;
 }

@@ -24,11 +24,10 @@
                     </a>
                 </nilla-confirm>
             </th>
-            <th style="width:@Html.Width(ColumnWidth.Id)px" data-property="id">@Core.Id</th>
             <th data-property="name">@Flags.Name</th>
             <th data-property="name">@Flags.Status</th>
         </data-head>
-        <data-body colspan="4">
+        <data-body colspan="3">
             <td>
                 <a authorize-roles="featureflag.edit" href="@Url.ActionForMustache("Edit")" class="button primary" title="@Flags.EditFlag">
                     <icon name="EditAlt" label="@Flags.EditFlag" />
@@ -41,7 +40,6 @@
                     </a>
                 </nilla-confirm>
             </td>
-            <td>{{id}}</td>
             <td>{{name}}</td>
             <td>{{statusText}}</td>
         </data-body>

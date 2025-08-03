@@ -23,10 +23,10 @@ public sealed record FeatureFlagModel : IAuditedModel, IVersionedModel {
     public string Name { get; init; } = "";
 
     /// <summary>
-    /// Gets a value indicating whether the feature flag is enabled.
+    /// Gets a value indicating whether the feature flag is active.
     /// </summary>
-    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.Enabled))]
-    public bool IsEnabled { get; init; }
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.Active))]
+    public bool Status { get; init; }
 
     /// <summary>
     /// Gets a value indicating whether any or all requirements must be met.

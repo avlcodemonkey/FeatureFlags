@@ -14,7 +14,8 @@ public class FeatureFlag : IAuditedEntity, IVersionedEntity {
     [Required, StringLength(100)]
     public string Name { get; set; } = null!;
 
-    public bool IsEnabled { get; set; }
+    [DefaultValue(true)]
+    public bool Status { get; set; }
 
     /// <summary>
     /// Gets or sets the type of requirement associated with the current entity.

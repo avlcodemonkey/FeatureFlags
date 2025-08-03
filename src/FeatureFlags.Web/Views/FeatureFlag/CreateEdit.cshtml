@@ -19,7 +19,7 @@
         <div class="col col-6-lg">
             <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
                 <input-group for="Name" autofocus />
-                <checkbox-group for="IsEnabled" />
+                <checkbox-group for="Status" />
                 <select-group for="RequirementType" options="@(Enum.GetValues(typeof(RequirementType)).Cast<RequirementType>().Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }))" />
 
                 <input class="button primary" type="submit" value="@Core.Save">
