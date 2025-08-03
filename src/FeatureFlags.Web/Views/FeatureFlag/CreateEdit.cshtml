@@ -22,6 +22,22 @@
                 <checkbox-group for="Status" />
                 <select-group for="RequirementType" options="@(Enum.GetValues(typeof(RequirementType)).Cast<RequirementType>().Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }))" />
 
+                <nilla-copy-content>
+                    <button class="button primary" type="button" data-copy-button>
+                        <icon name="Copy" label="@Core.Copy" />
+                    </button>
+                    <div data-copy-container>
+                        <template data-copy-template>
+                            <div>
+                                <label>
+                                    Filter
+                                    <div class="input-group"><input maxlength="100" name="Filter" required type="text" value="1234 qwewqeqwe"></div>
+                                </label>
+                            </div>
+                        </template>
+                    </div>
+                </nilla-copy-content>
+
                 <input class="button primary" type="submit" value="@Core.Save">
             </form-content>
         </div>

@@ -31,7 +31,7 @@ class CopyToClipboard extends HTMLElement {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('nilla-copy', CopyToClipboard);
+    customElements.define('nilla-copy-to-clipboard', CopyToClipboard);
 }
 
 export default CopyToClipboard;
