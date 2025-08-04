@@ -1,0 +1,13 @@
+nilla-list {
+    [data-list-item] {
+        border-radius: 4px;
+        border: 1px solid var(--color-light-grey);
+        padding: 1rem;
+        width: 100%;
+        margin-bottom: 2rem;
+
+        [data-list-remove-button] {
+            padding: 1rem;
+        }
+    }
+}

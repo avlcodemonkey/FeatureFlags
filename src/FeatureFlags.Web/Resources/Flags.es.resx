@@ -195,4 +195,16 @@
   <data name="Active" xml:space="preserve">
     <value />
   </data>
+  <data name="ConfirmDeleteFilter" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value />
+  </data>
+  <data name="FilterIntro" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value />
+  </data>
 </root>
