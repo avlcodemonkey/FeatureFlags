@@ -11,6 +11,7 @@ import './components/DateFormatter';
 import './components/JsonFormatter';
 import './components/Autocomplete';
 import './components/CopyToClipboard';
+import './components/List';
 
 // import anything else
 import setupLuxbarToggle from './luxbar';

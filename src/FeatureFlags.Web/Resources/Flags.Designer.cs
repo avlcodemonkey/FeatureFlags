@@ -88,6 +88,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this filter?.
+        /// </summary>
+        public static string ConfirmDeleteFilter {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to disable this flag?.
         /// </summary>
         public static string ConfirmDisable {
@@ -111,6 +120,15 @@ namespace FeatureFlags.Resources {
         public static string CreateFlag {
             get {
                 return ResourceManager.GetString("CreateFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string Details {
+            get {
+                return ResourceManager.GetString("Details", resourceCulture);
             }
         }
         
@@ -201,6 +219,24 @@ namespace FeatureFlags.Resources {
         public static string ErrorSavingFlag {
             get {
                 return ResourceManager.GetString("ErrorSavingFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filters are conditions for determining the state of the feature flag.  Flags with no filters will always evaluate to false.  Create at least one filter to enable the flag..
+        /// </summary>
+        public static string FilterIntro {
+            get {
+                return ResourceManager.GetString("FilterIntro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filters.
+        /// </summary>
+        public static string Filters {
+            get {
+                return ResourceManager.GetString("Filters", resourceCulture);
             }
         }
         

@@ -1,5 +1,5 @@
 /**
- * Unit tests for nilla-copy.
+ * Unit tests for nilla-copy-to-clipboard.
  */
 
 import {
@@ -13,12 +13,12 @@ describe('CopyToClipboard', () => {
 
     beforeEach(() => {
         document.body.innerHTML = `
-            <nilla-copy>
+            <nilla-copy-to-clipboard>
                 <input data-copy-content value="copied value" />
                 <button data-copy-button>Copy</button>
-            </nilla-copy>
+            </nilla-copy-to-clipboard>
         `;
-        copyEl = document.querySelector('nilla-copy');
+        copyEl = document.querySelector('nilla-copy-to-clipboard');
         button = copyEl.querySelector('[data-copy-button]');
         input = copyEl.querySelector('[data-copy-content]');
     });

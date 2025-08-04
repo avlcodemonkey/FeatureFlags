@@ -15,15 +15,68 @@
 
     <partial name="_Alerts" />
 
-    <div class="row">
-        <div class="col col-6-lg">
-            <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
+    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
+        <h4>@Flags.Details</h4>
+        <hr />
+
+        <div class="row">
+            <div class="col col-6-lg">
                 <input-group for="Name" autofocus />
                 <checkbox-group for="Status" />
                 <select-group for="RequirementType" options="@(Enum.GetValues(typeof(RequirementType)).Cast<RequirementType>().Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }))" />
-
-                <input class="button primary" type="submit" value="@Core.Save">
-            </form-content>
+            </div>
         </div>
-    </div>
+        <hr class="mb-2" />
+
+        <div class="row">
+            <div class="col">
+                <nilla-list>
+                    <template data-list-template>
+                        <div data-list-item>
+                            @* @todo move into a partial that can be re-used to render existing filters *@
+                            <div class="text-right">
+                                <nilla-confirm>
+                                    <button class="button dark" type="button" data-list-remove-button data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmDeleteFilter">
+                                        <icon name="Delete" label="@Core.Delete" />
+                                    </button>
+                                </nilla-confirm>
+                            </div>
+                            <div>
+                                <label>
+                                    Filter
+                                    <div class="input-group"><input maxlength="100" name="Filter" required type="text" value="1234 qwewqeqwe"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="row">
+                        <div class="col">
+                            <h4>@Flags.Filters</h4>
+                        </div>
+                        <div class="col text-right">
+                            <button class="button primary" type="button" data-list-add-button>
+                                <icon name="Add" label="@Core.Add" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div data-list-empty-message>
+                        <i>@Flags.FilterIntro</i>
+                    </div>
+
+                    <div data-list-container>
+                        @* @todo render existing filters when editing *@
+                    </div>
+                </nilla-list>
+            </div>
+        </div>
+        <hr class="mb-2" />
+
+        <div class="row">
+            <div class="col">
+                <input class="button primary" type="submit" value="@Core.Save">
+            </div>
+        </div>
+    </form-content>
 </content>
