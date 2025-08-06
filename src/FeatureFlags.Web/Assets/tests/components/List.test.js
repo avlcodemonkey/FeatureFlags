@@ -60,7 +60,7 @@ function getEmptyMessage() {
 
 /**
  * Gets all item elements.
- * @returns {NodeListOf<HTMLElement>} Item elements
+ * @returns {HTMLElement[]} Item elements
  */
 function getItems() {
     return getContainer()?.querySelectorAll('[data-list-item]') ?? [];

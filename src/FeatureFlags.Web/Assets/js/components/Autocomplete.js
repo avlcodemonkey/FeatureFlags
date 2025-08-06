@@ -1,8 +1,8 @@
 import autocomplete from 'autocompleter';
-// @ts-ignore doesn't like this import but it builds fine
-import ky, { Options } from 'ky';
 import FetchError from './FetchError';
 import HttpHeaders from '../constants/HttpHeaders';
+import HttpMethods from '../constants/HttpMethods';
+import DefaultTimeout from '../constants/Fetch';
 
 /**
  * @typedef AutocompleteItem
@@ -59,18 +59,28 @@ class Autocomplete extends HTMLElement {
                     const headers = {};
                     headers[HttpHeaders.RequestedWith] = 'XMLHttpRequest';
 
-                    const options = /** @type {Options} */ ({
+                    const url = new URL(srcUrl, window.location.href);
+                    url.search = new URLSearchParams([['query', query]]).toString();
+
+                    const response = await fetch(url, {
+                        method: HttpMethods.GET,
+                        signal: AbortSignal.timeout(DefaultTimeout),
                         headers,
-                        searchParams: new URLSearchParams([['query', query]]),
                     });
 
-                    const json = await ky.get(srcUrl, options).json();
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    /** @type {object[]} */
+                    const json = await response.json();
                     if (!(json && Array.isArray(json))) {
                         throw new FetchError(`Request to '${srcUrl}' returned invalid response.`);
                     }
 
                     suggestions = json ?? [];
-                } catch {
+                } catch (ex) {
+                    console.log(ex);
                     suggestions = [];
                 }
                 update(suggestions);
