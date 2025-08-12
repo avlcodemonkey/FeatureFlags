@@ -1,4 +1,4 @@
-import autocomplete from 'autocompleter';
+import autocomplete from '../utils/autocomplete';
 import FetchError from './FetchError';
 import HttpHeaders from '../constants/HttpHeaders';
 import HttpMethods from '../constants/HttpMethods';
