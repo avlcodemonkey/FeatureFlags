@@ -16,9 +16,6 @@
         "stylelint-config-standard": "39.0.0",
         "vitest": "3.2.4"
     },
-    "dependencies": {
-        "esbuild": "0.25.8"
-    },
     "scripts": {
         "build": "node build.mjs",
         "watch": "node build.mjs --watch",
@@ -27,5 +24,8 @@
         "test": "vitest",
         "js:lint": "eslint .",
         "js:fix": "eslint --fix ."
+    },
+    "dependencies": {
+        "esbuild": "0.25.8"
     }
 }
