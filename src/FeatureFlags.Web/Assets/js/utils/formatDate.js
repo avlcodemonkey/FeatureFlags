@@ -4,7 +4,7 @@
  */
 
 /**
- * @typedef {Object} I18nSettings
+ * @typedef {object} I18nSettings
  * @property {[string, string]} amPm - AM/PM strings
  * @property {string[]} dayNames - Full day names
  * @property {string[]} dayNamesShort - Short day names
