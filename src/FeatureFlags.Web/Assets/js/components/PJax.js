@@ -1,10 +1,10 @@
-// @ts-ignore doesn't like this import but it builds fine
-import ky, { HTTPError } from 'ky';
 import BaseComponent from './BaseComponent';
 import { getResponseBody, isJson } from '../utils/response';
 import HttpMethods from '../constants/HttpMethods';
 import HttpHeaders from '../constants/HttpHeaders';
+import DefaultTimeout from '../constants/Fetch';
 import NillaInfo from './InfoDialog';
+import FetchError from './FetchError';
 
 /**
  * Enum for identifiers to query DOM elements.
@@ -249,10 +249,15 @@ class PJax extends BaseComponent {
         url.searchParams.set('_t', `${Date.now()}`);
 
         try {
-            const response = await ky(url, {
+            const response = await fetch(url, {
                 method,
+                signal: AbortSignal.timeout(DefaultTimeout),
                 headers: this.buildRequestHeaders(),
             });
+
+            if (!response.ok) {
+                throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
+            }
 
             await this.processResponse(url, updateHistory, response);
         } catch (error) {
@@ -272,11 +277,16 @@ class PJax extends BaseComponent {
         this.showLoadingIndicator();
 
         try {
-            const response = await ky(url, {
+            const response = await fetch(url, {
                 method,
+                signal: AbortSignal.timeout(DefaultTimeout),
                 headers: this.buildRequestHeaders(),
                 body: formData,
             });
+
+            if (!response.ok) {
+                throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
+            }
 
             await this.processResponse(url, true, response);
         } catch (error) {
@@ -288,7 +298,7 @@ class PJax extends BaseComponent {
 
     /**
      * Creates headers to use with requests to server.
-     * @returns {object} Headers for ky request
+     * @returns {object} Headers for fetch request
      */
     buildRequestHeaders() {
         const headers = {};
@@ -372,11 +382,10 @@ class PJax extends BaseComponent {
 
     /**
      * Handle response errors.
-     * @param {HTTPError} error Error from ky.
+     * @param {FetchError} error Error from fetch.
      */
     async handleResponseError(error) {
         console.error(error.message);
-
         this.showErrorDialog();
     }
 

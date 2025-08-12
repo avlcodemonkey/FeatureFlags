@@ -1,5 +1,5 @@
 /**
- * Error wrapper for use with ky.
+ * Error wrapper for use with fetch.
  */
 class FetchError extends Error {
 }

@@ -1,6 +1,7 @@
-// @ts-ignore doesn't like this import but it builds fine
-import ky from 'ky';
 import HttpHeaders from '../constants/HttpHeaders';
+import HttpMethods from '../constants/HttpMethods';
+import DefaultTimeout from '../constants/Fetch';
+import FetchError from '../components/FetchError';
 
 /**
  * Log errors to the backend.
@@ -25,10 +26,19 @@ async function onError(msg, url, lineNum, columnNum, error) {
 
     // save error message to server
     try {
-        // @ts-ignore Header is fine as a plain ole object
-        await ky.post('/Error/LogJavascriptError', { headers, body });
-    } catch {
+        const response = await fetch('/Error/LogJavascriptError', {
+            method: HttpMethods.POST,
+            signal: AbortSignal.timeout(DefaultTimeout),
+            headers,
+            body,
+        });
+
+        if (!response.ok) {
+            throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
+        }
+    } catch (ex) {
         console.error(`Unable to log error to server: ${msg}`);
+        console.error(ex);
     }
 }
 
