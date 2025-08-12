@@ -63,10 +63,11 @@ Github actions are used for continuous integration.  The repo is configured to o
     - ~~Add api key in appsettings.~~
 - ~~Use new feature definition provider in web project.~~
 - Add UI support for filters
-    - User can pick one type of filter for each feature flag?
-    - Percentage of users - just pick a percentage
-    - Time window - pick start and end time
-    - Targeting - set patterns to include or exclude users like `*@domain.com`
+    - Users can add as many filters as they want
+    - Percentage of users - just pick a percentage using a range input
+    - Time window - pick start and end time, recurrence
+    - Targeting - set patterns to include or exclude users like `email@domain.com`
+        - Allow targeting users by email or group/role
 - Persistent percentage custom filter
     - Like built in percentage but saves user to database so they always get the same value
     - Build UI to support this
