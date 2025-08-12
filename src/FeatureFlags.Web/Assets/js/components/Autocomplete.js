@@ -69,7 +69,7 @@ class Autocomplete extends HTMLElement {
                     });
 
                     if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
                     }
 
                     /** @type {object[]} */
@@ -80,7 +80,7 @@ class Autocomplete extends HTMLElement {
 
                     suggestions = json ?? [];
                 } catch (ex) {
-                    console.log(ex);
+                    console.error(ex);
                     suggestions = [];
                 }
                 update(suggestions);

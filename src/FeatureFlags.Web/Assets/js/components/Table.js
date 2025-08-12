@@ -1,8 +1,9 @@
-// @ts-ignore VS doesn't like this import but it builds fine
-import ky, { Options } from 'ky';
+/* global RequestInit */
+
 import BaseComponent from './BaseComponent';
 import FetchError from './FetchError';
 import HttpHeaders from '../constants/HttpHeaders';
+import DefaultTimeout from '../constants/Fetch';
 import TableSort from './TableSort';
 import TableSortDirection from '../constants/TableSortDirection';
 import TableSettings from '../constants/TableSettings';
@@ -283,11 +284,13 @@ class Table extends BaseComponent {
         // now request new data
         try {
             let url = this.srcUrl;
+
             const headers = {};
             headers[HttpHeaders.RequestedWith] = 'XMLHttpRequest';
 
-            const options = /** @type {Options} */ ({
+            const options = /** @type {RequestInit} */ ({
                 headers,
+                signal: AbortSignal.timeout(DefaultTimeout),
             });
 
             if (this.srcForm) {
@@ -301,13 +304,20 @@ class Table extends BaseComponent {
                 }
             }
 
-            const json = await ky(url, options).json();
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            /** @type {object[] } */
+            const json = await response.json();
             if (!(json && Array.isArray(json))) {
                 throw new FetchError(`Request to '${this.srcUrl}' returned invalid response.`);
             }
 
             this.rows = json.map((x, index) => ({ ...x, _index: index })) ?? [];
-        } catch {
+        } catch (ex) {
+            console.error(ex);
             this.rows = [];
             this.error = true;
         } finally {

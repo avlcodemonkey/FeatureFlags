@@ -1,6 +1,7 @@
 import HttpHeaders from '../constants/HttpHeaders';
 import HttpMethods from '../constants/HttpMethods';
 import DefaultTimeout from '../constants/Fetch';
+import FetchError from '../components/FetchError';
 
 /**
  * Log errors to the backend.
@@ -33,7 +34,7 @@ async function onError(msg, url, lineNum, columnNum, error) {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
         }
     } catch (ex) {
         console.error(`Unable to log error to server: ${msg}`);
