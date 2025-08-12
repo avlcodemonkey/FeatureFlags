@@ -28,7 +28,6 @@ public static class AuditLogServiceExtensions {
     public static IQueryable<AuditLogSearchResultModel> SelectAsSearchResultModel(this IQueryable<AuditLog> query)
         => query.Select(x => new AuditLogSearchResultModel {
             Id = x.Id, BatchId = x.BatchId, Entity = x.Entity, State = x.State.ToString(),
-            UniversalDate = x.Date.ToString("u"),
-            Name = NameHelper.DisplayName(x.User == null ? null : x.User.Name, x.User == null ? null : x.User.Email)
+            Date = x.Date, Name = NameHelper.DisplayName(x.User == null ? null : x.User.Name, x.User == null ? null : x.User.Email)
         });
 }

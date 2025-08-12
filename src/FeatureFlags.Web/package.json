@@ -27,7 +27,6 @@
         "js:fix": "eslint --fix ."
     },
     "dependencies": {
-        "autocompleter": "9.3.2",
-        "fecha": "4.2.3",
+        "autocompleter": "9.3.2"
     }
 }

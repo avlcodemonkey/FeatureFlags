@@ -54,7 +54,7 @@
     <data-table key="auditLogs" src-form="auditLogSearch" max-results="AuditLogService.MaxResults">
         <data-head>
             <th style="width:@Html.Width(ColumnWidth.SingleIcon)px"></th>
-            <th data-property="universalDate">@AuditLogs.Date</th>
+            <th data-property="date">@AuditLogs.Date</th>
             <th data-property="name">@AuditLogs.Name</th>
             <th data-property="state">@AuditLogs.State</th>
             <th data-property="entity">@AuditLogs.Entity</th>
@@ -67,7 +67,7 @@
                 </a>
             </td>
             @* @todo replace this date-format when a user setting is added*@
-            <td><nilla-date data-date-format="MM/DD/YYYY hh:mm:ss A">{{universalDate}}</nilla-date></td>
+            <td><nilla-date data-date-format="YYYY-MM-DD hh:mm:ss A">{{date}}</nilla-date></td>
             <td>{{name}}</td>
             <td>{{state}}</td>
             <td>{{entity}}</td>

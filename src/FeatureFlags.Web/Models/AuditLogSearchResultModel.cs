@@ -27,7 +27,7 @@ public sealed record AuditLogSearchResultModel {
     /// <summary>
     /// Gets the universal date of the audit log entry as a string.
     /// </summary>
-    public string UniversalDate { get; init; } = "";
+    public DateTime Date { get; init; }
 
     /// <summary>
     /// Gets the display name associated with the audit log entry.
