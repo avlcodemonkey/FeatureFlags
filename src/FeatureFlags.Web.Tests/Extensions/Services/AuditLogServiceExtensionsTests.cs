@@ -111,7 +111,7 @@ public class AuditLogServiceExtensionsTests {
 
         Assert.Equal(auditLog.Id, singleModel.Id);
         Assert.Equal(auditLog.BatchId, singleModel.BatchId);
-        Assert.Equal(auditLog.Date.ToString("u"), singleModel.UniversalDate);
+        Assert.Equal(auditLog.Date, singleModel.Date);
         Assert.Equal(auditLog.Entity, singleModel.Entity);
         Assert.Equal(auditLog.State.ToString(), singleModel.State);
         Assert.Equal(NameHelper.DisplayName(user.Name, user.Email), singleModel.Name);
@@ -147,8 +147,8 @@ public class AuditLogServiceExtensionsTests {
             x => Assert.Equal(auditLog2.BatchId, x.BatchId)
         );
         Assert.Collection(models,
-            x => Assert.Equal(auditLog1.Date.ToString("u"), x.UniversalDate),
-            x => Assert.Equal(auditLog2.Date.ToString("u"), x.UniversalDate)
+            x => Assert.Equal(auditLog1.Date, x.Date),
+            x => Assert.Equal(auditLog2.Date, x.Date)
         );
         Assert.Collection(models,
             x => Assert.Equal(auditLog1.Entity, x.Entity),

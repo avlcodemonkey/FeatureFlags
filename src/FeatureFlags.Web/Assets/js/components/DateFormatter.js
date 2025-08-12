@@ -1,4 +1,4 @@
-import { format } from 'fecha';
+import { formatDate } from '../utils/formatDate';
 
 /**
  * Web component for displaying dates in a friendly way.
@@ -13,9 +13,14 @@ class DateFormatter extends HTMLElement {
         this.dateFormat = this.dataset.dateFormat;
         if (this.textContent) {
             try {
-                const date = new Date(this.textContent);
+                // backend will always return date in UTC. let JS convert to local
+                let dateString = this.textContent;
+                if (!dateString.endsWith('Z')) {
+                    dateString = `${dateString}Z`;
+                }
+                const date = new Date(dateString);
                 if (date && date.toString() !== 'Invalid Date') {
-                    this.textContent = this.dateFormat ? format(date, this.dateFormat) : date.toLocaleString();
+                    this.textContent = this.dateFormat ? formatDate(date, this.dateFormat) : date.toLocaleString();
                 }
             } catch {
                 /* empty */

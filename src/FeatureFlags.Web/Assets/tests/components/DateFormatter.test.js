@@ -1,21 +1,20 @@
 /**
  * Unit tests for nilla-date.
- * Doesn't try to test 3rd party fecha library.
  */
 
 import {
     describe, expect, it,
 } from 'vitest';
-import { format } from 'fecha';
+import { formatDate } from '../../js/utils/formatDate';
 import { isRendered } from '../utils';
 import '../../js/components/DateFormatter';
 
 const dateString = '2024-02-27 01:23:45';
-const testDate = new Date(dateString);
+const testDate = new Date(`${dateString}z`);
 const localeDateString = testDate.toLocaleString();
 const invalidDateString = 'gibberish';
 const dateFormat = 'YYYY-MM-DD hh:mm:ss.SSS A';
-const formattedDateString = format(testDate, dateFormat);
+const formattedDateString = formatDate(testDate, dateFormat);
 
 /**
  * Gets the date formatter element.
