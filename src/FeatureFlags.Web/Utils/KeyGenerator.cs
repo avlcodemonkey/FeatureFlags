@@ -14,13 +14,13 @@ public static class KeyGenerator {
     private const int _LengthOfKey = 32;
 
     /// <summary>
-    /// Generates a unique token of the specified size using cryptographic random numbers.
+    /// Generates a token of the specified size using cryptographic random numbers.
     /// </summary>
     /// <remarks>The method uses a cryptographic random number generator to ensure the uniqueness and
     /// unpredictability of the key. The generated key consists of characters from a predefined set.</remarks>
     /// <param name="size">The length of the key to generate. Must be a positive integer.</param>
     /// <returns>A string representing the unique key composed of randomly selected characters.</returns>
-    public static string GetUniqueToken(int size) {
+    public static string GenerateToken(int size) {
         var data = new byte[4 * size];
         using (var crypto = RandomNumberGenerator.Create()) {
             crypto.GetBytes(data);
@@ -37,18 +37,20 @@ public static class KeyGenerator {
     }
 
     /// <summary>
-    /// Generates an API key using cryptographic random numbers.
+    /// Generates a key using cryptographic random numbers.
     /// </summary>
+    /// <param name="prefix"">An optional prefix to prepend to the generated key. If not provided, a default prefix is used.</param>
     /// <remarks>The method uses a cryptographic random number generator to ensure the uniqueness and
     /// unpredictability of the key. The generated key consists of characters from a predefined set.</remarks>
     /// <returns>A string representing the unique key composed of randomly selected characters.</returns>
-    public static string GetApiKey() {
+    public static string GenerateKey(string? prefix = null) {
         var bytes = RandomNumberGenerator.GetBytes(_NumberOfSecureBytesToGenerate);
         var base64String = Convert.ToBase64String(bytes)
             .Replace("+", "-")
             .Replace("/", "_");
-        var keyLength = _LengthOfKey - _Prefix.Length;
-        return _Prefix + base64String[..keyLength];
+        prefix ??= _Prefix;
+        var keyLength = _LengthOfKey - prefix.Length;
+        return prefix + base64String[..keyLength];
     }
 
     /// <summary>

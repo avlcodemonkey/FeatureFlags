@@ -556,11 +556,12 @@ public class UserServiceTests {
         var userId = -9999;
 
         // Act
-        (var success, var token) = await _UserService.CreateUserTokenAsync(userId);
+        (var success, var token, var hiddenToken) = await _UserService.CreateUserTokenAsync(userId);
 
         // Assert
         Assert.False(success);
         Assert.Null(token);
+        Assert.Null(hiddenToken);
     }
 
     [Fact]
@@ -569,12 +570,14 @@ public class UserServiceTests {
         var user = _Fixture.User;
 
         //// Act
-        (var success, var token) = await _UserService.CreateUserTokenAsync(user.Id);
+        (var success, var token, var hiddenToken) = await _UserService.CreateUserTokenAsync(user.Id);
 
         //// Assert
         Assert.True(success);
         Assert.NotNull(token);
         Assert.NotEmpty(token);
+        Assert.NotNull(hiddenToken);
+        Assert.NotEmpty(hiddenToken);
     }
 
     [Fact]
@@ -589,12 +592,13 @@ public class UserServiceTests {
         }
 
         // Act
-        (var _, var token) = await _UserService.CreateUserTokenAsync(user.Id);
+        (var _, var token, var hiddenToken) = await _UserService.CreateUserTokenAsync(user.Id);
         var newToken = await _Fixture.CreateContext().UserTokens.FirstOrDefaultAsync(x => x.UserId == user.Id && x.Token == token);
 
         // Assert
         Assert.NotNull(newToken);
         Assert.Equal(token, newToken.Token);
+        Assert.Equal(hiddenToken, newToken.HiddenToken);
     }
 
     [Fact]
@@ -604,7 +608,7 @@ public class UserServiceTests {
         var (user, _) = await CreateUserAndTokenAsync("deleteToken@aaa.com", token, DateTime.UtcNow);
 
         // Act
-        (var success, var newToken) = await _UserService.CreateUserTokenAsync(user.Id);
+        (var success, var newToken, var _) = await _UserService.CreateUserTokenAsync(user.Id);
         UserToken? originalToken = null;
         UserToken? newUserToken = null;
         using (var dbContext = _Fixture.CreateContext()) {
@@ -623,6 +627,8 @@ public class UserServiceTests {
         Assert.Null(originalToken);
         Assert.NotNull(newToken);
         Assert.NotEqual(token, newToken);
+        Assert.NotNull(newUserToken);
+        Assert.Equal(newToken, newUserToken.Token);
     }
 
     [Fact]

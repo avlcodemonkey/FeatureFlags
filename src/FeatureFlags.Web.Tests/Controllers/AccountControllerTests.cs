@@ -38,6 +38,7 @@ public class AccountControllerTests {
 
     private readonly string _Url = "/Account/AccessDenied";
     private readonly string _Token = "ABCDEFGH";
+    private readonly string _HiddenToken = "HiddenToken";
     private readonly string _InvalidToken = "invalid1";
     private readonly string _DefaultReturnUrl = "https://example.com";
 
@@ -47,7 +48,7 @@ public class AccountControllerTests {
         _MockUserService.Setup(x => x.SaveUserAsync(It.IsAny<UserModel>(), It.IsAny<CancellationToken>())).ReturnsAsync((true, Account.UserRegistered));
         _MockUserService.Setup(x => x.GetUserByEmailAsync(_UserForLogin.Email, It.IsAny<CancellationToken>())).ReturnsAsync(_UserForLogin);
         _MockUserService.Setup(x => x.GetUserByEmailAsync(_UserForFailure.Email, It.IsAny<CancellationToken>())).ReturnsAsync(null as UserModel);
-        _MockUserService.Setup(x => x.CreateUserTokenAsync(_UserForLogin.Id, It.IsAny<CancellationToken>())).ReturnsAsync((true, _Token));
+        _MockUserService.Setup(x => x.CreateUserTokenAsync(_UserForLogin.Id, It.IsAny<CancellationToken>())).ReturnsAsync((true, _Token, _HiddenToken));
         _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForLogin.Email, _Token, It.IsAny<CancellationToken>())).ReturnsAsync((true, ""));
         _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForFailure.Email, _Token, It.IsAny<CancellationToken>())).ReturnsAsync((true, ""));
         _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForFailure.Email, _InvalidToken, It.IsAny<CancellationToken>())).ReturnsAsync((false, Core.ErrorGeneric));
@@ -365,7 +366,7 @@ public class AccountControllerTests {
         var model = new LoginModel { Email = _UserForLogin.Email, ReturnUrl = _DefaultReturnUrl };
         var mockUserService = new Mock<IUserService>();
         mockUserService.Setup(x => x.GetUserByEmailAsync(_UserForLogin.Email, It.IsAny<CancellationToken>())).ReturnsAsync(_UserForLogin);
-        mockUserService.Setup(x => x.CreateUserTokenAsync(_UserForLogin.Id, It.IsAny<CancellationToken>())).ReturnsAsync((false, Core.ErrorGeneric));
+        mockUserService.Setup(x => x.CreateUserTokenAsync(_UserForLogin.Id, It.IsAny<CancellationToken>())).ReturnsAsync((false, "", ""));
         var controller = new AccountController(mockUserService.Object, _MockLanguageService.Object, _MockEmailService.Object, _MockViewService.Object, _MockRoleService.Object, _MockLogger.Object) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext() {

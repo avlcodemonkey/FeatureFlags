@@ -114,14 +114,14 @@ public class AccountController(IUserService userService, ILanguageService langua
             return ViewWithError(_LoginView, model, Account.ErrorInvalidUser);
         }
 
-        (var success, var token) = await _UserService.CreateUserTokenAsync(user.Id, cancellationToken);
-        if (!success || string.IsNullOrWhiteSpace(token)) {
+        (var success, var token, var hiddenToken) = await _UserService.CreateUserTokenAsync(user.Id, cancellationToken);
+        if (!success || string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(hiddenToken)) {
             return ViewWithError(_LoginView, model, Account.ErrorSendingToken);
         }
 
         // send token in email
         var emailBody = await _ViewService.RenderViewToStringAsync(_TokenEmailView,
-            new LoginTokenModel { Email = model.Email, Token = token }, ControllerContext, true);
+            new LoginTokenModel { Email = model.Email, Token = token, HiddenToken = hiddenToken }, ControllerContext, true);
         if (!await _EmailService.SendEmailAsync(user.Email, user.Name, Account.TokenEmailSubject, emailBody, cancellationToken)) {
             return ViewWithError(_LoginView, model, Account.ErrorSendingToken);
         }

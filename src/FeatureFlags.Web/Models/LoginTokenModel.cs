@@ -23,6 +23,13 @@ public sealed record LoginTokenModel {
     public string Token { get; init; } = "";
 
     /// <summary>
+    /// Gets the hidden token from the hidden input or email sent to user.
+    /// </summary>
+    [Display(ResourceType = typeof(Account), Name = nameof(Account.LoginCode))]
+    [IsRequired, IsStringLength(100)]
+    public string HiddenToken { get; init; } = "";
+
+    /// <summary>
     /// Gets the URL to redirect to after successful login.
     /// </summary>
     public string? ReturnUrl { get; init; }

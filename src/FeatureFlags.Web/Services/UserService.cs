@@ -121,23 +121,25 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
     }
 
     /// <inheritdoc />
-    public async Task<(bool success, string? token)> CreateUserTokenAsync(int id, CancellationToken cancellationToken = default) {
+    public async Task<(bool success, string? token, string? hiddenToken)> CreateUserTokenAsync(int id, CancellationToken cancellationToken = default) {
         var user = await _DbContext.Users.FirstOrDefaultAsync(x => x.Id == id && x.Status, cancellationToken);
         if (user == null) {
-            return (false, null);
+            return (false, null, null);
         }
 
         var existingTokens = await _DbContext.UserTokens.Where(x => x.UserId == user.Id).ToListAsync(cancellationToken);
         _DbContext.UserTokens.RemoveRange(existingTokens);
 
-        var token = KeyGenerator.GetUniqueToken(Auth.TokenSize);
+        var token = KeyGenerator.GenerateToken(Auth.TokenSize);
+        var hiddenToken = KeyGenerator.GenerateKey("HT");
         var userToken = new UserToken {
-            UserId = user.Id, Token = token, ExpirationDate = DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Attempts = 0
+            UserId = user.Id, Token = token, HiddenToken = hiddenToken,
+            ExpirationDate = DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Attempts = 0
         };
 
         _DbContext.UserTokens.Add(userToken);
 
-        return (await _DbContext.SaveChangesAsync(cancellationToken) > 0) ? (true, token) : (false, null);
+        return (await _DbContext.SaveChangesAsync(cancellationToken) > 0) ? (true, token, hiddenToken) : (false, null, null);
     }
 
     /// <inheritdoc />

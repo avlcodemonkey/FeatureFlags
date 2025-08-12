@@ -13,8 +13,17 @@ public class UserToken {
     [Required]
     public int UserId { get; set; }
 
+    /// <summary>
+    /// Token user will enter to verify their identity.
+    /// </summary>
     [StringLength(100)]
-    public string? Token { get; set; }
+    public string Token { get; set; } = "";
+
+    /// <summary>
+    /// Second hidden token to make man-in-the-middle attacks harder.
+    /// </summary>
+    [StringLength(100)]
+    public string HiddenToken { get; set; } = "";
 
     public DateTime? ExpirationDate { get; set; }
 
