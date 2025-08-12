@@ -14,12 +14,12 @@
     <partial name="_Alerts" />
 
     <div class="container mb-2">
-        <details>
+        <details open>
             <summary><b>@AuditLogs.Filters</b></summary>
             <form method="post" action="@Url.Action(nameof(AuditLogController.Search), nameof(AuditLogController).StripController())" id="auditLogSearch" class="form-compact">
                 <div class="row">
                     <div class="col">
-                        <input-group for="StartDate" autofocus />
+                        <input-group for="StartDate" />
                     </div>
                     <div class="col">
                         <input-group for="EndDate" />

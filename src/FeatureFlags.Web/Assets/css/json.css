@@ -8,29 +8,8 @@
     transition: background-color 400ms;
 }
 
-.json-key, .json-string, .json-number, .json-boolean, .json-null, .json-mark, a.json-link, ol.json-lines > li {
+.json-key, .json-string, .json-number, .json-boolean, .json-null, .json-mark, ol.json-lines > li {
     transition: all 400ms;
-}
-
-a.json-link {
-    color: purple;
-    text-decoration: none;
-    border-bottom: 1px solid;
-    outline: none;
-}
-
-a.json-link:visited {
-    color: slategray;
-}
-
-a.json-link:active {
-    color: slategray;
-}
-
-a.json-link:hover {
-    color: blueviolet;
-    background-color: transparent;
-    outline: none;
 }
 
 ol.json-lines {
@@ -87,4 +66,3 @@ ol.json-lines > li:hover {
 .json-mark {
     color: black;
 }
-

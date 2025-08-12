@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "name": "FeatureFlags",
+    "name": "avlcodemonkey-feature-flags",
     "private": true,
     "engines": {
         "node": "^22.0.0"
@@ -29,6 +29,5 @@
     "dependencies": {
         "autocompleter": "9.3.2",
         "fecha": "4.2.3",
-        "pretty-print-json": "3.0.5"
     }
 }
