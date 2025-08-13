@@ -2,11 +2,18 @@
  * Unit tests for Luxbar toggle functionality.
  */
 
-import {
-    describe, expect, it, beforeEach,
-} from 'vitest';
-import { isRendered, tick } from './utils';
-import setupLuxbarToggle from '../js/luxbar';
+import { JSDOM } from 'jsdom';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { isRendered, tick } from './utils.js';
+import setupLuxbarToggle from '../js/luxbar.js';
+
+// Setup jsdom globals
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
+global.window = dom.window;
+global.document = dom.window.document;
+global.HTMLElement = dom.window.HTMLElement;
+global.HTMLInputElement = dom.window.HTMLInputElement;
 
 // luxbar-checkbox being checked by default simulates the menu being open on a mobile device
 const menuHtml = `
@@ -64,7 +71,7 @@ function getDropdownLink() {
 }
 
 /**
- * Gets the active menu item link.
+ * Gets the brand link.
  * @returns {HTMLElement|null} Menu item link.
  */
 function getBrandLink() {
@@ -72,15 +79,15 @@ function getBrandLink() {
 }
 
 /**
- * Gets the active menu item link.
+ * Gets the dropdown child link.
  * @returns {HTMLElement|null} Menu item link.
  */
 function getDropdownChildLink() {
     return getMenu().querySelector('[data-child-link] a');
 }
 
-describe('luxbar', async () => {
-    beforeEach(async () => {
+test.describe('luxbar', () => {
+    test.beforeEach(async () => {
         document.body.innerHTML = menuHtml;
         await isRendered(getMenu);
 
@@ -97,43 +104,43 @@ describe('luxbar', async () => {
         await tick();
     });
 
-    it('should uncheck checkbox when clicking menu item for new page', async () => {
+    test('should uncheck checkbox when clicking menu item for new page', async () => {
         const homeLink = getActiveLink();
         const checkbox = getCheckbox();
 
         homeLink.click();
         await tick();
 
-        expect(homeLink).toBeTruthy();
-        expect(checkbox).toBeTruthy();
-        expect(checkbox.checked).toBeFalsy();
+        assert.ok(homeLink);
+        assert.ok(checkbox);
+        assert.strictEqual(checkbox.checked, false);
     });
 
-    it('should not uncheck checkbox when clicking menu item for current page', async () => {
+    test('should not uncheck checkbox when clicking menu item for current page', async () => {
         const brandLink = getBrandLink();
         const checkbox = getCheckbox();
 
         brandLink.click();
         await tick();
 
-        expect(brandLink).toBeTruthy();
-        expect(checkbox).toBeTruthy();
-        expect(checkbox.checked).toBeTruthy();
+        assert.ok(brandLink);
+        assert.ok(checkbox);
+        assert.strictEqual(checkbox.checked, true);
     });
 
-    it('should not uncheck checkbox when clicking dropdown menu item', async () => {
+    test('should not uncheck checkbox when clicking dropdown menu item', async () => {
         const dropdownLink = getDropdownLink();
         const checkbox = getCheckbox();
 
         dropdownLink.click();
         await tick();
 
-        expect(dropdownLink).toBeTruthy();
-        expect(checkbox).toBeTruthy();
-        expect(checkbox.checked).toBeTruthy();
+        assert.ok(dropdownLink);
+        assert.ok(checkbox);
+        assert.strictEqual(checkbox.checked, true);
     });
 
-    it('should uncheck checkbox when clicking dropdown menu item for new page', async () => {
+    test('should uncheck checkbox when clicking dropdown menu item for new page', async () => {
         const dropdownLink = getDropdownLink();
         const dropdownChildLink = getDropdownChildLink();
         const checkbox = getCheckbox();
@@ -142,8 +149,8 @@ describe('luxbar', async () => {
         dropdownChildLink.click();
         await tick();
 
-        expect(dropdownChildLink).toBeTruthy();
-        expect(checkbox).toBeTruthy();
-        expect(checkbox.checked).toBeFalsy();
+        assert.ok(dropdownChildLink);
+        assert.ok(checkbox);
+        assert.strictEqual(checkbox.checked, false);
     });
 });

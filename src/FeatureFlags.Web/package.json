@@ -5,6 +5,7 @@
     "engines": {
         "node": "^22.0.0"
     },
+    "type": "module",
     "devDependencies": {
         "@eslint/js": "9.33.0",
         "@stylistic/eslint-plugin": "5.2.3",
