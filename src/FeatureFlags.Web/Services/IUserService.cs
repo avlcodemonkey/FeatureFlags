@@ -75,15 +75,16 @@ public interface IUserService {
     /// </summary>
     /// <param name="id">ID of user to create token for.</param>
     /// <param name="cancellationToken">Token to monitor for cancellation requests.</param>
-    /// <returns>Tuple indicating success and new token value.</returns>
-    Task<(bool success, string? token)> CreateUserTokenAsync(int id, CancellationToken cancellationToken = default);
+    /// <returns>Tuple indicating success, new token value, and hidden token value.</returns>
+    Task<(bool success, string? token, string? secondaryToken)> CreateUserTokenAsync(int id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Verifies a user token for login or authentication.
     /// </summary>
     /// <param name="email">Email address of user.</param>
     /// <param name="token">Token to verify.</param>
+    /// <param name="secondaryToken">Secondary hidden token to verify.</param>
     /// <param name="cancellationToken">Token to monitor for cancellation requests.</param>
     /// <returns>Tuple indicating success and message.</returns>
-    Task<(bool success, string message)> VerifyUserTokenAsync(string email, string token, CancellationToken cancellationToken = default);
+    Task<(bool success, string message)> VerifyUserTokenAsync(string email, string token, string secondaryToken, CancellationToken cancellationToken = default);
 }

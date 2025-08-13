@@ -121,27 +121,29 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
     }
 
     /// <inheritdoc />
-    public async Task<(bool success, string? token)> CreateUserTokenAsync(int id, CancellationToken cancellationToken = default) {
+    public async Task<(bool success, string? token, string? secondaryToken)> CreateUserTokenAsync(int id, CancellationToken cancellationToken = default) {
         var user = await _DbContext.Users.FirstOrDefaultAsync(x => x.Id == id && x.Status, cancellationToken);
         if (user == null) {
-            return (false, null);
+            return (false, null, null);
         }
 
         var existingTokens = await _DbContext.UserTokens.Where(x => x.UserId == user.Id).ToListAsync(cancellationToken);
         _DbContext.UserTokens.RemoveRange(existingTokens);
 
-        var token = KeyGenerator.GetUniqueToken(Auth.TokenSize);
+        var token = KeyGenerator.GenerateToken(Auth.TokenSize);
+        var secondaryToken = KeyGenerator.GenerateKey("ST-");
         var userToken = new UserToken {
-            UserId = user.Id, Token = token, ExpirationDate = DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Attempts = 0
+            UserId = user.Id, Token = token, SecondaryToken = secondaryToken,
+            ExpirationDate = DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Attempts = 0
         };
 
         _DbContext.UserTokens.Add(userToken);
 
-        return (await _DbContext.SaveChangesAsync(cancellationToken) > 0) ? (true, token) : (false, null);
+        return (await _DbContext.SaveChangesAsync(cancellationToken) > 0) ? (true, token, secondaryToken) : (false, null, null);
     }
 
     /// <inheritdoc />
-    public async Task<(bool success, string message)> VerifyUserTokenAsync(string email, string token, CancellationToken cancellationToken = default) {
+    public async Task<(bool success, string message)> VerifyUserTokenAsync(string email, string token, string secondaryToken, CancellationToken cancellationToken = default) {
         var userToken = await _DbContext.UserTokens.FirstOrDefaultAsync(x => x.User.Email.ToLower() == email.ToLower() && x.User.Status, cancellationToken);
         if (userToken == null) {
             return (false, Core.ErrorGeneric);
@@ -153,7 +155,7 @@ public sealed class UserService(FeatureFlagsDbContext dbContext, IHttpContextAcc
             return (false, await _DbContext.SaveChangesAsync(cancellationToken) > 0 ? Account.ErrorTokenDeleted : Core.ErrorGeneric);
         }
 
-        if (userToken.Token != token) {
+        if (userToken.Token != token || userToken.SecondaryToken != secondaryToken) {
             // token is wrong
             if (userToken.Attempts + 1 >= Auth.TokenMaxAttempts) {
                 // too many attempts for this user, delete token

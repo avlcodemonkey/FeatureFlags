@@ -38,7 +38,9 @@ public class AccountControllerTests {
 
     private readonly string _Url = "/Account/AccessDenied";
     private readonly string _Token = "ABCDEFGH";
+    private readonly string _SecondaryToken = "SecondaryToken";
     private readonly string _InvalidToken = "invalid1";
+    private readonly string _InvalidSecondaryToken = "invalidSecondary1";
     private readonly string _DefaultReturnUrl = "https://example.com";
 
     public AccountControllerTests() {
@@ -47,10 +49,10 @@ public class AccountControllerTests {
         _MockUserService.Setup(x => x.SaveUserAsync(It.IsAny<UserModel>(), It.IsAny<CancellationToken>())).ReturnsAsync((true, Account.UserRegistered));
         _MockUserService.Setup(x => x.GetUserByEmailAsync(_UserForLogin.Email, It.IsAny<CancellationToken>())).ReturnsAsync(_UserForLogin);
         _MockUserService.Setup(x => x.GetUserByEmailAsync(_UserForFailure.Email, It.IsAny<CancellationToken>())).ReturnsAsync(null as UserModel);
-        _MockUserService.Setup(x => x.CreateUserTokenAsync(_UserForLogin.Id, It.IsAny<CancellationToken>())).ReturnsAsync((true, _Token));
-        _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForLogin.Email, _Token, It.IsAny<CancellationToken>())).ReturnsAsync((true, ""));
-        _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForFailure.Email, _Token, It.IsAny<CancellationToken>())).ReturnsAsync((true, ""));
-        _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForFailure.Email, _InvalidToken, It.IsAny<CancellationToken>())).ReturnsAsync((false, Core.ErrorGeneric));
+        _MockUserService.Setup(x => x.CreateUserTokenAsync(_UserForLogin.Id, It.IsAny<CancellationToken>())).ReturnsAsync((true, _Token, _SecondaryToken));
+        _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForLogin.Email, _Token, _SecondaryToken, It.IsAny<CancellationToken>())).ReturnsAsync((true, ""));
+        _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForFailure.Email, _Token, _SecondaryToken, It.IsAny<CancellationToken>())).ReturnsAsync((true, ""));
+        _MockUserService.Setup(x => x.VerifyUserTokenAsync(_UserForFailure.Email, _InvalidToken, _InvalidSecondaryToken, It.IsAny<CancellationToken>())).ReturnsAsync((false, Core.ErrorGeneric));
 
         _MockEmailService.Setup(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
@@ -365,7 +367,7 @@ public class AccountControllerTests {
         var model = new LoginModel { Email = _UserForLogin.Email, ReturnUrl = _DefaultReturnUrl };
         var mockUserService = new Mock<IUserService>();
         mockUserService.Setup(x => x.GetUserByEmailAsync(_UserForLogin.Email, It.IsAny<CancellationToken>())).ReturnsAsync(_UserForLogin);
-        mockUserService.Setup(x => x.CreateUserTokenAsync(_UserForLogin.Id, It.IsAny<CancellationToken>())).ReturnsAsync((false, Core.ErrorGeneric));
+        mockUserService.Setup(x => x.CreateUserTokenAsync(_UserForLogin.Id, It.IsAny<CancellationToken>())).ReturnsAsync((false, "", ""));
         var controller = new AccountController(mockUserService.Object, _MockLanguageService.Object, _MockEmailService.Object, _MockViewService.Object, _MockRoleService.Object, _MockLogger.Object) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext() {
@@ -474,7 +476,7 @@ public class AccountControllerTests {
     [Fact]
     public async Task Post_LoginTokenWithValidModelAndNoReturnUrl_RedirectsToDashboard() {
         // Arrange
-        var loginTokenModel = new LoginTokenModel { Email = _UserForLogin.Email, Token = _Token };
+        var loginTokenModel = new LoginTokenModel { Email = _UserForLogin.Email, Token = _Token, SecondaryToken = _SecondaryToken };
         var controller = CreateController(isAnonymous: true);
 
         // Act
@@ -489,7 +491,10 @@ public class AccountControllerTests {
     [Fact]
     public async Task Post_LoginTokenWithValidModelAndReturnUrl_RedirectsToReturnUrl() {
         // Arrange
-        var loginTokenModel = new LoginTokenModel { Email = _UserForLogin.Email, Token = _Token, ReturnUrl = _DefaultReturnUrl };
+        var loginTokenModel = new LoginTokenModel {
+            Email = _UserForLogin.Email, Token = _Token,
+            SecondaryToken = _SecondaryToken, ReturnUrl = _DefaultReturnUrl
+        };
         var controller = CreateController(isAnonymous: true);
 
         // Act
@@ -503,7 +508,10 @@ public class AccountControllerTests {
     [Fact]
     public async Task Post_LoginTokenWithValidModelAndInvalidReturnUrl_RedirectsToDashboard() {
         // Arrange
-        var loginTokenModel = new LoginTokenModel { Email = _UserForLogin.Email, Token = _Token, ReturnUrl = "https://anotherdomain.com/test" };
+        var loginTokenModel = new LoginTokenModel {
+            Email = _UserForLogin.Email, Token = _Token,
+            SecondaryToken = _SecondaryToken, ReturnUrl = "https://anotherdomain.com/test"
+        };
         var controller = CreateController(isAnonymous: true);
 
         // Act
@@ -538,7 +546,10 @@ public class AccountControllerTests {
     [Fact]
     public async Task Post_LoginTokenWithInvalidToken_ReturnViewWithError() {
         // Arrange
-        var loginTokenModel = new LoginTokenModel { Email = _UserForFailure.Email, Token = _InvalidToken, ReturnUrl = _DefaultReturnUrl };
+        var loginTokenModel = new LoginTokenModel {
+            Email = _UserForFailure.Email, Token = _InvalidToken,
+            SecondaryToken = _InvalidSecondaryToken, ReturnUrl = _DefaultReturnUrl
+        };
         var controller = CreateController(isAnonymous: true);
 
         // Act
@@ -555,7 +566,10 @@ public class AccountControllerTests {
     [Fact]
     public async Task Post_LoginTokenWithUserServiceError_ReturnViewWithError() {
         // Arrange
-        var loginTokenModel = new LoginTokenModel { Email = _UserForFailure.Email, Token = _Token, ReturnUrl = _DefaultReturnUrl };
+        var loginTokenModel = new LoginTokenModel {
+            Email = _UserForFailure.Email, Token = _Token,
+            SecondaryToken = _SecondaryToken, ReturnUrl = _DefaultReturnUrl
+        };
         var controller = CreateController(isAnonymous: true);
 
         // Act

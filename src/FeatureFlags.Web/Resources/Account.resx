@@ -163,7 +163,7 @@
     <value>You can ignore this email if you didn't request this token.</value>
   </data>
   <data name="TokenEmailLink" xml:space="preserve">
-    <value>Or use this link:</value>
+    <value>Or use this link -</value>
   </data>
   <data name="ContextHelp" xml:space="preserve">
     <value>Context Help</value>

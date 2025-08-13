@@ -36,7 +36,7 @@ public class ApiKeyController(IApiKeyService apiKeyService, ILogger<ApiKeyContro
     /// Renders the form to create an API key.
     /// </summary>
     [HttpGet]
-    public IActionResult Create() => View(_CreateView, new ApiKeyModel { Key = KeyGenerator.GetApiKey() });
+    public IActionResult Create() => View(_CreateView, new ApiKeyModel { Key = KeyGenerator.GenerateKey() });
 
     /// <summary>
     /// Saves new API key if valid. Renders the create page on error, or redirects to index page.

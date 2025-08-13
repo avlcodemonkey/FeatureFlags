@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -123,6 +123,9 @@
   <data name="ErrorSendingToken" xml:space="preserve">
     <value>El código de inicio de sesión no se pudo enviar.</value>
   </data>
+  <data name="UpdateAccount" xml:space="preserve">
+    <value>Actualizar Perfil</value>
+  </data>
   <data name="AccountUpdated" xml:space="preserve">
     <value>Su cuenta fue actualizada con éxito. Tendrá que volver a cargar esta página si ha cambiado su idioma.</value>
   </data>
@@ -160,10 +163,7 @@
     <value>Puede ignorar este correo electrónico si no solicitó este token.</value>
   </data>
   <data name="TokenEmailLink" xml:space="preserve">
-    <value>O use este enlace:</value>
-  </data>
-  <data name="UpdateAccount" xml:space="preserve">
-    <value>Actualizar Perfil</value>
+    <value>O use este enlace -</value>
   </data>
   <data name="ContextHelp" xml:space="preserve">
     <value>Ayuda del contexto</value>

@@ -6,12 +6,12 @@ public class KeyGeneratorTests {
     internal static readonly char[] _Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
 
     [Fact]
-    public void GetUniqueToken_ReturnsStringOfCorrectLength_AndAllowedChars() {
+    public void GenerateToken_ReturnsStringOfCorrectLength_AndAllowedChars() {
         // Arrange
         var size = 24;
 
         // Act
-        var token = KeyGenerator.GetUniqueToken(size);
+        var token = KeyGenerator.GenerateToken(size);
 
         // Assert
         Assert.NotNull(token);
@@ -20,19 +20,19 @@ public class KeyGeneratorTests {
     }
 
     [Fact]
-    public void GetUniqueToken_ReturnsDifferentTokens() {
+    public void GenerateToken_ReturnsDifferentTokens() {
         // Act
-        var token1 = KeyGenerator.GetUniqueToken(16);
-        var token2 = KeyGenerator.GetUniqueToken(16);
+        var token1 = KeyGenerator.GenerateToken(16);
+        var token2 = KeyGenerator.GenerateToken(16);
 
         // Assert
         Assert.NotEqual(token1, token2);
     }
 
     [Fact]
-    public void GetApiKey_ReturnsStringWithPrefix_AndCorrectLength() {
+    public void GenerateKey_ReturnsStringWithPrefix_AndCorrectLength() {
         // Act
-        var apiKey = KeyGenerator.GetApiKey();
+        var apiKey = KeyGenerator.GenerateKey();
 
         // Assert
         Assert.NotNull(apiKey);
@@ -44,10 +44,10 @@ public class KeyGeneratorTests {
     }
 
     [Fact]
-    public void GetApiKey_ReturnsUniqueKeys() {
+    public void GenerateKey_ReturnsUniqueKeys() {
         // Act
-        var key1 = KeyGenerator.GetApiKey();
-        var key2 = KeyGenerator.GetApiKey();
+        var key1 = KeyGenerator.GenerateKey();
+        var key2 = KeyGenerator.GenerateKey();
 
         // Assert
         Assert.NotEqual(key1, key2);

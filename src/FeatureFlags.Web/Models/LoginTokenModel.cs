@@ -23,6 +23,12 @@ public sealed record LoginTokenModel {
     public string Token { get; init; } = "";
 
     /// <summary>
+    /// Gets the secondary token from the hidden input or email sent to user.
+    /// Secondary token is required but not shown to user, so no validation message is needed.
+    /// </summary>
+    public string SecondaryToken { get; init; } = "";
+
+    /// <summary>
     /// Gets the URL to redirect to after successful login.
     /// </summary>
     public string? ReturnUrl { get; init; }
