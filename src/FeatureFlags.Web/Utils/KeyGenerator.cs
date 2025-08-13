@@ -39,7 +39,7 @@ public static class KeyGenerator {
     /// <summary>
     /// Generates a key using cryptographic random numbers.
     /// </summary>
-    /// <param name="prefix"">An optional prefix to prepend to the generated key. If not provided, a default prefix is used.</param>
+    /// <param name="prefix">An optional prefix to prepend to the generated key. If not provided, a default prefix is used.</param>
     /// <remarks>The method uses a cryptographic random number generator to ensure the uniqueness and
     /// unpredictability of the key. The generated key consists of characters from a predefined set.</remarks>
     /// <returns>A string representing the unique key composed of randomly selected characters.</returns>

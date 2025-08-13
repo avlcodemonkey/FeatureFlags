@@ -8,7 +8,7 @@
 
 @{
     Layout = "_EmailLayout";
-    var loginLink = Url.ActionLink(nameof(AccountController.LoginByLink), nameof(AccountController).StripController(), new { Email = Model.Email, Token = Model.Token });
+    var loginLink = Url.ActionLink(nameof(AccountController.LoginByLink), nameof(AccountController).StripController(), new { Email = Model.Email, Token = Model.Token, SecondaryToken = Model.SecondaryToken });
 }
 
 <h3 class="text-primary">@Account.LoginCode</h3>
@@ -22,7 +22,7 @@
 </div>
 
 <p>
-    @Account.TokenEmailLink <a href="@loginLink">@loginLink</a>
+    @Account.TokenEmailLink <a href="@loginLink" target="_blank" rel="nofollow noreferrer">@Account.Login</a>
 </p>
 
 <p class="text-dark-grey">

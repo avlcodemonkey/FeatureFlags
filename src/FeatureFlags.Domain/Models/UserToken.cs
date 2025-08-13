@@ -20,10 +20,10 @@ public class UserToken {
     public string Token { get; set; } = "";
 
     /// <summary>
-    /// Second hidden token to make man-in-the-middle attacks harder.
+    /// Secondary token to make man-in-the-middle attacks harder.
     /// </summary>
     [StringLength(100)]
-    public string HiddenToken { get; set; } = "";
+    public string SecondaryToken { get; set; } = "";
 
     public DateTime? ExpirationDate { get; set; }
 

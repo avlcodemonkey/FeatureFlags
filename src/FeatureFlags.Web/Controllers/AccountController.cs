@@ -114,14 +114,14 @@ public class AccountController(IUserService userService, ILanguageService langua
             return ViewWithError(_LoginView, model, Account.ErrorInvalidUser);
         }
 
-        (var success, var token, var hiddenToken) = await _UserService.CreateUserTokenAsync(user.Id, cancellationToken);
-        if (!success || string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(hiddenToken)) {
+        (var success, var token, var secondaryToken) = await _UserService.CreateUserTokenAsync(user.Id, cancellationToken);
+        if (!success || string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(secondaryToken)) {
             return ViewWithError(_LoginView, model, Account.ErrorSendingToken);
         }
 
         // send token in email
         var emailBody = await _ViewService.RenderViewToStringAsync(_TokenEmailView,
-            new LoginTokenModel { Email = model.Email, Token = token, HiddenToken = hiddenToken }, ControllerContext, true);
+            new LoginTokenModel { Email = model.Email, Token = token, SecondaryToken = secondaryToken }, ControllerContext, true);
         if (!await _EmailService.SendEmailAsync(user.Email, user.Name, Account.TokenEmailSubject, emailBody, cancellationToken)) {
             return ViewWithError(_LoginView, model, Account.ErrorSendingToken);
         }
@@ -132,7 +132,10 @@ public class AccountController(IUserService userService, ILanguageService langua
             returnUrl = null;
         }
 
-        return ViewWithMessage(_LoginTokenView, new LoginTokenModel { Email = model.Email, ReturnUrl = returnUrl }, Account.CheckYourEmail);
+        return ViewWithMessage(_LoginTokenView,
+            new LoginTokenModel { Email = model.Email, SecondaryToken = secondaryToken, ReturnUrl = returnUrl },
+            Account.CheckYourEmail
+        );
     }
 
     /// <summary>
@@ -153,7 +156,7 @@ public class AccountController(IUserService userService, ILanguageService langua
             return ViewWithError(_LoginView, model, Account.ErrorInvalidUser);
         }
 
-        return View(_LoginTokenView, new LoginTokenModel { Email = model.Email, Token = model.Token });
+        return View(_LoginTokenView, new LoginTokenModel { Email = model.Email, Token = model.Token, SecondaryToken = model.SecondaryToken });
     }
 
     /// <summary>
@@ -169,13 +172,13 @@ public class AccountController(IUserService userService, ILanguageService langua
             return ViewWithError(_LoginTokenView, model, ModelState);
         }
 
-        (var success, var message) = await _UserService.VerifyUserTokenAsync(model.Email, model.Token!, cancellationToken);
+        (var success, var message) = await _UserService.VerifyUserTokenAsync(model.Email, model.Token, model.SecondaryToken, cancellationToken);
         if (!success) {
             // if token has been deleted send user to start of login process, else let user try again
             if (message == Account.ErrorTokenDeleted) {
                 return ViewWithError(_LoginView, new LoginModel { Email = model.Email }, message);
             }
-            return ViewWithError(_LoginTokenView, new LoginTokenModel { Email = model.Email }, message);
+            return ViewWithError(_LoginTokenView, new LoginTokenModel { Email = model.Email, SecondaryToken = model.SecondaryToken }, message);
         }
 
         // token valid, load the user info

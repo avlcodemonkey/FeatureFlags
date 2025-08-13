@@ -223,7 +223,7 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Or use this link:.
+        ///   Looks up a localized string similar to Or use this link -.
         /// </summary>
         public static string TokenEmailLink {
             get {

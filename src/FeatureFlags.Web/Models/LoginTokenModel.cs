@@ -23,11 +23,10 @@ public sealed record LoginTokenModel {
     public string Token { get; init; } = "";
 
     /// <summary>
-    /// Gets the hidden token from the hidden input or email sent to user.
+    /// Gets the secondary token from the hidden input or email sent to user.
+    /// Secondary token is required but not shown to user, so no validation message is needed.
     /// </summary>
-    [Display(ResourceType = typeof(Account), Name = nameof(Account.LoginCode))]
-    [IsRequired, IsStringLength(100)]
-    public string HiddenToken { get; init; } = "";
+    public string SecondaryToken { get; init; } = "";
 
     /// <summary>
     /// Gets the URL to redirect to after successful login.

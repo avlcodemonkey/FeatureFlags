@@ -556,12 +556,12 @@ public class UserServiceTests {
         var userId = -9999;
 
         // Act
-        (var success, var token, var hiddenToken) = await _UserService.CreateUserTokenAsync(userId);
+        (var success, var token, var secondaryToken) = await _UserService.CreateUserTokenAsync(userId);
 
         // Assert
         Assert.False(success);
         Assert.Null(token);
-        Assert.Null(hiddenToken);
+        Assert.Null(secondaryToken);
     }
 
     [Fact]
@@ -570,14 +570,14 @@ public class UserServiceTests {
         var user = _Fixture.User;
 
         //// Act
-        (var success, var token, var hiddenToken) = await _UserService.CreateUserTokenAsync(user.Id);
+        (var success, var token, var secondaryToken) = await _UserService.CreateUserTokenAsync(user.Id);
 
         //// Assert
         Assert.True(success);
         Assert.NotNull(token);
         Assert.NotEmpty(token);
-        Assert.NotNull(hiddenToken);
-        Assert.NotEmpty(hiddenToken);
+        Assert.NotNull(secondaryToken);
+        Assert.NotEmpty(secondaryToken);
     }
 
     [Fact]
@@ -592,23 +592,24 @@ public class UserServiceTests {
         }
 
         // Act
-        (var _, var token, var hiddenToken) = await _UserService.CreateUserTokenAsync(user.Id);
+        (var _, var token, var secondaryToken) = await _UserService.CreateUserTokenAsync(user.Id);
         var newToken = await _Fixture.CreateContext().UserTokens.FirstOrDefaultAsync(x => x.UserId == user.Id && x.Token == token);
 
         // Assert
         Assert.NotNull(newToken);
         Assert.Equal(token, newToken.Token);
-        Assert.Equal(hiddenToken, newToken.HiddenToken);
+        Assert.Equal(secondaryToken, newToken.SecondaryToken);
     }
 
     [Fact]
     public async Task CreateUserTokenAsync_WithExistingToken_DeletesExistingTokenAndCreatesNewToken() {
         // Arrange
         var token = "valid-token";
-        var (user, _) = await CreateUserAndTokenAsync("deleteToken@aaa.com", token, DateTime.UtcNow);
+        var secondaryToken = "secondary-token";
+        var (user, _) = await CreateUserAndTokenAsync("deleteToken@aaa.com", token, secondaryToken, DateTime.UtcNow);
 
         // Act
-        (var success, var newToken, var _) = await _UserService.CreateUserTokenAsync(user.Id);
+        (var success, var newToken, var newSecondaryToken) = await _UserService.CreateUserTokenAsync(user.Id);
         UserToken? originalToken = null;
         UserToken? newUserToken = null;
         using (var dbContext = _Fixture.CreateContext()) {
@@ -626,9 +627,12 @@ public class UserServiceTests {
         Assert.True(success);
         Assert.Null(originalToken);
         Assert.NotNull(newToken);
+        Assert.NotNull(newSecondaryToken);
         Assert.NotEqual(token, newToken);
+        Assert.NotEqual(secondaryToken, newSecondaryToken);
         Assert.NotNull(newUserToken);
         Assert.Equal(newToken, newUserToken.Token);
+        Assert.Equal(newSecondaryToken, newUserToken.SecondaryToken);
     }
 
     [Fact]
@@ -636,9 +640,10 @@ public class UserServiceTests {
         // Arrange
         var user = _Fixture.User;
         var token = "gibberish-token";
+        var secondaryToken = "secondary-token";
 
         // Act
-        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, token);
+        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, token, secondaryToken);
 
         // Assert
         Assert.False(success);
@@ -649,10 +654,11 @@ public class UserServiceTests {
     public async Task VerifyUserTokenAsync_WithValidToken_ReturnsSuccess() {
         // Arrange
         var token = "valid-token";
-        var (user, userToken) = await CreateUserAndTokenAsync("verifyToken@aaa.com", token, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime));
+        var secondaryToken = "secondary-token";
+        var (user, _) = await CreateUserAndTokenAsync("verifyToken@aaa.com", token, secondaryToken, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime));
 
         // Act
-        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, token);
+        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, token, secondaryToken);
 
         // Assert
         Assert.True(success);
@@ -663,10 +669,11 @@ public class UserServiceTests {
     public async Task VerifyUserTokenAsync_WithExpiredToken_ReturnsErrorAndDeletesToken() {
         // Arrange
         var token = "expired-token";
-        var (user, userToken) = await CreateUserAndTokenAsync("expiredToken@aaa.com", token, DateTime.UtcNow.AddMinutes(-Auth.TokenLifeTime));
+        var secondaryToken = "secondary-token";
+        var (user, _) = await CreateUserAndTokenAsync("expiredToken@aaa.com", token, secondaryToken, DateTime.UtcNow.AddMinutes(-Auth.TokenLifeTime));
 
         // Act
-        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, token);
+        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, token, secondaryToken);
 
         // Assert
         Assert.False(success);
@@ -677,10 +684,11 @@ public class UserServiceTests {
     public async Task VerifyUserTokenAsync_WithInvalidToken_ReturnsError() {
         // Arrange
         var token = "invalid-token";
-        var (user, userToken) = await CreateUserAndTokenAsync("invalidToken@aaa.com", token, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime));
+        var secondaryToken = "secondary-token";
+        var (user, userToken) = await CreateUserAndTokenAsync("invalidToken@aaa.com", token, secondaryToken, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime));
 
         // Act
-        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, "gibberish");
+        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, "gibberish", secondaryToken);
         using (var dbContext = _Fixture.CreateContext()) {
             dbContext.UserTokens.Remove(userToken);
             await dbContext.SaveChangesAsync();
@@ -695,10 +703,11 @@ public class UserServiceTests {
     public async Task VerifyUserTokenAsync_WithInvalidEmail_ReturnsError() {
         // Arrange
         var token = "valid-token";
-        var (_, userToken) = await CreateUserAndTokenAsync("validToken@aaa.com", token, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime));
+        var secondaryToken = "secondary-token";
+        var (_, userToken) = await CreateUserAndTokenAsync("validToken@aaa.com", token, secondaryToken, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime));
 
         // Act
-        (var success, var message) = await _UserService.VerifyUserTokenAsync("random-email@domain.com", token);
+        (var success, var message) = await _UserService.VerifyUserTokenAsync("random-email@domain.com", token, secondaryToken);
         using (var dbContext = _Fixture.CreateContext()) {
             dbContext.UserTokens.Remove(userToken);
             await dbContext.SaveChangesAsync();
@@ -713,10 +722,11 @@ public class UserServiceTests {
     public async Task VerifyUserTokenAsync_WithInvalidTokenAndOneAttemptLeft_ReturnsErrorAndDeletesToken() {
         // Arrange
         var token = "valid-token";
-        var (user, userToken) = await CreateUserAndTokenAsync("fourAttempts@aaa.com", token, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Auth.TokenMaxAttempts - 1);
+        var secondaryToken = "secondary-token";
+        var (user, userToken) = await CreateUserAndTokenAsync("fourAttempts@aaa.com", token, secondaryToken, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Auth.TokenMaxAttempts - 1);
 
         // Act
-        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, "gibberish");
+        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, "gibberish", secondaryToken);
         var updatedToken = await GetTokenAndDeleteAsync(userToken.UserId, token);
 
         // Assert
@@ -729,10 +739,11 @@ public class UserServiceTests {
     public async Task VerifyUserTokenAsync_WithInvalidTokenAndTooManyAttempts_ReturnsErrorAndDeletesToken() {
         // Arrange
         var token = "invalid-token";
-        var (user, userToken) = await CreateUserAndTokenAsync("tooManyAttempts@aaa.com", token, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Auth.TokenMaxAttempts);
+        var secondaryToken = "secondary-token";
+        var (user, userToken) = await CreateUserAndTokenAsync("tooManyAttempts@aaa.com", token, secondaryToken, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Auth.TokenMaxAttempts);
 
         // Act
-        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, "gibberish");
+        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, "gibberish", secondaryToken);
         var updatedToken = await GetTokenAndDeleteAsync(userToken.UserId, token);
 
         // Assert
@@ -745,10 +756,11 @@ public class UserServiceTests {
     public async Task VerifyUserTokenAsync_WithValidTokenAndOneAttemptLeft_ReturnsUserAndDeletesToken() {
         // Arrange
         var token = "valid-token";
-        var (user, userToken) = await CreateUserAndTokenAsync("validFour@aaa.com", token, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Auth.TokenMaxAttempts - 1);
+        var secondaryToken = "secondary-token";
+        var (user, userToken) = await CreateUserAndTokenAsync("validFour@aaa.com", token, secondaryToken, DateTime.UtcNow.AddMinutes(Auth.TokenLifeTime), Auth.TokenMaxAttempts - 1);
 
         // Act
-        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, token);
+        (var success, var message) = await _UserService.VerifyUserTokenAsync(user.Email, token, secondaryToken);
         var updatedToken = await GetTokenAndDeleteAsync(userToken.UserId, token);
 
         // Assert
@@ -757,12 +769,13 @@ public class UserServiceTests {
         Assert.Null(updatedToken);
     }
 
-    private async Task<(User user, UserToken userToken)> CreateUserAndTokenAsync(string email, string token, DateTime? expirationDate, int? attempts = null) {
+    private async Task<(User user, UserToken userToken)> CreateUserAndTokenAsync(string email, string token, string secondaryToken, DateTime? expirationDate, int? attempts = null) {
         var user = new User {
             Email = email, Name = email.Split('@')[0], LanguageId = 1, Status = true
         };
         var userToken = new UserToken {
             Token = token,
+            SecondaryToken = secondaryToken,
             ExpirationDate = expirationDate,
             Attempts = attempts ?? 0
         };
