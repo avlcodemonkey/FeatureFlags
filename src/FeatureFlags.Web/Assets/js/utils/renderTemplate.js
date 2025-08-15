@@ -1,4 +1,4 @@
-import escape from './escape';
+import escape from './escape.js';
 
 // regex for handling ifs
 const ifRegex = /{{#if\s*(!)?(\w+)}}([\s\S]+?){{\/if}}/m;
@@ -13,8 +13,17 @@ const ifRegex = /{{#if\s*(!)?(\w+)}}([\s\S]+?){{\/if}}/m;
  *              No nested properties or conditionals.
  */
 export default function renderTemplate(template, data, shouldEscape = true) {
-    let result = template;
+    let result = template ?? '';
     let match;
+
+    // if the template is empty, return an empty string
+    if (result === '') {
+        return '';
+    }
+    // if the data is not an object, return the template as is
+    if (typeof data !== 'object' || data === null) {
+        return result;
+    }
 
     // eslint-disable-next-line no-cond-assign
     while (match = ifRegex.exec(result)) {
@@ -34,7 +43,7 @@ export default function renderTemplate(template, data, shouldEscape = true) {
 
     // loop through each property of the data
     Object.keys(data).forEach((key) => {
-        let value = `${data[key]}`;
+        let value = data[key] === undefined || data[key] === null ? '' : `${data[key]}`;
         if (shouldEscape) {
             value = escape(value);
         }

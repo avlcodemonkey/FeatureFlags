@@ -16,6 +16,8 @@ async function setupDom() {
             global.document ??= dom.window.document;
             global.HTMLElement ??= dom.window.HTMLElement;
             global.HTMLInputElement ??= dom.window.HTMLInputElement;
+            global.FormData = dom.window.FormData;
+
             resolve(dom);
         });
     });

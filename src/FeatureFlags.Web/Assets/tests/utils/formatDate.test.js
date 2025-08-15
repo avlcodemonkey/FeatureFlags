@@ -2,41 +2,40 @@
  * Unit tests for formatDate function.
  */
 
-import {
-    describe, expect, it,
-} from 'vitest';
-import { formatDate } from '../../js/utils/formatDate';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { formatDate } from '../../js/utils/formatDate.js';
 
 describe('formatDate', () => {
     it('formats a date using the default mask', () => {
         const date = new Date('2023-04-05T14:23:45');
         // default: 'ddd MMM DD YYYY HH:mm:ss'
-        expect(formatDate(date)).toBe('Wed Apr 05 2023 14:23:45');
+        assert.strictEqual(formatDate(date), 'Wed Apr 05 2023 14:23:45');
     });
 
     it('formats a date using shortDate mask', () => {
         const date = new Date('2023-04-05T14:23:45');
-        expect(formatDate(date, 'shortDate')).toBe('4/5/23');
+        assert.strictEqual(formatDate(date, 'shortDate'), '4/5/23');
     });
 
     it('formats a date using mediumDate mask', () => {
         const date = new Date('2023-04-05T14:23:45');
-        expect(formatDate(date, 'mediumDate')).toBe('Apr 5, 2023');
+        assert.strictEqual(formatDate(date, 'mediumDate'), 'Apr 5, 2023');
     });
 
     it('formats a date using longDate mask', () => {
         const date = new Date('2023-04-05T14:23:45');
-        expect(formatDate(date, 'longDate')).toBe('April 5, 2023');
+        assert.strictEqual(formatDate(date, 'longDate'), 'April 5, 2023');
     });
 
     it('formats a date using fullDate mask', () => {
         const date = new Date('2023-04-05T14:23:45');
-        expect(formatDate(date, 'fullDate')).toBe('Wednesday, April 5, 2023');
+        assert.strictEqual(formatDate(date, 'fullDate'), 'Wednesday, April 5, 2023');
     });
 
     it('formats a date using isoDate mask', () => {
         const date = new Date('2023-04-05T14:23:45');
-        expect(formatDate(date, 'isoDate')).toBe('2023-04-05');
+        assert.strictEqual(formatDate(date, 'isoDate'), '2023-04-05');
     });
 
     it('formats a date using isoDateTime mask', () => {
@@ -57,49 +56,51 @@ describe('formatDate', () => {
         const offsetMinutes = pad(absOffset % 60);
         const tz = `${sign}${offsetHours}:${offsetMinutes}`;
         const expected = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${tz}`;
-        expect(formatDate(date, 'isoDateTime')).toBe(expected);
+        assert.strictEqual(formatDate(date, 'isoDateTime'), expected);
     });
 
     it('formats a date using shortTime mask', () => {
         const date = new Date('2023-04-05T04:05:09');
-        expect(formatDate(date, 'shortTime')).toBe('04:05');
+        assert.strictEqual(formatDate(date, 'shortTime'), '04:05');
     });
 
     it('formats a date using mediumTime mask', () => {
         const date = new Date('2023-04-05T04:05:09');
-        expect(formatDate(date, 'mediumTime')).toBe('04:05:09');
+        assert.strictEqual(formatDate(date, 'mediumTime'), '04:05:09');
     });
 
     it('formats a date using longTime mask', () => {
         const date = new Date('2023-04-05T04:05:09.123');
-        expect(formatDate(date, 'longTime')).toBe('04:05:09.123');
+        assert.strictEqual(formatDate(date, 'longTime'), '04:05:09.123');
     });
 
     it('formats a timestamp', () => {
         const timestamp = Date.UTC(2023, 3, 5, 14, 23, 45);
-        expect(formatDate(timestamp, 'isoDate')).toBe('2023-04-05');
+        assert.strictEqual(formatDate(timestamp, 'isoDate'), '2023-04-05');
     });
 
     it('throws on invalid date', () => {
-        expect(() => formatDate('not a date')).toThrow('Invalid Date pass to format');
+        assert.throws(
+            () => formatDate('not a date'),
+            { message: 'Invalid Date pass to format' }
+        );
     });
 
     it('formats ordinal days correctly', () => {
         const date = new Date('2023-04-01T00:00:00');
-        expect(formatDate(date, 'Do')).toBe('1st');
-        expect(formatDate(new Date('2023-04-02T00:00:00'), 'Do')).toBe('2nd');
-        expect(formatDate(new Date('2023-04-03T00:00:00'), 'Do')).toBe('3rd');
-        expect(formatDate(new Date('2023-04-04T00:00:00'), 'Do')).toBe('4th');
-        expect(formatDate(new Date('2023-04-11T00:00:00'), 'Do')).toBe('11th');
-        expect(formatDate(new Date('2023-04-21T00:00:00'), 'Do')).toBe('21st');
-        expect(formatDate(new Date('2023-04-22T00:00:00'), 'Do')).toBe('22nd');
-        expect(formatDate(new Date('2023-04-23T00:00:00'), 'Do')).toBe('23rd');
-        expect(formatDate(new Date('2023-04-24T00:00:00'), 'Do')).toBe('24th');
+        assert.strictEqual(formatDate(date, 'Do'), '1st');
+        assert.strictEqual(formatDate(new Date('2023-04-02T00:00:00'), 'Do'), '2nd');
+        assert.strictEqual(formatDate(new Date('2023-04-03T00:00:00'), 'Do'), '3rd');
+        assert.strictEqual(formatDate(new Date('2023-04-04T00:00:00'), 'Do'), '4th');
+        assert.strictEqual(formatDate(new Date('2023-04-11T00:00:00'), 'Do'), '11th');
+        assert.strictEqual(formatDate(new Date('2023-04-21T00:00:00'), 'Do'), '21st');
+        assert.strictEqual(formatDate(new Date('2023-04-22T00:00:00'), 'Do'), '22nd');
+        assert.strictEqual(formatDate(new Date('2023-04-23T00:00:00'), 'Do'), '23rd');
+        assert.strictEqual(formatDate(new Date('2023-04-24T00:00:00'), 'Do'), '24th');
     });
 
     it('formats a date using a custom mask "YYYY-MM-DD hh:mm:ss A"', () => {
         const date = new Date('2023-04-05T14:23:45');
-        // Build expected string using local time
         const pad = n => n.toString().padStart(2, '0');
         const year = date.getFullYear();
         const month = pad(date.getMonth() + 1);
@@ -110,7 +111,7 @@ describe('formatDate', () => {
         const minutes = pad(date.getMinutes());
         const seconds = pad(date.getSeconds());
         const expected = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${ampm}`;
-        expect(formatDate(date, 'YYYY-MM-DD hh:mm:ss A')).toBe(expected);
+        assert.strictEqual(formatDate(date, 'YYYY-MM-DD hh:mm:ss A'), expected);
     });
 
     it('formats a morning time using custom mask "YYYY-MM-DD hh:mm:ss A"', () => {
@@ -125,6 +126,6 @@ describe('formatDate', () => {
         const minutes = pad(date.getMinutes());
         const seconds = pad(date.getSeconds());
         const expected = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${ampm}`;
-        expect(formatDate(date, 'YYYY-MM-DD hh:mm:ss A')).toBe(expected);
+        assert.strictEqual(formatDate(date, 'YYYY-MM-DD hh:mm:ss A'), expected);
     });
 });
