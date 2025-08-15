@@ -2,11 +2,17 @@
  * Unit tests for nilla-list.
  */
 
-import {
-    beforeEach, describe, expect, it,
-} from 'vitest';
-import { tick, isRendered } from '../utils';
-import '../../js/components/List';
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'node:assert/strict';
+import setupDom from '../testUtils/setupDom.js';
+import tick from '../testUtils/tick.js';
+import isRendered from '../testUtils/isRendered.js';
+
+// Setup jsdom first
+await setupDom();
+
+// Import the custom element AFTER jsdom is set up
+await import('../../js/components/List.js');
 
 const itemHtml = `
     <div data-list-item>
@@ -66,55 +72,55 @@ function getItems() {
     return getContainer()?.querySelectorAll('[data-list-item]') ?? [];
 }
 
-describe('nilla-list', async () => {
+describe('nilla-list', () => {
     beforeEach(async () => {
         document.body.innerHTML = listHtml;
         await isRendered(getList);
     });
 
-    it('should show empty message when no items', async () => {
+    it('shows empty message when no items', async () => {
         const emptyMessage = getEmptyMessage();
-        expect(emptyMessage).toBeTruthy();
-        expect(emptyMessage.classList).not.toContain('is-hidden');
+        assert.ok(emptyMessage, 'Empty message element should exist');
+        assert.ok(!emptyMessage.classList.contains('is-hidden'), 'Empty message should be visible');
     });
 
-    it('should add item on add button click', async () => {
+    it('adds item on add button click', async () => {
         const addButton = getAddButton();
         addButton?.click();
         await tick();
 
         const items = getItems();
-        expect(items.length).toBe(1);
+        assert.strictEqual(items.length, 1, 'Should have one item after add');
 
         const emptyMessage = getEmptyMessage();
-        expect(emptyMessage.classList).toContain('is-hidden');
+        assert.ok(emptyMessage.classList.contains('is-hidden'), 'Empty message should be hidden after add');
     });
 
-    it('should remove item on remove button click', async () => {
+    it('removes item on remove button click', async () => {
         const addButton = getAddButton();
         addButton?.click();
         await tick();
 
         let items = getItems();
-        expect(items.length).toBe(1);
+        assert.strictEqual(items.length, 1, 'Should have one item after add');
 
         const removeButton = items[0].querySelector('[data-list-remove-button]');
         removeButton?.click();
         await tick();
 
         items = getItems();
-        expect(items.length).toBe(0);
+        assert.strictEqual(items.length, 0, 'Should have zero items after remove');
 
         const emptyMessage = getEmptyMessage();
-        expect(emptyMessage.classList).not.toContain('is-hidden');
+        assert.ok(!emptyMessage.classList.contains('is-hidden'), 'Empty message should be visible after remove');
     });
 
-    it('should hide empty message when item is present', async () => {
+    it('hides empty message when item is present', async () => {
         const addButton = getAddButton();
         addButton?.click();
         await tick();
 
         const emptyMessage = getEmptyMessage();
-        expect(emptyMessage.classList).toContain('is-hidden');
+        assert.ok(emptyMessage.classList.contains('is-hidden'), 'Empty message should be hidden when item is present');
     });
 });

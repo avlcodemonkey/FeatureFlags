@@ -2,10 +2,12 @@ import { JSDOM } from 'jsdom';
 
 /**
  * Sets up a JSDOM environment with minimal HTML and initializes the global window and document objects.
+ * @param {string} html - Optional HTML string to be parsed and set as the document body.
  * @returns {Promise<void>} A promise that resolves when the DOM is fully loaded and global objects are set.
  */
-async function setupDom() {
-    const dom = new JSDOM(`<!DOCTYPE html><html><head></head><body></body></html>`, {
+async function setupDom(html) {
+    html ??= `<!DOCTYPE html><html><head></head><body></body></html>`;
+    const dom = new JSDOM(html, {
         runScripts: 'dangerously',
         resources: 'usable',
     });
@@ -17,6 +19,7 @@ async function setupDom() {
             global.HTMLElement ??= dom.window.HTMLElement;
             global.HTMLInputElement ??= dom.window.HTMLInputElement;
             global.FormData = dom.window.FormData;
+            global.customElements ??= dom.window.customElements;
 
             resolve(dom);
         });
