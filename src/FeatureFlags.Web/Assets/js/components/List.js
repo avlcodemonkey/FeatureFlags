@@ -1,4 +1,4 @@
-import BaseComponent from './BaseComponent';
+import BaseComponent from './BaseComponent.js';
 
 /**
  * Enum for identifiers to query DOM elements.

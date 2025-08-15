@@ -404,14 +404,18 @@ const autocomplete = (settings) => {
     const startFetch = (inputText, trigger, cursorPos) => {
         if (destroyed) return;
         const savedFetchCounter = ++fetchCounter;
-        settings.fetch(inputText, (elements) => {
-            if (fetchCounter === savedFetchCounter && elements) {
-                items = elements;
-                inputValue = inputText;
-                selected = (items.length < 1 || disableAutoSelect) ? undefined : items[0];
-                update();
-            }
-        }, trigger, cursorPos);
+        try {
+            settings.fetch(inputText, (elements) => {
+                if (fetchCounter === savedFetchCounter && elements) {
+                    items = elements;
+                    inputValue = inputText;
+                    selected = (items.length < 1 || disableAutoSelect) ? undefined : items[0];
+                    update();
+                }
+            }, trigger, cursorPos);
+        } catch {
+            clear();
+        }
     };
 
     /**

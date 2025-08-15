@@ -2,11 +2,15 @@
  * Unit tests for formData util functions.
  */
 
-import {
-    describe, expect, it,
-} from 'vitest';
-import { isRendered, tick } from '../utils';
-import { formToObject, objectToForm } from '../../js/utils/formData';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import isRendered from '../testUtils/isRendered.js';
+import tick from '../testUtils/tick.js';
+import { formToObject, objectToForm } from '../../js/utils/formData.js';
+import setupDom from '../testUtils/setupDom.js';
+
+// Setup jsdom first
+await setupDom();
 
 const dataObj = {
     field1: 'value1',
@@ -51,15 +55,15 @@ function getForm() {
     return document.querySelector('form');
 }
 
-describe('formToObject', async () => {
+describe('formToObject', () => {
     it('should return populated object when form has data', async () => {
         document.body.innerHTML = populatedFormHtml;
         await isRendered(getForm);
 
         const result = formToObject(getForm());
 
-        expect(result).toBeTruthy();
-        expect(result).toMatchObject(dataObj);
+        assert.ok(result);
+        assert.deepStrictEqual(result, dataObj);
     });
 
     it('should return empty object when form has no data', async () => {
@@ -68,12 +72,67 @@ describe('formToObject', async () => {
 
         const result = formToObject(getForm());
 
-        expect(result).toBeTruthy();
-        expect(result).toMatchObject({});
+        assert.ok(result);
+        assert.deepStrictEqual(result, {});
+    });
+
+    it('should ignore unchecked checkboxes and radios', async () => {
+        document.body.innerHTML = `
+            <form>
+                <input type="checkbox" name="cb1" value="yes" />
+                <input type="checkbox" name="cb2" value="on" checked />
+                <input type="radio" name="r1" value="A" />
+                <input type="radio" name="r1" value="B" checked />
+            </form>
+        `;
+        await isRendered(getForm);
+
+        const result = formToObject(getForm());
+        assert.deepStrictEqual(result, { cb2: 'on', r1: 'B' });
+    });
+
+    it('should ignore fields without a name attribute', async () => {
+        document.body.innerHTML = `
+            <form>
+                <input type="text" value="foo" />
+                <input type="text" name="named" value="bar" />
+            </form>
+        `;
+        await isRendered(getForm);
+
+        const result = formToObject(getForm());
+        assert.deepStrictEqual(result, { named: 'bar' });
+    });
+
+    it('should ignore disabled fields', async () => {
+        document.body.innerHTML = `
+            <form>
+                <input type="text" name="enabled" value="yes" />
+                <input type="text" name="disabled" value="no" disabled />
+            </form>
+        `;
+        await isRendered(getForm);
+
+        const result = formToObject(getForm());
+        assert.deepStrictEqual(result, { enabled: 'yes' });
+    });
+
+    it('should handle malformed HTML gracefully', async () => {
+        document.body.innerHTML = `
+            <form>
+                <input type="text" name="field1" value="abc"
+                <input type="number" name="field2" value="123" />
+            </form>
+        `;
+        await isRendered(getForm);
+
+        const result = formToObject(getForm());
+        // Only field1 should be present due to malformed field1
+        assert.deepStrictEqual(result, { field1: 'abc' });
     });
 });
 
-describe('objectToForm', async () => {
+describe('objectToForm', () => {
     it('should populate form when object has data', async () => {
         document.body.innerHTML = unpopulatedFormHtml;
         await isRendered(getForm);
@@ -84,14 +143,14 @@ describe('objectToForm', async () => {
         const { field1, field2, field3 } = form.elements;
         const selectedValues = Array.from(field3.options).filter(option => option.selected).map(option => option.value);
 
-        expect(field1).toBeTruthy();
-        expect(field1.value).toEqual(dataObj.field1);
+        assert.ok(field1);
+        assert.strictEqual(field1.value, dataObj.field1);
 
-        expect(field2).toBeTruthy();
-        expect(field2.value).toEqual(dataObj.field2);
+        assert.ok(field2);
+        assert.strictEqual(field2.value, dataObj.field2);
 
-        expect(field3).toBeTruthy();
-        expect(selectedValues).toEqual(dataObj.field3);
+        assert.ok(field3);
+        assert.deepStrictEqual(selectedValues, dataObj.field3);
     });
 
     it('should do nothing if form or data are missing', async () => {
@@ -104,13 +163,65 @@ describe('objectToForm', async () => {
         const { field1, field2, field3 } = form.elements;
         const selectedValues = Array.from(field3.options).filter(option => option.selected).map(option => option.value);
 
-        expect(field1).toBeTruthy();
-        expect(field1.value).toEqual('');
+        assert.ok(field1);
+        assert.strictEqual(field1.value, '');
 
-        expect(field2).toBeTruthy();
-        expect(field2.value).toEqual('');
+        assert.ok(field2);
+        assert.strictEqual(field2.value, '');
 
-        expect(field3).toBeTruthy();
-        expect(selectedValues).toEqual([]);
+        assert.ok(field3);
+        assert.deepStrictEqual(selectedValues, []);
+    });
+
+    it('should not populate fields without a name attribute', async () => {
+        document.body.innerHTML = `
+            <form>
+                <input type="text" value="" />
+                <input type="text" name="named" value="" />
+            </form>
+        `;
+        await isRendered(getForm);
+        const form = getForm();
+
+        objectToForm({ named: 'bar', unnamed: 'foo' }, form);
+        await tick();
+
+        const { named } = form.elements;
+        assert.strictEqual(named.value, 'bar');
+        // unnamed field should remain empty
+        assert.strictEqual(form.querySelector('input:not([name])').value, '');
+    });
+
+    it('should not update disabled fields', async () => {
+        document.body.innerHTML = `
+            <form>
+                <input type="text" name="enabled" value="" />
+                <input type="text" name="disabled" value="" disabled />
+            </form>
+        `;
+        await isRendered(getForm);
+        const form = getForm();
+
+        objectToForm({ enabled: 'yes', disabled: 'no' }, form);
+        await tick();
+
+        assert.strictEqual(form.elements.enabled.value, 'yes');
+        assert.strictEqual(form.elements.disabled.value, '');
+    });
+
+    it('should ignore extra keys in data object not present in form', async () => {
+        document.body.innerHTML = `
+            <form>
+                <input type="text" name="field1" value="" />
+            </form>
+        `;
+        await isRendered(getForm);
+        const form = getForm();
+
+        objectToForm({ field1: 'foo', extra: 'bar' }, form);
+        await tick();
+
+        assert.strictEqual(form.elements.field1.value, 'foo');
+        // No error should occur for 'extra'
     });
 });
