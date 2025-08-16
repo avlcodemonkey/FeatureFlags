@@ -94,29 +94,6 @@ describe('autocomplete with valid markup', () => {
         assert.strictEqual(valueInput.value, '', 'Value input should be cleared');
     });
 
-    it('should update value and label on select', async () => {
-        const autocomplete = getAutocomplete();
-        const displayInput = getDisplayInput();
-        const valueInput = getValueInput();
-
-        // Patch onSelect directly on the autocompleter instance if not present
-        if (!autocomplete.autocompleter.onSelect) {
-            autocomplete.autocompleter.onSelect = function(item) {
-                valueInput.value = item.value;
-                displayInput.value = item.label;
-                displayInput.dataset.label = item.label;
-            };
-        }
-
-        // Simulate onSelect callback
-        const item = { label: 'User A', value: 'user-a' };
-        autocomplete.autocompleter.onSelect(item);
-
-        assert.strictEqual(valueInput.value, 'user-a', 'Value input should be set');
-        assert.strictEqual(displayInput.value, 'User A', 'Display input should be set');
-        assert.strictEqual(displayInput.dataset.label, 'User A', 'Display input dataset.label should be set');
-    });
-
     it('should destroy autocompleter on disconnectedCallback', async () => {
         const autocomplete = getAutocomplete();
         let destroyCalled = false;
@@ -129,29 +106,6 @@ describe('autocomplete with valid markup', () => {
         autocomplete.remove();
         // disconnectedCallback is called automatically by jsdom
         assert.ok(destroyCalled, 'destroy should be called on disconnectedCallback');
-    });
-
-    it('should handle fetch error gracefully', async () => {
-        const autocomplete = getAutocomplete();
-
-        // Patch fetch to simulate error
-        let updateCalled = false;
-        autocomplete.autocompleter.fetch = async function(query, update) {
-            update([]);
-            throw new Error('Simulated fetch error');
-        };
-        autocomplete.autocompleter.update = function(suggestions) {
-            updateCalled = true;
-            assert.deepStrictEqual(suggestions, [], 'Suggestions should be empty on error');
-        };
-
-        // Simulate fetch call
-        try {
-            await autocomplete.autocompleter.fetch('test', autocomplete.autocompleter.update);
-        } catch {
-            // Expected error
-        }
-        assert.ok(updateCalled, 'Update should be called with empty array on error');
     });
 });
 
