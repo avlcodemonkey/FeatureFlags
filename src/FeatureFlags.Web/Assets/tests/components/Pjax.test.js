@@ -38,9 +38,9 @@ function getPjax() {
  * Gets the target element for content replacement.
  * @returns {HTMLElement | null | undefined} Target element
  */
-// function getTarget() {
-//     return getPjax()?.querySelector('[data-pjax-target]');
-// }
+function getTarget() {
+    return getPjax()?.querySelector('[data-pjax-target]');
+}
 
 /**
  * Gets the loading indicator element.
@@ -100,30 +100,17 @@ describe('nilla-pjax', () => {
         assert.ok(showCalled, 'Info dialog show should be called on error');
     });
 
-    // @TODO finish implementing pjax tests. these are failing for now because I need to mock the fetch calls and response handling.
-    /*
     it('should update target content on processResponse with HTML', async () => {
         const pjax = getPjax();
         const target = getTarget();
 
-        // Patch processResponse to use our mock getResponseBody
-        await pjax.processResponse(new URL('/test', 'http://localhost'), true, {
-            ok: true,
-            headers: {
-                get: () => 'text/html',
-                has: (h) => {
-                    console.log(h);
-                    console.log(h !== 'x-pjax-refresh');
-                    return h !== 'x-pjax-refresh';
-                },
-            },
-            text: async () => '<span>New Content</span>',
-        });
+        const response = new Response();
+        response.headers.set('content-type', 'text/html');
+        response.text = async () => '<span>New Content</span>';
+
+        await pjax.processResponse(new URL('/test', 'http://localhost'), false, response);
 
         assert.ok(target.innerHTML.includes('New Content'), 'Target content should be updated');
-        // Clean up
-        delete global.getResponseBody;
-        delete global.isJson;
     });
 
     it('should not update target content if response is JSON', async () => {
@@ -131,22 +118,17 @@ describe('nilla-pjax', () => {
         const target = getTarget();
         target.innerHTML = 'Initial Content';
 
-        const mockResponse = {
-            ok: true,
-            // set content type to application/json
-            headers: {
-                get: () => 'application/json',
-                has: () => true,
-            },
-            json: async () => ({ message: 'This is JSON' }),
-        };
+        const response = new Response();
+        response.headers.set('content-type', 'application/json');
+        response.json = async () => '{}';
 
-        await pjax.processResponse(new URL('/test', 'http://localhost'), true, mockResponse);
+        await pjax.processResponse(new URL('/test', 'http://localhost'), true, response);
 
         assert.strictEqual(target.innerHTML, 'Initial Content', 'Target content should not be updated for JSON');
         delete global.isJson;
     });
-    */
+
+    // @TODO finish implementing pjax tests.
 
     it('should clean up event listeners on disconnectedCallback', async () => {
         const pjax = getPjax();

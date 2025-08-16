@@ -14,6 +14,7 @@ async function setupDom(html) {
 
     return new Promise((resolve) => {
         dom.window.addEventListener('load', () => {
+            // Set global objects to the JSDOM window and document
             global.window ??= dom.window;
             global.document ??= dom.window.document;
             global.HTMLElement ??= dom.window.HTMLElement;
@@ -24,6 +25,10 @@ async function setupDom(html) {
             global.Event ??= dom.window.Event;
             global.KeyboardEvent ??= dom.window.KeyboardEvent;
             global.MouseEvent ??= dom.window.MouseEvent;
+
+            // Mock window.scrollTo to prevent errors in tests since jsdom does not implement it
+            window.scrollTo = () => {
+            };
 
             resolve(dom);
         });
