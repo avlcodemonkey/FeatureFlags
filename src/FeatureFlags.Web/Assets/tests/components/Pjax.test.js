@@ -132,12 +132,16 @@ describe('nilla-pjax', () => {
 
     it('should clean up event listeners on disconnectedCallback', async () => {
         const pjax = getPjax();
+
         // Patch removeEventListener to track calls
         let popStateRemoved = false, clickRemoved = false, submitRemoved = false;
+        const originalRemoveEventListener = window.removeEventListener;
         // eslint-disable-next-line no-unused-vars
         window.removeEventListener = (type, fn) => {
             if (type === 'popstate') popStateRemoved = true;
         };
+
+        const originalPjaxRemoveEventListener = pjax.removeEventListener;
         // eslint-disable-next-line no-unused-vars
         pjax.removeEventListener = (type, fn) => {
             if (type === 'click') clickRemoved = true;
@@ -148,5 +152,9 @@ describe('nilla-pjax', () => {
         assert.ok(popStateRemoved, 'popstate listener should be removed');
         assert.ok(clickRemoved, 'click listener should be removed');
         assert.ok(submitRemoved, 'submit listener should be removed');
+
+        // Restore original listeners
+        window.removeEventListener = originalRemoveEventListener;
+        pjax.removeEventListener = originalPjaxRemoveEventListener;
     });
 });
