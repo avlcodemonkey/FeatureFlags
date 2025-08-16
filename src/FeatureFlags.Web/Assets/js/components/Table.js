@@ -1,7 +1,7 @@
 /* global RequestInit */
 
 import BaseComponent from './BaseComponent';
-import FetchError from './FetchError';
+import FetchError from '../errors/FetchError';
 import HttpHeaders from '../constants/HttpHeaders';
 import DefaultTimeout from '../constants/Fetch';
 import TableSort from './TableSort';

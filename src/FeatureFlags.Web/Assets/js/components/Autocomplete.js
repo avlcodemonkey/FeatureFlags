@@ -1,5 +1,5 @@
 import autocomplete from '../utils/autocomplete';
-import FetchError from './FetchError';
+import FetchError from '../errors/FetchError';
 import HttpHeaders from '../constants/HttpHeaders';
 import HttpMethods from '../constants/HttpMethods';
 import DefaultTimeout from '../constants/Fetch';

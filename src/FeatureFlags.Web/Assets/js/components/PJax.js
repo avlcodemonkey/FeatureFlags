@@ -4,7 +4,7 @@ import HttpMethods from '../constants/HttpMethods';
 import HttpHeaders from '../constants/HttpHeaders';
 import DefaultTimeout from '../constants/Fetch';
 import NillaInfo from './InfoDialog';
-import FetchError from './FetchError';
+import FetchError from '../errors/FetchError';
 
 /**
  * Enum for identifiers to query DOM elements.
