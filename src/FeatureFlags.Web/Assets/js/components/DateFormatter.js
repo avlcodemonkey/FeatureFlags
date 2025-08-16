@@ -15,7 +15,7 @@ class DateFormatter extends HTMLElement {
             try {
                 // backend will always return date in UTC. let JS convert to local
                 let dateString = this.textContent;
-                if (!dateString.endsWith('Z') && dateString.indexOf('+') === -1) {
+                if (!dateString.toLowerCase().endsWith('z') && dateString.indexOf('+') === -1) {
                     dateString = `${dateString}Z`;
                 }
                 const date = new Date(dateString);

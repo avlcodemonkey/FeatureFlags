@@ -15,7 +15,7 @@ await setupDom();
 await import('../../js/components/DateFormatter.js');
 
 const dateString = '2024-02-27 01:23:45';
-const testDate = new Date(`${dateString}z`);
+const testDate = new Date(`${dateString}Z`);
 const invalidDateString = 'gibberish';
 const dateFormat = 'YYYY-MM-DD hh:mm:ss.SSS A';
 const formattedDateString = formatDate(testDate, dateFormat);
@@ -30,21 +30,14 @@ function getDateFormatter() {
 
 describe('date formatter with no format', () => {
     it('should show date in locale format when format string is empty', async () => {
-        // Mock Date.prototype.toLocaleString for consistent output
-        const originalToLocaleString = Date.prototype.toLocaleString;
-        // Mock toLocaleString to return a fixed string for all dates
-        Date.prototype.toLocaleString = function() { // NOSONAR
-            return 'MOCKED_LOCALE_STRING';
-        };
+        const expected = new Date(`${dateString}Z`).toLocaleString();
 
         document.body.innerHTML = `<nilla-date data-date-format="">${dateString}</nilla-date>`;
         await isRendered(getDateFormatter);
-        // reset prototype to original
-        Date.prototype.toLocaleString = originalToLocaleString; // NOSONAR
 
         const dateFormatter = getDateFormatter();
         assert.ok(dateFormatter, 'Date formatter element should exist');
-        assert.strictEqual(dateFormatter.textContent, 'MOCKED_LOCALE_STRING', 'Should show date in locale format for empty format');
+        assert.strictEqual(dateFormatter.textContent, expected, 'Should show date in locale format for empty format');
     });
 
     it('should have unchanged content when date is omitted', async () => {
@@ -113,7 +106,7 @@ describe('date formatter with format', () => {
 describe('date formatter edge cases', () => {
     it('should handle leap year date', async () => {
         const leapDateString = '2024-02-29 12:00:00';
-        const leapDate = new Date(`${leapDateString}z`);
+        const leapDate = new Date(`${leapDateString}Z`);
         const expected = leapDate.toLocaleString();
 
         document.body.innerHTML = `<nilla-date>${leapDateString}</nilla-date>`;
@@ -126,7 +119,7 @@ describe('date formatter edge cases', () => {
 
     it('should handle very old date', async () => {
         const oldDateString = '1900-01-01 00:00:00';
-        const oldDate = new Date(`${oldDateString}z`);
+        const oldDate = new Date(`${oldDateString}Z`);
         const expected = oldDate.toLocaleString();
 
         document.body.innerHTML = `<nilla-date>${oldDateString}</nilla-date>`;
@@ -139,7 +132,7 @@ describe('date formatter edge cases', () => {
 
     it('should handle very future date', async () => {
         const futureDateString = '3000-12-31 23:59:59';
-        const futureDate = new Date(`${futureDateString}z`);
+        const futureDate = new Date(`${futureDateString}Z`);
         const expected = futureDate.toLocaleString();
 
         document.body.innerHTML = `<nilla-date>${futureDateString}</nilla-date>`;
@@ -152,7 +145,7 @@ describe('date formatter edge cases', () => {
 
     it('should handle ambiguous date string', async () => {
         const ambiguousDateString = '02/03/2024 01:23:45'; // MM/DD/YYYY or DD/MM/YYYY
-        const ambiguousDate = new Date(`${ambiguousDateString}z`);
+        const ambiguousDate = new Date(`${ambiguousDateString}Z`);
         const expected = ambiguousDate.toLocaleString();
 
         document.body.innerHTML = `<nilla-date>${ambiguousDateString}</nilla-date>`;
