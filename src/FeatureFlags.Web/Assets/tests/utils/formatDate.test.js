@@ -82,7 +82,7 @@ describe('formatDate', () => {
     it('throws on invalid date', () => {
         assert.throws(
             () => formatDate('not a date'),
-            { message: 'Invalid Date pass to format' }
+            { message: 'Invalid Date pass to format' },
         );
     });
 

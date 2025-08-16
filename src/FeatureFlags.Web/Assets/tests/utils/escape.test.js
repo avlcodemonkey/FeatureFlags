@@ -20,7 +20,7 @@ describe('escape', () => {
     it('escapes only the special characters', () => {
         assert.strictEqual(
             escape('a&b<c>d"e\'f/g`h=i'),
-            'a&amp;b&lt;c&gt;d&quot;e&#39;f&#x2F;g&#x60;h&#x3D;i'
+            'a&amp;b&lt;c&gt;d&quot;e&#39;f&#x2F;g&#x60;h&#x3D;i',
         );
     });
 
