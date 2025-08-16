@@ -38,9 +38,9 @@ function getPjax() {
  * Gets the target element for content replacement.
  * @returns {HTMLElement | null | undefined} Target element
  */
-function getTarget() {
-    return getPjax()?.querySelector('[data-pjax-target]');
-}
+// function getTarget() {
+//     return getPjax()?.querySelector('[data-pjax-target]');
+// }
 
 /**
  * Gets the loading indicator element.
