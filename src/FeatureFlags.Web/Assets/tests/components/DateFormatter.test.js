@@ -2,16 +2,20 @@
  * Unit tests for nilla-date.
  */
 
-import {
-    describe, expect, it,
-} from 'vitest';
-import { formatDate } from '../../js/utils/formatDate';
-import { isRendered } from '../utils';
-import '../../js/components/DateFormatter';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { formatDate } from '../../js/utils/formatDate.js';
+import isRendered from '../testUtils/isRendered.js';
+import setupDom from '../testUtils/setupDom.js';
+
+// Setup jsdom first
+await setupDom();
+
+// Import the custom element after jsdom is set up
+await import('../../js/components/DateFormatter.js');
 
 const dateString = '2024-02-27 01:23:45';
 const testDate = new Date(`${dateString}z`);
-const localeDateString = testDate.toLocaleString();
 const invalidDateString = 'gibberish';
 const dateFormat = 'YYYY-MM-DD hh:mm:ss.SSS A';
 const formattedDateString = formatDate(testDate, dateFormat);
@@ -24,15 +28,23 @@ function getDateFormatter() {
     return document.body.querySelector('nilla-date');
 }
 
-describe('date formatter with no format', async () => {
-    it('should have locale formatted date when date is valid', async () => {
-        document.body.innerHTML = `<nilla-date>${dateString}</nilla-date>`;
+describe('date formatter with no format', () => {
+    it('should show date in locale format when format string is empty', async () => {
+        // Mock Date.prototype.toLocaleString for consistent output
+        const originalToLocaleString = Date.prototype.toLocaleString;
+        // Mock toLocaleString to return a fixed string for all dates
+        Date.prototype.toLocaleString = function() { // NOSONAR
+            return 'MOCKED_LOCALE_STRING';
+        };
+
+        document.body.innerHTML = `<nilla-date data-date-format="">${dateString}</nilla-date>`;
         await isRendered(getDateFormatter);
+        // reset prototype to original
+        Date.prototype.toLocaleString = originalToLocaleString; // NOSONAR
 
         const dateFormatter = getDateFormatter();
-
-        expect(dateFormatter).toBeTruthy();
-        expect(dateFormatter.textContent).toEqual(localeDateString);
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, 'MOCKED_LOCALE_STRING', 'Should show date in locale format for empty format');
     });
 
     it('should have unchanged content when date is omitted', async () => {
@@ -41,8 +53,8 @@ describe('date formatter with no format', async () => {
 
         const dateFormatter = getDateFormatter();
 
-        expect(dateFormatter).toBeTruthy();
-        expect(dateFormatter.textContent).toEqual('');
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, '', 'Should show empty string when date is omitted');
     });
 
     it('should have unchanged content when date is invalid', async () => {
@@ -51,20 +63,20 @@ describe('date formatter with no format', async () => {
 
         const dateFormatter = getDateFormatter();
 
-        expect(dateFormatter).toBeTruthy();
-        expect(dateFormatter.textContent).toEqual(invalidDateString);
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, invalidDateString, 'Should show original content when date is invalid');
     });
 });
 
-describe('date formatter with format', async () => {
+describe('date formatter with format', () => {
     it('should have correctly formatted date when date is valid', async () => {
         document.body.innerHTML = `<nilla-date data-date-format="${dateFormat}">${dateString}</nilla-date>`;
         await isRendered(getDateFormatter);
 
         const dateFormatter = getDateFormatter();
 
-        expect(dateFormatter).toBeTruthy();
-        expect(dateFormatter.textContent).toEqual(formattedDateString);
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, formattedDateString, 'Should show formatted date string');
     });
 
     it('should have unchanged content when date is omitted', async () => {
@@ -73,8 +85,8 @@ describe('date formatter with format', async () => {
 
         const dateFormatter = getDateFormatter();
 
-        expect(dateFormatter).toBeTruthy();
-        expect(dateFormatter.textContent).toEqual('');
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, '', 'Should show empty string when date is omitted');
     });
 
     it('should have unchanged content when date is invalid', async () => {
@@ -83,7 +95,84 @@ describe('date formatter with format', async () => {
 
         const dateFormatter = getDateFormatter();
 
-        expect(dateFormatter).toBeTruthy();
-        expect(dateFormatter.textContent).toEqual(invalidDateString);
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, invalidDateString, 'Should show original content when date is invalid');
+    });
+
+    it('should show format string when format string is unsupported', async () => {
+        const unsupportedFormat = 'XXXXXX';
+        document.body.innerHTML = `<nilla-date data-date-format="${unsupportedFormat}">${dateString}</nilla-date>`;
+        await isRendered(getDateFormatter);
+
+        const dateFormatter = getDateFormatter();
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, unsupportedFormat, 'Should show format string for unsupported format');
+    });
+});
+
+describe('date formatter edge cases', () => {
+    it('should handle leap year date', async () => {
+        const leapDateString = '2024-02-29 12:00:00';
+        const leapDate = new Date(`${leapDateString}z`);
+        const expected = leapDate.toLocaleString();
+
+        document.body.innerHTML = `<nilla-date>${leapDateString}</nilla-date>`;
+        await isRendered(getDateFormatter);
+
+        const dateFormatter = getDateFormatter();
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, expected, 'Should show locale formatted leap year date');
+    });
+
+    it('should handle very old date', async () => {
+        const oldDateString = '1900-01-01 00:00:00';
+        const oldDate = new Date(`${oldDateString}z`);
+        const expected = oldDate.toLocaleString();
+
+        document.body.innerHTML = `<nilla-date>${oldDateString}</nilla-date>`;
+        await isRendered(getDateFormatter);
+
+        const dateFormatter = getDateFormatter();
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, expected, 'Should show locale formatted old date');
+    });
+
+    it('should handle very future date', async () => {
+        const futureDateString = '3000-12-31 23:59:59';
+        const futureDate = new Date(`${futureDateString}z`);
+        const expected = futureDate.toLocaleString();
+
+        document.body.innerHTML = `<nilla-date>${futureDateString}</nilla-date>`;
+        await isRendered(getDateFormatter);
+
+        const dateFormatter = getDateFormatter();
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, expected, 'Should show locale formatted future date');
+    });
+
+    it('should handle ambiguous date string', async () => {
+        const ambiguousDateString = '02/03/2024 01:23:45'; // MM/DD/YYYY or DD/MM/YYYY
+        const ambiguousDate = new Date(`${ambiguousDateString}z`);
+        const expected = ambiguousDate.toLocaleString();
+
+        document.body.innerHTML = `<nilla-date>${ambiguousDateString}</nilla-date>`;
+        await isRendered(getDateFormatter);
+
+        const dateFormatter = getDateFormatter();
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, expected, 'Should show locale formatted ambiguous date');
+    });
+
+    it('should handle time zone offset', async () => {
+        const tzDateString = '2024-02-27T01:23:45+05:00';
+        const tzDate = new Date(tzDateString);
+        const expected = formatDate(tzDate, dateFormat);
+
+        document.body.innerHTML = `<nilla-date data-date-format="${dateFormat}">${tzDateString}</nilla-date>`;
+        await isRendered(getDateFormatter);
+
+        const dateFormatter = getDateFormatter();
+        assert.ok(dateFormatter, 'Date formatter element should exist');
+        assert.strictEqual(dateFormatter.textContent, expected, 'Should show locale formatted date with time zone');
     });
 });

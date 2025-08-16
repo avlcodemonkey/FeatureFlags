@@ -1,4 +1,4 @@
-import TableSortDirection from '../constants/TableSortDirection';
+import TableSortDirection from '../constants/TableSortDirection.js';
 
 class TableSort {
     /**

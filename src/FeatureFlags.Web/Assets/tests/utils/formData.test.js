@@ -2,12 +2,12 @@
  * Unit tests for formData util functions.
  */
 
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import isRendered from '../testUtils/isRendered.js';
-import tick from '../testUtils/tick.js';
+import { describe, it } from 'node:test';
 import { formToObject, objectToForm } from '../../js/utils/formData.js';
+import isRendered from '../testUtils/isRendered.js';
 import setupDom from '../testUtils/setupDom.js';
+import tick from '../testUtils/tick.js';
 
 // Setup jsdom first
 await setupDom();

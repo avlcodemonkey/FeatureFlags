@@ -1,6 +1,6 @@
+import DefaultTimeout from '../constants/Fetch';
 import HttpHeaders from '../constants/HttpHeaders';
 import HttpMethods from '../constants/HttpMethods';
-import DefaultTimeout from '../constants/Fetch';
 import FetchError from '../errors/FetchError';
 
 /**

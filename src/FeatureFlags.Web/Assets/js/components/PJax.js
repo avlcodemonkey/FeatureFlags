@@ -1,10 +1,10 @@
-import BaseComponent from './BaseComponent';
-import { getResponseBody, isJson } from '../utils/response';
-import HttpMethods from '../constants/HttpMethods';
-import HttpHeaders from '../constants/HttpHeaders';
-import DefaultTimeout from '../constants/Fetch';
-import NillaInfo from './InfoDialog';
-import FetchError from '../errors/FetchError';
+import DefaultTimeout from '../constants/Fetch.js';
+import HttpHeaders from '../constants/HttpHeaders.js';
+import HttpMethods from '../constants/HttpMethods.js';
+import FetchError from '../errors/FetchError.js';
+import { getResponseBody, isJson } from '../utils/response.js';
+import BaseComponent from './BaseComponent.js';
+import NillaInfo from './InfoDialog.js';
 
 /**
  * Enum for identifiers to query DOM elements.

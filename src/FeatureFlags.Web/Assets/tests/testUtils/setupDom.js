@@ -18,8 +18,11 @@ async function setupDom(html) {
             global.document ??= dom.window.document;
             global.HTMLElement ??= dom.window.HTMLElement;
             global.HTMLInputElement ??= dom.window.HTMLInputElement;
+            global.HTMLDialogElement ??= dom.window.HTMLDialogElement;
             global.FormData = dom.window.FormData;
             global.customElements ??= dom.window.customElements;
+            global.KeyboardEvent ??= dom.window.KeyboardEvent;
+            global.MouseEvent ??= dom.window.MouseEvent;
 
             resolve(dom);
         });

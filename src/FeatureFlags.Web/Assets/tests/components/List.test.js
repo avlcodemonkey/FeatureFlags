@@ -2,11 +2,11 @@
  * Unit tests for nilla-list.
  */
 
-import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import isRendered from '../testUtils/isRendered.js';
 import setupDom from '../testUtils/setupDom.js';
 import tick from '../testUtils/tick.js';
-import isRendered from '../testUtils/isRendered.js';
 
 // Setup jsdom first
 await setupDom();

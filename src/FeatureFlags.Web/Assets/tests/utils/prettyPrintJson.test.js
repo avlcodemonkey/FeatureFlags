@@ -2,8 +2,8 @@
  * Unit tests for prettyPrintJson function.
  */
 
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import { prettyPrintJson } from '../../js/utils/prettyPrintJson.js';
 
 describe('prettyPrintJson', () => {

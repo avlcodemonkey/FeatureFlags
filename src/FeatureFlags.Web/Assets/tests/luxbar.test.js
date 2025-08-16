@@ -2,12 +2,12 @@
  * Unit tests for Luxbar toggle functionality.
  */
 
-import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import isRendered from './testUtils/isRendered.js';
-import tick from './testUtils/tick.js';
-import setupDom from './testUtils/setupDom.js';
+import { beforeEach, describe, it } from 'node:test';
 import setupLuxbarToggle from '../js/luxbar.js';
+import isRendered from './testUtils/isRendered.js';
+import setupDom from './testUtils/setupDom.js';
+import tick from './testUtils/tick.js';
 
 // Setup jsdom first
 await setupDom();

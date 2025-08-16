@@ -2,8 +2,8 @@
  * Unit tests for autocomplete functionality.
  */
 
-import { describe, it, beforeEach, afterEach, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 import autocomplete from '../../js/utils/autocomplete.js';
 import setupDom from '../testUtils/setupDom.js';
 import tick from '../testUtils/tick.js';

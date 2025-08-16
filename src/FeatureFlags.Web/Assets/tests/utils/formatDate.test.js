@@ -2,8 +2,8 @@
  * Unit tests for formatDate function.
  */
 
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import { formatDate } from '../../js/utils/formatDate.js';
 
 describe('formatDate', () => {

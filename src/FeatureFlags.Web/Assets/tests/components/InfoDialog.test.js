@@ -3,11 +3,17 @@
  * Testing keyboard events is iffy, so focus/tab trap logic isn't tested.
  */
 
-import {
-    beforeEach, beforeAll, describe, expect, it, vi, afterEach,
-} from 'vitest';
-import { tick, isRendered } from '../utils';
-import '../../js/components/InfoDialog';
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import isRendered from '../testUtils/isRendered.js';
+import setupDom from '../testUtils/setupDom.js';
+import tick from '../testUtils/tick.js';
+
+// Setup jsdom first
+await setupDom();
+
+// Import the custom element after jsdom is set up
+await import('../../js/components/InfoDialog.js');
 
 const textContent = 'Dialog test';
 const textOkay = 'okay';
@@ -56,7 +62,7 @@ function getDoNothingButton() {
 
 /**
  * Gets the dialog element after its created.
- * @returns {HTMLElement | null | undefined} Button
+ * @returns {HTMLElement | null | undefined} Dialog
  */
 function getNativeDialog() {
     return document.body.querySelector('dialog');
@@ -78,99 +84,94 @@ function getCancelButton() {
     return getNativeDialog()?.querySelector(`button[value="${valueCancel}"]`);
 }
 
-describe('info dialog', async () => {
+// Mock dialog methods since jsdom doesn't support modals
+HTMLDialogElement.prototype.show = () => {
+};
+HTMLDialogElement.prototype.showModal = () => {
+    HTMLDialogElement.prototype._showModalCalled = (HTMLDialogElement.prototype._showModalCalled || 0) + 1;
+};
+HTMLDialogElement.prototype.close = () => {
+    HTMLDialogElement.prototype._closeCalled = (HTMLDialogElement.prototype._closeCalled || 0) + 1;
+};
+
+describe('info dialog', () => {
     beforeEach(async () => {
         document.body.innerHTML = infoDialogHtml;
         await isRendered(getInfoDialog);
-    });
-
-    beforeAll(() => {
-        // workaround since jsdom doesn't support modals yet
-        HTMLDialogElement.prototype.show = vi.fn();
-        HTMLDialogElement.prototype.showModal = vi.fn();
-        HTMLDialogElement.prototype.close = vi.fn();
-    });
-
-    afterEach(() => {
-        vi.restoreAllMocks();
+        // Reset call counters
+        HTMLDialogElement.prototype._showModalCalled = 0;
+        HTMLDialogElement.prototype._closeCalled = 0;
     });
 
     it('should open on open button click', async () => {
         const infoDialog = getInfoDialog();
         const openButton = getOpenButton();
-        const spy = vi.spyOn(HTMLDialogElement.prototype, 'showModal');
 
         openButton?.click();
         await tick();
         const nativeDialog = getNativeDialog();
 
-        expect(infoDialog).toBeTruthy();
-        expect(openButton).toBeTruthy();
-        expect(nativeDialog).toBeTruthy();
-        expect(nativeDialog.innerHTML).toContain(textContent);
-        expect(spy).toHaveBeenCalledTimes(1);
+        assert.ok(infoDialog, 'Info dialog element should exist');
+        assert.ok(openButton, 'Open button should exist');
+        assert.ok(nativeDialog, 'Native dialog should exist');
+        assert.ok(nativeDialog.innerHTML.includes(textContent), 'Dialog should contain expected content');
+        assert.strictEqual(HTMLDialogElement.prototype._showModalCalled, 1, 'showModal should be called once');
     });
 
     it('should not open on bad button click', async () => {
         const infoDialog = getInfoDialog();
         const badButton = getBadButton();
-        const spy = vi.spyOn(HTMLDialogElement.prototype, 'showModal');
 
         badButton?.click();
         await tick();
         const nativeDialog = getNativeDialog();
 
-        expect(infoDialog).toBeTruthy();
-        expect(badButton).toBeTruthy();
-        expect(nativeDialog).toBeFalsy();
-        expect(spy).toHaveBeenCalledTimes(0);
+        assert.ok(infoDialog, 'Info dialog element should exist');
+        assert.ok(badButton, 'Bad button should exist');
+        assert.ok(!nativeDialog, 'Native dialog should not exist');
+        assert.strictEqual(HTMLDialogElement.prototype._showModalCalled, 0, 'showModal should not be called');
     });
 
     it('should not open on do nothing button click', async () => {
         const infoDialog = getInfoDialog();
         const doNothingButton = getDoNothingButton();
-        const spy = vi.spyOn(HTMLDialogElement.prototype, 'showModal');
 
         doNothingButton?.click();
         await tick();
         const nativeDialog = getNativeDialog();
 
-        expect(infoDialog).toBeTruthy();
-        expect(doNothingButton).toBeTruthy();
-        expect(nativeDialog).toBeFalsy();
-        expect(spy).toHaveBeenCalledTimes(0);
+        assert.ok(infoDialog, 'Info dialog element should exist');
+        assert.ok(doNothingButton, 'Do nothing button should exist');
+        assert.ok(!nativeDialog, 'Native dialog should not exist');
+        assert.strictEqual(HTMLDialogElement.prototype._showModalCalled, 0, 'showModal should not be called');
     });
 
     it('should have content and okay button when open', async () => {
         const infoDialog = getInfoDialog();
         const openButton = getOpenButton();
-        const spyShow = vi.spyOn(HTMLDialogElement.prototype, 'showModal');
-        const spyClose = vi.spyOn(HTMLDialogElement.prototype, 'close');
 
         openButton?.click();
         await tick();
         const nativeDialog = getNativeDialog();
         const okayButton = getOkayButton();
         const cancelButton = getCancelButton();
-        const p = nativeDialog.querySelector('p');
+        const p = nativeDialog?.querySelector('p');
 
-        expect(infoDialog).toBeTruthy();
-        expect(openButton).toBeTruthy();
-        expect(nativeDialog).toBeTruthy();
-        expect(p).toBeTruthy();
-        expect(p.textContent).toEqual(textContent);
-        expect(okayButton).toBeTruthy();
-        expect(okayButton.textContent).toEqual(textOkay);
-        expect(cancelButton).toBeFalsy();
-        expect(spyShow).toHaveBeenCalledTimes(1);
-        expect(spyClose).toHaveBeenCalledTimes(0);
+        assert.ok(infoDialog, 'Info dialog element should exist');
+        assert.ok(openButton, 'Open button should exist');
+        assert.ok(nativeDialog, 'Native dialog should exist');
+        assert.ok(p, 'Dialog should contain a <p> element');
+        assert.strictEqual(p.textContent, textContent, 'Dialog <p> should contain expected text');
+        assert.ok(okayButton, 'Okay button should exist');
+        assert.strictEqual(okayButton.textContent, textOkay, 'Okay button should have expected text');
+        assert.ok(!cancelButton, 'Cancel button should not exist');
+        assert.strictEqual(HTMLDialogElement.prototype._showModalCalled, 1, 'showModal should be called once');
+        assert.strictEqual(HTMLDialogElement.prototype._closeCalled, 0, 'close should not be called yet');
     });
 
     it('should close dialog when clicking okay', async () => {
         const infoDialog = getInfoDialog();
         const openButton = getOpenButton();
-        const spyShow = vi.spyOn(HTMLDialogElement.prototype, 'showModal');
-        const spyClose = vi.spyOn(HTMLDialogElement.prototype, 'close');
 
         openButton?.click();
         await tick();
@@ -179,12 +180,11 @@ describe('info dialog', async () => {
         okayButton?.click();
         await tick();
 
-        expect(infoDialog).toBeTruthy();
-        expect(openButton).toBeTruthy();
-        expect(nativeDialog).toBeTruthy();
-        expect(okayButton).toBeTruthy();
-        expect(spyShow).toHaveBeenCalledTimes(1);
-        // jsdom doesn't support modals yet, so check our mock was called instead of checking that getNativeDialog() is falsy
-        expect(spyClose).toHaveBeenCalledTimes(1);
+        assert.ok(infoDialog, 'Info dialog element should exist');
+        assert.ok(openButton, 'Open button should exist');
+        assert.ok(nativeDialog, 'Native dialog should exist');
+        assert.ok(okayButton, 'Okay button should exist');
+        assert.strictEqual(HTMLDialogElement.prototype._showModalCalled, 1, 'showModal should be called once');
+        assert.strictEqual(HTMLDialogElement.prototype._closeCalled, 1, 'close should be called once');
     });
 });

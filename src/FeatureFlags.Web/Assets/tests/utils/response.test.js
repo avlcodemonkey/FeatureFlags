@@ -2,9 +2,9 @@
  * Unit tests for response util functions.
  */
 
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { getContentType, isJson, getResponseBody } from '../../js/utils/response.js';
+import { describe, it } from 'node:test';
+import { getContentType, getResponseBody, isJson } from '../../js/utils/response.js';
 
 describe('getContentType', () => {
     it('should return value when content type is set', async () => {

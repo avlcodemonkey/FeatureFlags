@@ -2,8 +2,8 @@
  * Unit tests for template rendering function.
  */
 
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import renderTemplate from '../../js/utils/renderTemplate.js';
 
 describe('renderTemplate', () => {
