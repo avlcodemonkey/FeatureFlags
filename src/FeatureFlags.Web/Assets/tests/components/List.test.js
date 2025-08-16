@@ -11,7 +11,7 @@ import isRendered from '../testUtils/isRendered.js';
 // Setup jsdom first
 await setupDom();
 
-// Import the custom element AFTER jsdom is set up
+// Import the custom element after jsdom is set up
 await import('../../js/components/List.js');
 
 const itemHtml = `
@@ -122,5 +122,89 @@ describe('nilla-list', () => {
 
         const emptyMessage = getEmptyMessage();
         assert.ok(emptyMessage.classList.contains('is-hidden'), 'Empty message should be hidden when item is present');
+    });
+
+    it('adds multiple items sequentially', async () => {
+        const addButton = getAddButton();
+        addButton?.click();
+        await tick();
+        addButton?.click();
+        await tick();
+        addButton?.click();
+        await tick();
+
+        const items = getItems();
+        assert.strictEqual(items.length, 3, 'Should have three items after three adds');
+
+        const emptyMessage = getEmptyMessage();
+        assert.ok(emptyMessage.classList.contains('is-hidden'), 'Empty message should be hidden when items are present');
+    });
+
+    it('removes items one by one until empty', async () => {
+        const addButton = getAddButton();
+        for (let i = 0; i < 3; i++) {
+            addButton?.click();
+            await tick();
+        }
+
+        let items = getItems();
+        assert.strictEqual(items.length, 3, 'Should have three items after adds');
+
+        // Remove items one by one
+        for (let i = 0; i < 3; i++) {
+            items = getItems();
+            const removeButton = items[0].querySelector('[data-list-remove-button]');
+            removeButton?.click();
+            await tick();
+        }
+
+        items = getItems();
+        assert.strictEqual(items.length, 0, 'Should have zero items after removing all');
+
+        const emptyMessage = getEmptyMessage();
+        assert.ok(!emptyMessage.classList.contains('is-hidden'), 'Empty message should be visible after all items removed');
+    });
+
+    it('removes only the clicked item when multiple exist', async () => {
+        const addButton = getAddButton();
+        for (let i = 0; i < 3; i++) {
+            addButton?.click();
+            await tick();
+        }
+
+        let items = getItems();
+        assert.strictEqual(items.length, 3, 'Should have three items after adds');
+
+        // Remove the second item
+        const secondRemoveButton = items[1].querySelector('[data-list-remove-button]');
+        secondRemoveButton?.click();
+        await tick();
+
+        items = getItems();
+        assert.strictEqual(items.length, 2, 'Should have two items after removing one');
+    });
+
+    it('does not add item if add button is disabled', async () => {
+        const addButton = getAddButton();
+        addButton.disabled = true;
+        addButton.click();
+        await tick();
+
+        const items = getItems();
+        assert.strictEqual(items.length, 0, 'Should not add item when add button is disabled');
+    });
+
+    it('does not throw if remove button is clicked when no items', async () => {
+        const container = getContainer();
+        // Simulate clicking a remove button when no items exist
+        const fakeRemoveButton = document.createElement('button');
+        fakeRemoveButton.setAttribute('data-list-remove-button', '');
+        container.appendChild(fakeRemoveButton);
+
+        assert.doesNotThrow(() => {
+            fakeRemoveButton.click();
+        }, 'Clicking remove button with no items should not throw');
+
+        container.removeChild(fakeRemoveButton);
     });
 });
