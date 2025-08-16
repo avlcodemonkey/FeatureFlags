@@ -6,6 +6,10 @@
 function formToObject(formElement) {
     const result = {};
 
+    if (!formElement) {
+        return result;
+    }
+
     new FormData(formElement)?.forEach((value, key) => {
         if (!Object.hasOwn(result, key)) {
             result[key] = value;
@@ -34,6 +38,10 @@ function objectToForm(data, formElement) {
     try {
         Object.entries(data).forEach(([key, value]) => {
             const input = formElement.elements.namedItem(key);
+            if (input.disabled) {
+                return;
+            }
+
             if (input) {
                 if (Array.isArray(value)) {
                     // @ts-ignore input will be a HTMLSelectElement

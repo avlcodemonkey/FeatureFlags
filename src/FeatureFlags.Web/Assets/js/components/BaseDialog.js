@@ -1,5 +1,5 @@
-import BaseComponent from './BaseComponent';
-import escape from '../utils/escape';
+import escape from '../utils/escape.js';
+import BaseComponent from './BaseComponent.js';
 
 /**
  * Extend the base component to provide common functionality for custom dialogs.

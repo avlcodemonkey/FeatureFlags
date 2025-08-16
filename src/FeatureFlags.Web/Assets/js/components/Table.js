@@ -1,14 +1,14 @@
 /* global RequestInit */
 
-import BaseComponent from './BaseComponent';
-import FetchError from './FetchError';
-import HttpHeaders from '../constants/HttpHeaders';
-import DefaultTimeout from '../constants/Fetch';
-import TableSort from './TableSort';
-import TableSortDirection from '../constants/TableSortDirection';
-import TableSettings from '../constants/TableSettings';
-import { formToObject, objectToForm } from '../utils/formData';
-import renderTemplate from '../utils/renderTemplate';
+import DefaultTimeout from '../constants/Fetch.js';
+import HttpHeaders from '../constants/HttpHeaders.js';
+import TableSettings from '../constants/TableSettings.js';
+import TableSortDirection from '../constants/TableSortDirection.js';
+import FetchError from '../errors/FetchError.js';
+import { formToObject, objectToForm } from '../utils/formData.js';
+import renderTemplate from '../utils/renderTemplate.js';
+import BaseComponent from './BaseComponent.js';
+import TableSort from './TableSort.js';
 
 /**
  * Enum for identifiers to query DOM elements.

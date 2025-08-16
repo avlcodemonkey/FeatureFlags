@@ -1,8 +1,8 @@
-import autocomplete from '../utils/autocomplete';
-import FetchError from './FetchError';
-import HttpHeaders from '../constants/HttpHeaders';
-import HttpMethods from '../constants/HttpMethods';
-import DefaultTimeout from '../constants/Fetch';
+import DefaultTimeout from '../constants/Fetch.js';
+import HttpHeaders from '../constants/HttpHeaders.js';
+import HttpMethods from '../constants/HttpMethods.js';
+import FetchError from '../errors/FetchError.js';
+import autocomplete from '../utils/autocomplete.js';
 
 /**
  * @typedef AutocompleteItem

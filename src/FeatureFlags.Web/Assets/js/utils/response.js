@@ -4,7 +4,7 @@
  * @returns {string} Content type.
  */
 function getContentType(response) {
-    return response?.headers.has('content-type') ? response.headers.get('content-type') : '';
+    return response?.headers.get('content-type')?.toLowerCase() ?? '';
 }
 
 /**

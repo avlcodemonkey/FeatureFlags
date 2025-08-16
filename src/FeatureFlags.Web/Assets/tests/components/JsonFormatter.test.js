@@ -3,11 +3,16 @@
  * Doesn't try to test 3rd party prettyPrintJson library.
  */
 
-import {
-    beforeEach, describe, expect, it,
-} from 'vitest';
-import { isRendered } from '../utils';
-import '../../js/components/JsonFormatter';
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import isRendered from '../testUtils/isRendered.js';
+import setupDom from '../testUtils/setupDom.js';
+
+// Setup jsdom first
+await setupDom();
+
+// Import the custom element after jsdom is set up
+await import('../../js/components/JsonFormatter.js');
 
 const testString = 'find this test string';
 const testObj = {
@@ -45,7 +50,7 @@ function getPre() {
     return getJsonFormatter()?.querySelector('pre');
 }
 
-describe('json formatter with content', async () => {
+describe('json formatter with content', () => {
     beforeEach(async () => {
         document.body.innerHTML = jsonFormatterHtml;
         await isRendered(getJsonFormatter);
@@ -55,22 +60,22 @@ describe('json formatter with content', async () => {
         const jsonFormatter = getJsonFormatter();
         const pre = getPre();
 
-        expect(jsonFormatter).toBeTruthy();
-        expect(pre).toBeTruthy();
-        expect(pre.innerHTML).toContain(testString);
+        assert.ok(jsonFormatter, 'Json formatter element should exist');
+        assert.ok(pre, 'Pre element should exist');
+        assert.ok(pre.innerHTML.includes(testString), 'Pre should contain test string');
     });
 
     it('should have pre json container', async () => {
         const jsonFormatter = getJsonFormatter();
         const pre = getPre();
 
-        expect(jsonFormatter).toBeTruthy();
-        expect(pre).toBeTruthy();
-        expect(pre.classList).toContain('json-container');
+        assert.ok(jsonFormatter, 'Json formatter element should exist');
+        assert.ok(pre, 'Pre element should exist');
+        assert.ok(pre.classList.contains('json-container'), 'Pre should have json-container class');
     });
 });
 
-describe('json formatter with no content', async () => {
+describe('json formatter with no content', () => {
     beforeEach(async () => {
         document.body.innerHTML = emptyJsonFormatterHtml;
         await isRendered(getJsonFormatter);
@@ -80,22 +85,22 @@ describe('json formatter with no content', async () => {
         const jsonFormatter = getJsonFormatter();
         const pre = getPre();
 
-        expect(jsonFormatter).toBeTruthy();
-        expect(pre).toBeTruthy();
-        expect(pre.innerHTML).toContain('{}');
+        assert.ok(jsonFormatter, 'Json formatter element should exist');
+        assert.ok(pre, 'Pre element should exist');
+        assert.ok(pre.innerHTML.includes('{}'), 'Pre should contain {} for empty json');
     });
 
     it('should have pre json container', async () => {
         const jsonFormatter = getJsonFormatter();
         const pre = getPre();
 
-        expect(jsonFormatter).toBeTruthy();
-        expect(pre).toBeTruthy();
-        expect(pre.classList).toContain('json-container');
+        assert.ok(jsonFormatter, 'Json formatter element should exist');
+        assert.ok(pre, 'Pre element should exist');
+        assert.ok(pre.classList.contains('json-container'), 'Pre should have json-container class');
     });
 });
 
-describe('json formatter with invalid content', async () => {
+describe('json formatter with invalid content', () => {
     beforeEach(async () => {
         document.body.innerHTML = invalidJsonFormatterHtml;
         await isRendered(getJsonFormatter);
@@ -104,15 +109,15 @@ describe('json formatter with invalid content', async () => {
     it('should have invalid json', async () => {
         const jsonFormatter = getJsonFormatter();
 
-        expect(jsonFormatter).toBeTruthy();
-        expect(jsonFormatter.innerHTML).toContain(invalidJson);
+        assert.ok(jsonFormatter, 'Json formatter element should exist');
+        assert.ok(jsonFormatter.innerHTML.includes(invalidJson), 'Json formatter should contain invalid json');
     });
 
     it('should not have pre json container', async () => {
         const jsonFormatter = getJsonFormatter();
         const pre = getPre();
 
-        expect(jsonFormatter).toBeTruthy();
-        expect(pre).toBeFalsy();
+        assert.ok(jsonFormatter, 'Json formatter element should exist');
+        assert.ok(!pre, 'Pre element should not exist for invalid json');
     });
 });

@@ -1,5 +1,5 @@
-import BaseDialog from './BaseDialog';
-import ConfirmClickEvent from '../events/ConfirmClickEvent';
+import ConfirmClickEvent from '../events/ConfirmClickEvent.js';
+import BaseDialog from './BaseDialog.js';
 
 /**
  * Web component that wraps confirm logic around any links or buttons it contains.
@@ -23,7 +23,7 @@ class ConfirmDialog extends BaseDialog {
     }
 
     /**
-     * Open alert dialog when user clicks on the element.
+     * Open confirm dialog when user clicks on the element.
      * @param {ConfirmClickEvent} event Click event that triggers the dialog.
      */
     handleEvent(event) {

@@ -1,4 +1,4 @@
-import { formatDate } from '../utils/formatDate';
+import { formatDate } from '../utils/formatDate.js';
 
 /**
  * Web component for displaying dates in a friendly way.
@@ -15,7 +15,7 @@ class DateFormatter extends HTMLElement {
             try {
                 // backend will always return date in UTC. let JS convert to local
                 let dateString = this.textContent;
-                if (!dateString.endsWith('Z')) {
+                if (!dateString.toLowerCase().endsWith('z') && dateString.indexOf('+') === -1) {
                     dateString = `${dateString}Z`;
                 }
                 const date = new Date(dateString);

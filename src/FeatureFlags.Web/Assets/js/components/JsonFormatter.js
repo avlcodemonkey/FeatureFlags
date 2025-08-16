@@ -1,4 +1,4 @@
-import { prettyPrintJson } from '../utils/prettyPrintJson';
+import { prettyPrintJson } from '../utils/prettyPrintJson.js';
 
 /**
  * Web component for displaying json in a pretty way.

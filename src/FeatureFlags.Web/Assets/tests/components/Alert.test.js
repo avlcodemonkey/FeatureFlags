@@ -2,11 +2,17 @@
  * Unit tests for nilla-alert.
  */
 
-import {
-    beforeEach, describe, expect, it,
-} from 'vitest';
-import { tick, isRendered } from '../utils';
-import '../../js/components/Alert';
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import isRendered from '../testUtils/isRendered.js';
+import setupDom from '../testUtils/setupDom.js';
+import tick from '../testUtils/tick.js';
+
+// Setup jsdom first
+await setupDom();
+
+// Import the custom element after jsdom is set up
+await import('../../js/components/Alert.js');
 
 const textContent = 'Alert test';
 
@@ -53,7 +59,7 @@ function getDoNothingButton() {
     return getAlert()?.querySelector('[data-do-nothing]');
 }
 
-describe('dismissable alert', async () => {
+describe('dismissable alert', () => {
     beforeEach(async () => {
         document.body.innerHTML = dismissableAlertHtml;
         await isRendered(getAlert);
@@ -61,8 +67,7 @@ describe('dismissable alert', async () => {
 
     it('should have test text', async () => {
         const alert = getAlert();
-
-        expect(alert.innerHTML).toContain(textContent);
+        assert.ok(alert.innerHTML.includes(textContent), 'Alert should contain test text');
     });
 
     it('should hide on dismiss button click', async () => {
@@ -72,40 +77,9 @@ describe('dismissable alert', async () => {
         dismissButton?.click();
         await tick();
 
-        expect(alert).toBeTruthy();
-        expect(dismissButton).toBeTruthy();
-        expect(alert.classList).toContain('is-hidden');
-    });
-
-    it('should not hide on do nothing button click', async () => {
-        const alert = getAlert();
-        const doNothingButton = getDoNothingButton();
-
-        getDoNothingButton()?.click();
-        await tick();
-
-        expect(alert).toBeTruthy();
-        expect(doNothingButton).toBeTruthy();
-        expect(alert.classList).not.toContain('is-hidden');
-    });
-});
-
-describe('not dismissable alert', async () => {
-    beforeEach(async () => {
-        document.body.innerHTML = notDismissableAlertHtml;
-        await isRendered(getAlert);
-    });
-
-    it('should have test text', async () => {
-        const alert = getAlert();
-
-        expect(alert.innerHTML).toContain(textContent);
-    });
-
-    it('should have no dismiss button', async () => {
-        const dismissButton = getDismissButton();
-
-        expect(dismissButton).toBeFalsy();
+        assert.ok(alert, 'Alert should exist');
+        assert.ok(dismissButton, 'Dismiss button should exist');
+        assert.ok(alert.classList.contains('is-hidden'), 'Alert should be hidden after dismiss');
     });
 
     it('should not hide on do nothing button click', async () => {
@@ -115,8 +89,37 @@ describe('not dismissable alert', async () => {
         doNothingButton?.click();
         await tick();
 
-        expect(alert).toBeTruthy();
-        expect(doNothingButton).toBeTruthy();
-        expect(alert.classList).not.toContain('is-hidden');
+        assert.ok(alert, 'Alert should exist');
+        assert.ok(doNothingButton, 'Do nothing button should exist');
+        assert.ok(!alert.classList.contains('is-hidden'), 'Alert should not be hidden after do nothing');
+    });
+});
+
+describe('not dismissable alert', () => {
+    beforeEach(async () => {
+        document.body.innerHTML = notDismissableAlertHtml;
+        await isRendered(getAlert);
+    });
+
+    it('should have test text', async () => {
+        const alert = getAlert();
+        assert.ok(alert.innerHTML.includes(textContent), 'Alert should contain test text');
+    });
+
+    it('should have no dismiss button', async () => {
+        const dismissButton = getDismissButton();
+        assert.ok(!dismissButton, 'Dismiss button should not exist');
+    });
+
+    it('should not hide on do nothing button click', async () => {
+        const alert = getAlert();
+        const doNothingButton = getDoNothingButton();
+
+        doNothingButton?.click();
+        await tick();
+
+        assert.ok(alert, 'Alert should exist');
+        assert.ok(doNothingButton, 'Do nothing button should exist');
+        assert.ok(!alert.classList.contains('is-hidden'), 'Alert should not be hidden after do nothing');
     });
 });

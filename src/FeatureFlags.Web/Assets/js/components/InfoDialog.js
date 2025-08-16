@@ -1,4 +1,4 @@
-import BaseDialog from './BaseDialog';
+import BaseDialog from './BaseDialog.js';
 
 /**
  * Extend the custom dialog class to create the alert web component.
