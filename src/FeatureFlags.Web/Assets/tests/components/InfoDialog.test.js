@@ -95,7 +95,21 @@ HTMLDialogElement.prototype.close = () => {
 };
 
 describe('info dialog', () => {
+// Save original dialog methods
+const originalShow = HTMLDialogElement.prototype.show;
+const originalShowModal = HTMLDialogElement.prototype.showModal;
+const originalClose = HTMLDialogElement.prototype.close;
+
+describe('info dialog', () => {
     beforeEach(async () => {
+        // Mock dialog methods since jsdom doesn't support modals
+        HTMLDialogElement.prototype.show = () => {};
+        HTMLDialogElement.prototype.showModal = () => {
+            HTMLDialogElement.prototype._showModalCalled = (HTMLDialogElement.prototype._showModalCalled || 0) + 1;
+        };
+        HTMLDialogElement.prototype.close = () => {
+            HTMLDialogElement.prototype._closeCalled = (HTMLDialogElement.prototype._closeCalled || 0) + 1;
+        };
         document.body.innerHTML = infoDialogHtml;
         await isRendered(getInfoDialog);
         // Reset call counters
