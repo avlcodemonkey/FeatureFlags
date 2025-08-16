@@ -21,6 +21,7 @@ async function setupDom(html) {
             global.HTMLDialogElement ??= dom.window.HTMLDialogElement;
             global.FormData = dom.window.FormData;
             global.customElements ??= dom.window.customElements;
+            global.Event ??= dom.window.Event;
             global.KeyboardEvent ??= dom.window.KeyboardEvent;
             global.MouseEvent ??= dom.window.MouseEvent;
 
