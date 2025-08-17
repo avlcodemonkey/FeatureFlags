@@ -34,7 +34,7 @@ class List extends BaseComponent {
         }
 
         // render the empty message initially
-        this.renderEmptyMessage();
+        this.#renderEmptyMessage();
 
         // add event listener to handle clicks on remove buttons within the container
         const container = this.getElement(Elements.Container);
@@ -45,7 +45,7 @@ class List extends BaseComponent {
                     const item = event.target.closest(`[data-list-${Elements.Item}]`);
                     if (item) {
                         item.parentNode.removeChild(item);
-                        this.renderEmptyMessage();
+                        this.#renderEmptyMessage();
                     }
                 }
             });
@@ -68,14 +68,14 @@ class List extends BaseComponent {
 
         if (template && container) {
             container.insertAdjacentHTML('beforeend', template.innerHTML);
-            this.renderEmptyMessage();
+            this.#renderEmptyMessage();
         }
     }
 
     /**
      * Display a message if the list is empty, or hide it if there are items in the list.
      */
-    renderEmptyMessage() {
+    #renderEmptyMessage() {
         const container = this.getElement(Elements.Container);
         const emptyMessage = this.getElement(Elements.EmptyMessage);
 

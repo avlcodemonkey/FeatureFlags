@@ -25,49 +25,49 @@ class PJax extends BaseComponent {
      * Version number to include with requests.
      * @type {string}
      */
-    version = '';
+    #version = '';
 
     /**
      * List of file types to ignore when intercepting links.
      * @type {string[]}
      */
-    ignoreFileTypes = ['pdf', 'doc', 'docx', 'zip', 'rar', '7z', 'gif', 'jpeg', 'jpg', 'png'];
+    #ignoreFileTypes = ['pdf', 'doc', 'docx', 'zip', 'rar', '7z', 'gif', 'jpeg', 'jpg', 'png'];
 
     /**
      * Name of attribute that indicates an element should be ignored.
      * @type {string}
      */
-    excludeAttribute = 'data-pjax-no-follow';
+    #excludeAttribute = 'data-pjax-no-follow';
 
     /**
      * Bound popState event listener.
      * @type {(event: any) => Promise<void>|undefined}
      */
-    popStateListener;
+    #popStateListener;
 
     /**
      * Bound click event listener.
      * @type {(event: any) => Promise<void>|undefined}
      */
-    clickListener;
+    #clickListener;
 
     /**
      * Bound submit event listener.
      * @type {(event: any) => Promise<void>|undefined}
      */
-    submitListener;
+    #submitListener;
 
     /**
      * Path of the current page to use when creating history.
      * @type {string}
      */
-    currentUrlForHistory;
+    #currentUrlForHistory;
 
     /**
      * Url origin.
      * @type {string}
      */
-    origin;
+    #origin;
 
     /**
      * Initialize pjax by setting up event listeners.
@@ -79,40 +79,40 @@ class PJax extends BaseComponent {
         super.elementPrefix = 'pjax';
 
         if (this.dataset.version) {
-            this.version = this.dataset.version;
+            this.#version = this.dataset.version;
         }
 
-        this.popStateListener = event => this.onPopState(event);
-        this.clickListener = event => this.onClickListener(event);
-        this.submitListener = event => this.onSubmitListener(event);
+        this.#popStateListener = event => this.#onPopState(event);
+        this.#clickListener = event => this.#onClickListener(event);
+        this.#submitListener = event => this.#onSubmitListener(event);
 
-        window.addEventListener('popstate', this.popStateListener);
-        this.addEventListener('click', this.clickListener);
-        this.addEventListener('submit', this.submitListener);
+        window.addEventListener('popstate', this.#popStateListener);
+        this.addEventListener('click', this.#clickListener);
+        this.addEventListener('submit', this.#submitListener);
 
         // create a state object for the current page with out special properties
         window.history.replaceState({ url: document.location.href, title: document.title }, '');
 
         const currentUrl = new URL(document.location.href);
-        this.currentUrlForHistory = currentUrl.pathname;
-        this.origin = currentUrl.origin;
+        this.#currentUrlForHistory = currentUrl.pathname;
+        this.#origin = currentUrl.origin;
     }
 
     /**
      * Clean up when removing component.
      */
     disconnectedCallback() {
-        if (this.popStateListener) {
-            window.removeEventListener('popstate', this.popStateListener);
-            this.popStateListener = undefined;
+        if (this.#popStateListener) {
+            window.removeEventListener('popstate', this.#popStateListener);
+            this.#popStateListener = undefined;
         }
-        if (this.clickListener) {
-            this.removeEventListener('click', this.clickListener);
-            this.clickListener = undefined;
+        if (this.#clickListener) {
+            this.removeEventListener('click', this.#clickListener);
+            this.#clickListener = undefined;
         }
-        if (this.submitListener) {
-            this.removeEventListener('submit', this.submitListener);
-            this.submitListener = undefined;
+        if (this.#submitListener) {
+            this.removeEventListener('submit', this.#submitListener);
+            this.#submitListener = undefined;
         }
 
         super.disconnectedCallback();
@@ -122,16 +122,16 @@ class PJax extends BaseComponent {
      * Listens for back/forward navigation events and updates page accordingly.
      * @param {PopStateEvent} event PopState event
      */
-    async onPopState(event) {
+    async #onPopState(event) {
         if (event.state !== null) {
             // stop if url is missing from state
-            if (!(event.state.url && URL.canParse(event.state.url, this.origin))) {
+            if (!(event.state.url && URL.canParse(event.state.url, this.#origin))) {
                 return;
             }
 
             // If there is a state object, handle it as a page load.
             // history is only designed to work with GET requests.  don't want to try to store/rebuild request body for other methods like POST/PUT
-            await this.requestPage(new URL(event.state.url, this.origin), HttpMethods.GET, false);
+            await this.#requestPage(new URL(event.state.url, this.#origin), HttpMethods.GET, false);
         }
     }
 
@@ -139,7 +139,7 @@ class PJax extends BaseComponent {
      * Link click listener.
      * @param {Event} event Click event
      */
-    async onClickListener(event) {
+    async #onClickListener(event) {
         let target = /** @type {HTMLAnchorElement} */ (event.target);
         if (target.nodeName !== 'A') {
             target = target.closest('a');
@@ -151,7 +151,7 @@ class PJax extends BaseComponent {
         }
 
         // Ignore clicks if link has the exclude class
-        if (this.excludeAttribute && target.hasAttribute(this.excludeAttribute)) {
+        if (this.#excludeAttribute && target.hasAttribute(this.#excludeAttribute)) {
             return;
         }
 
@@ -161,7 +161,7 @@ class PJax extends BaseComponent {
 
         // Ignore external links
         const url = new URL(target.href);
-        if (url.origin !== this.origin) {
+        if (url.origin !== this.#origin) {
             return;
         }
 
@@ -171,7 +171,7 @@ class PJax extends BaseComponent {
         }
 
         // Skip link if file type is within ignored types array
-        if (this.ignoreFileTypes.indexOf(url.pathname.split('.').pop().toLowerCase()) !== -1) {
+        if (this.#ignoreFileTypes.indexOf(url.pathname.split('.').pop().toLowerCase()) !== -1) {
             return;
         }
 
@@ -188,14 +188,14 @@ class PJax extends BaseComponent {
             method = HttpMethods.GET;
         }
 
-        await this.requestPage(url, method, true);
+        await this.#requestPage(url, method, true);
     }
 
     /**
      * Form submit listener.
      * @param {Event} event Submit event.
      */
-    async onSubmitListener(event) {
+    async #onSubmitListener(event) {
         let target = /** @type {HTMLFormElement} */ (event.target);
         if (target.nodeName !== 'FORM') {
             target = target.closest('form');
@@ -207,7 +207,7 @@ class PJax extends BaseComponent {
         }
 
         // Ignore submit if the form has the exclude attribute
-        if (this.excludeAttribute && target.hasAttribute(this.excludeAttribute)) {
+        if (this.#excludeAttribute && target.hasAttribute(this.#excludeAttribute)) {
             return;
         }
 
@@ -217,7 +217,7 @@ class PJax extends BaseComponent {
 
         // Ignore submit if the origin doesn't match
         const url = new URL(target.action);
-        if (url.origin !== this.origin) {
+        if (url.origin !== this.#origin) {
             return;
         }
 
@@ -233,7 +233,7 @@ class PJax extends BaseComponent {
         }
 
         // handle the submission
-        await this.submitForm(url, method, new FormData(target));
+        await this.#submitForm(url, method, new FormData(target));
     }
 
     /**
@@ -242,8 +242,8 @@ class PJax extends BaseComponent {
      * @param {string} method Http method to use for request.
      * @param {boolean} updateHistory Update browser history if true.
      */
-    async requestPage(url, method, updateHistory) {
-        this.showLoadingIndicator();
+    async #requestPage(url, method, updateHistory) {
+        this.#showLoadingIndicator();
 
         // keep browser from caching requests by tacking milliseconds to end of url
         url.searchParams.set('_t', `${Date.now()}`);
@@ -252,18 +252,18 @@ class PJax extends BaseComponent {
             const response = await fetch(url, {
                 method,
                 signal: AbortSignal.timeout(DefaultTimeout),
-                headers: this.buildRequestHeaders(),
+                headers: this.#buildRequestHeaders(),
             });
 
             if (!response.ok) {
                 throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
             }
 
-            await this.processResponse(url, updateHistory, response);
+            await this.#processResponse(url, updateHistory, response);
         } catch (error) {
-            await this.handleResponseError(error);
+            await this.#handleResponseError(error);
         } finally {
-            this.hideLoadingIndicator();
+            this.#hideLoadingIndicator();
         }
     }
 
@@ -273,14 +273,14 @@ class PJax extends BaseComponent {
      * @param {string} method Http method to use for request.
      * @param {FormData} formData Form element to sub
      */
-    async submitForm(url, method, formData) {
-        this.showLoadingIndicator();
+    async #submitForm(url, method, formData) {
+        this.#showLoadingIndicator();
 
         try {
             const response = await fetch(url, {
                 method,
                 signal: AbortSignal.timeout(DefaultTimeout),
-                headers: this.buildRequestHeaders(),
+                headers: this.#buildRequestHeaders(),
                 body: formData,
             });
 
@@ -288,11 +288,11 @@ class PJax extends BaseComponent {
                 throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
             }
 
-            await this.processResponse(url, true, response);
+            await this.#processResponse(url, true, response);
         } catch (error) {
-            await this.handleResponseError(error);
+            await this.#handleResponseError(error);
         } finally {
-            this.hideLoadingIndicator();
+            this.#hideLoadingIndicator();
         }
     }
 
@@ -300,11 +300,11 @@ class PJax extends BaseComponent {
      * Creates headers to use with requests to server.
      * @returns {object} Headers for fetch request
      */
-    buildRequestHeaders() {
+    #buildRequestHeaders() {
         const headers = {};
         headers[HttpHeaders.RequestedWith] = 'XMLHttpRequest';
         headers[HttpHeaders.PJax] = true;
-        headers[HttpHeaders.PJaxVersion] = this.version;
+        headers[HttpHeaders.PJaxVersion] = this.#version;
         return headers;
     }
 
@@ -314,7 +314,7 @@ class PJax extends BaseComponent {
      * @param {boolean} updateHistory Update browser history if true.
      * @param {Response} response Fetch response.
      */
-    async processResponse(requestUrl, updateHistory, response) {
+    async #processResponse(requestUrl, updateHistory, response) {
         const body = await getResponseBody(response);
 
         // reload the page if the refresh header was included
@@ -325,7 +325,7 @@ class PJax extends BaseComponent {
 
         // make sure request is successful and response is HTML
         if (!response.ok || isJson(response)) {
-            this.showErrorDialog();
+            this.#showErrorDialog();
             return;
         }
 
@@ -333,12 +333,12 @@ class PJax extends BaseComponent {
         if (updateHistory) {
             const newUrl = response.headers.has(HttpHeaders.PJaxPushUrl) ? response.headers.get(HttpHeaders.PJaxPushUrl) : requestUrl.pathname;
 
-            if (this.currentUrlForHistory !== newUrl) {
+            if (this.#currentUrlForHistory !== newUrl) {
                 // don't add page to history unless the url changed
-                this.currentUrlForHistory = newUrl;
+                this.#currentUrlForHistory = newUrl;
 
                 // push the page into the history
-                window.history.pushState({ url: this.currentUrlForHistory, title: document.title }, '', this.currentUrlForHistory);
+                window.history.pushState({ url: this.#currentUrlForHistory, title: document.title }, '', this.#currentUrlForHistory);
             }
         }
 
@@ -369,14 +369,14 @@ class PJax extends BaseComponent {
     /**
      * Shows the loading indicator.
      */
-    showLoadingIndicator() {
+    #showLoadingIndicator() {
         this.getElement(Elements.LoadingIndicator)?.classList.add('pjax-request');
     }
 
     /**
      * Hides the loading indicator.
      */
-    hideLoadingIndicator() {
+    #hideLoadingIndicator() {
         this.getElement(Elements.LoadingIndicator)?.classList.remove('pjax-request');
     }
 
@@ -384,15 +384,15 @@ class PJax extends BaseComponent {
      * Handle response errors.
      * @param {FetchError} error Error from fetch.
      */
-    async handleResponseError(error) {
+    async #handleResponseError(error) {
         console.error(error.message);
-        this.showErrorDialog();
+        this.#showErrorDialog();
     }
 
     /**
      * Shows the error dialog.
      */
-    showErrorDialog() {
+    #showErrorDialog() {
         const element = /** @type {NillaInfo} */ (this.getElement(Elements.InfoDialog));
         element?.show();
     }

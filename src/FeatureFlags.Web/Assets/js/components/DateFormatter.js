@@ -5,12 +5,12 @@ import { formatDate } from '../utils/formatDate.js';
  */
 class DateFormatter extends HTMLElement {
     /** @type {string} */
-    dateFormat;
+    #dateFormat;
 
     constructor() {
         super();
 
-        this.dateFormat = this.dataset.dateFormat;
+        this.#dateFormat = this.dataset.dateFormat;
         if (this.textContent) {
             try {
                 // backend will always return date in UTC. let JS convert to local
@@ -20,7 +20,7 @@ class DateFormatter extends HTMLElement {
                 }
                 const date = new Date(dateString);
                 if (date && date.toString() !== 'Invalid Date') {
-                    this.textContent = this.dateFormat ? formatDate(date, this.dateFormat) : date.toLocaleString();
+                    this.textContent = this.#dateFormat ? formatDate(date, this.#dateFormat) : date.toLocaleString();
                 }
             } catch {
                 /* empty */
