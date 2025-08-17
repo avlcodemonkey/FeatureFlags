@@ -25,6 +25,8 @@ async function setupDom(html) {
             global.Event ??= dom.window.Event;
             global.KeyboardEvent ??= dom.window.KeyboardEvent;
             global.MouseEvent ??= dom.window.MouseEvent;
+            global.PopStateEvent ??= dom.window.PopStateEvent;
+            global.CustomEvent ??= dom.window.CustomEvent;
 
             // Mock window.scrollTo to prevent errors in tests since jsdom does not implement it
             window.scrollTo = () => {

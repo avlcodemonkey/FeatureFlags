@@ -64,109 +64,134 @@ describe('nilla-pjax', () => {
         await isRendered(getPjax);
     });
 
-    /*
-    it('should initialize with version from dataset', async () => {
-        const pjax = getPjax();
-
-        assert.strictEqual(pjax.version, '1.2.3', 'Version should be set from dataset');
-    });
-    */
-
-    /*
-    it('should add loading indicator class on showLoadingIndicator', async () => {
-        const pjax = getPjax();
-        const indicator = getLoadingIndicator();
-        assert.ok(indicator, 'Loading indicator should exist');
-        pjax.showLoadingIndicator();
-
-        assert.ok(indicator.classList.contains('pjax-request'), 'Loading indicator should have pjax-request class');
-    });
-    */
-
-    /*
-    it('should remove loading indicator class on hideLoadingIndicator', async () => {
-        const pjax = getPjax();
-        const indicator = getLoadingIndicator();
-        indicator.classList.add('pjax-request');
-        pjax.hideLoadingIndicator();
-
-        assert.ok(!indicator.classList.contains('pjax-request'), 'Loading indicator should not have pjax-request class');
-    });
-    */
-
-    /*
-    it('should show error dialog on handleResponseError', async () => {
-        const pjax = getPjax();
-        const infoDialog = getInfoDialog();
-        let showCalled = false;
-        infoDialog.show = () => {
-            showCalled = true;
+    it('should add popstate listener on init', async () => {
+        let popStateAdded = false;
+        const originalAddEventListener = window.addEventListener;
+        window.addEventListener = (type, fn) => {
+            if (type === 'popstate') popStateAdded = true;
+            // Call through to original to avoid breaking other logic
+            return originalAddEventListener.call(window, type, fn);
         };
-        await pjax.handleResponseError(new Error('Test error'));
 
-        assert.ok(showCalled, 'Info dialog show should be called on error');
+        // Re-render PJax to trigger initialization
+        document.body.innerHTML = pjaxHtml;
+        await isRendered(getPjax);
+
+        assert.ok(popStateAdded, 'popstate listener should be added');
+        window.addEventListener = originalAddEventListener;
     });
-    */
 
-    /*
-    it('should update target content on processResponse with HTML', async () => {
-        const pjax = getPjax();
-        const target = getTarget();
+    it('should add click listener on component on init', async () => {
+        let clickAdded = false;
+        // Patch addEventListener on the prototype before element is created
+        const originalAddEventListener = HTMLElement.prototype.addEventListener;
+        HTMLElement.prototype.addEventListener = function(type, fn) {
+            if (type === 'click' && this.tagName === 'NILLA-PJAX') {
+                clickAdded = true;
+            }
+            return originalAddEventListener.call(this, type, fn);
+        };
 
-        const response = new Response();
-        response.headers.set('content-type', 'text/html');
-        response.text = async () => '<span>New Content</span>';
+        // Re-render PJax to trigger initialization
+        document.body.innerHTML = pjaxHtml;
+        await isRendered(getPjax);
 
-        await pjax.processResponse(new URL('/test', 'http://localhost'), false, response);
-
-        assert.ok(target.innerHTML.includes('New Content'), 'Target content should be updated');
+        assert.ok(clickAdded, 'click listener should be added on PJax component');
+        HTMLElement.prototype.addEventListener = originalAddEventListener;
     });
-    */
 
-    /*
-    it('should not update target content if response is JSON', async () => {
-        const pjax = getPjax();
-        const target = getTarget();
-        target.innerHTML = 'Initial Content';
+    it('should add submit listener on component on init', async () => {
+        let submitAdded = false;
+        const originalAddEventListener = HTMLElement.prototype.addEventListener;
+        HTMLElement.prototype.addEventListener = function(type, fn) {
+            if (type === 'submit' && this.tagName === 'NILLA-PJAX') {
+                submitAdded = true;
+            }
+            return originalAddEventListener.call(this, type, fn);
+        };
 
-        const response = new Response();
-        response.headers.set('content-type', 'application/json');
-        response.json = async () => '{}';
+        // Re-render PJax to trigger initialization
+        document.body.innerHTML = pjaxHtml;
+        await isRendered(getPjax);
 
-        await pjax.processResponse(new URL('/test', 'http://localhost'), true, response);
-
-        assert.strictEqual(target.innerHTML, 'Initial Content', 'Target content should not be updated for JSON');
-        delete global.isJson;
+        assert.ok(submitAdded, 'submit listener should be added on PJax component');
+        HTMLElement.prototype.addEventListener = originalAddEventListener;
     });
-    */
 
-    // @TODO finish implementing pjax tests.
+    it('should replace state on init', async () => {
+        let stateReplaced = false;
+        const originalReplaceState = window.history.replaceState;
+        window.history.replaceState = function(state, title, url) {
+            stateReplaced = true;
+            return originalReplaceState.call(this, state, title, url);
+        };
 
-    it('should clean up event listeners on disconnectedCallback', async () => {
+        // Re-render PJax to trigger initialization
+        document.body.innerHTML = pjaxHtml;
+        await isRendered(getPjax);
+
+        assert.ok(stateReplaced, 'history.replaceState should be called on init');
+        window.history.replaceState = originalReplaceState;
+    });
+
+    it('should ', async () => {
+    });
+
+    it('should remove popstate listener on disconnect', async () => {
         const pjax = getPjax();
-
-        // Patch removeEventListener to track calls
-        let popStateRemoved = false, clickRemoved = false, submitRemoved = false;
+        let popStateRemoved = false;
         const originalRemoveEventListener = window.removeEventListener;
         // eslint-disable-next-line no-unused-vars
         window.removeEventListener = (type, fn) => {
             if (type === 'popstate') popStateRemoved = true;
         };
+        // Remove PJax from DOM
+        pjax.remove();
 
-        const originalPjaxRemoveEventListener = pjax.removeEventListener;
-        // eslint-disable-next-line no-unused-vars
-        pjax.removeEventListener = (type, fn) => {
-            if (type === 'click') clickRemoved = true;
-            if (type === 'submit') submitRemoved = true;
-        };
-        pjax.disconnectedCallback();
+        // Wait for disconnectedCallback
+        await new Promise(resolve => setTimeout(resolve, 10));
 
         assert.ok(popStateRemoved, 'popstate listener should be removed');
-        assert.ok(clickRemoved, 'click listener should be removed');
-        assert.ok(submitRemoved, 'submit listener should be removed');
-
-        // Restore original listeners
         window.removeEventListener = originalRemoveEventListener;
-        pjax.removeEventListener = originalPjaxRemoveEventListener;
+    });
+
+    it('should remove click listener on component on disconnect', async () => {
+        const pjax = getPjax();
+        let clickRemoved = false;
+        const originalRemoveEventListener = HTMLElement.prototype.removeEventListener;
+        HTMLElement.prototype.removeEventListener = function(type, fn) {
+            if (type === 'click' && this === pjax) {
+                clickRemoved = true;
+            }
+            return originalRemoveEventListener.call(this, type, fn);
+        };
+
+        // Remove PJax from DOM to trigger disconnectedCallback
+        pjax.remove();
+        // Wait for disconnectedCallback
+        await new Promise(resolve => setTimeout(resolve, 10));
+
+        assert.ok(clickRemoved, 'click listener should be removed from PJax component');
+        HTMLElement.prototype.removeEventListener = originalRemoveEventListener;
+    });
+
+    it('should remove submit listener on component on disconnect', async () => {
+        const pjax = getPjax();
+        let submitRemoved = false;
+        const originalRemoveEventListener = HTMLElement.prototype.removeEventListener;
+        HTMLElement.prototype.removeEventListener = function(type, fn) {
+            if (type === 'submit' && this === pjax) {
+                submitRemoved = true;
+            }
+            return originalRemoveEventListener.call(this, type, fn);
+        };
+
+        // Remove PJax from DOM to trigger disconnectedCallback
+        pjax.remove();
+        // Wait for disconnectedCallback
+        await new Promise(resolve => setTimeout(resolve, 10));
+
+        assert.ok(submitRemoved, 'submit listener should be removed from PJax component');
+        HTMLElement.prototype.removeEventListener = originalRemoveEventListener;
     });
 });
