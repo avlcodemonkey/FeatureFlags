@@ -26,6 +26,6 @@
         "js:fix": "eslint --fix ."
     },
     "dependencies": {
-        "esbuild": "^0.25.8"
+        "esbuild": "^0.25.9"
     }
 }
