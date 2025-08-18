@@ -350,6 +350,16 @@ describe('nilla-pjax', () => {
             });
         };
 
+        // Patch pushState to capture arguments
+        let pushStateCalled = false;
+        let pushStateArgs = null;
+        const originalPushState = window.history.pushState;
+        window.history.pushState = function(state, unused, url) {
+            pushStateCalled = true;
+            pushStateArgs = { state, url };
+            return originalPushState.apply(this, arguments);
+        };
+
         // Act: simulate click event on valid internal link
         const link = document.getElementById('test-link');
         const event = new MouseEvent('click', { bubbles: true, cancelable: true });
@@ -363,7 +373,12 @@ describe('nilla-pjax', () => {
             'Target content should be updated after link click',
         );
         assert.strictEqual(document.title, 'Clicked Title', 'Document title should be updated after link click');
+        assert.ok(!indicator.classList.contains('pjax-request'), 'Loading indicator should be hidden after fetch');
+        assert.ok(pushStateCalled, 'pushState should be called after navigation');
+        assert.ok(pushStateArgs && typeof pushStateArgs.state === 'object', 'pushState should be called with a state object');
+        assert.ok(pushStateArgs.url.includes('/test-link'), 'pushState should be called with the correct URL');
 
+        // Cleanup
         global.fetch = originalFetch;
     });
 
@@ -692,4 +707,6 @@ describe('nilla-pjax', () => {
 
         global.fetch = originalFetch;
     });
+
+    // @TODO add tests for custom header logic
 });
