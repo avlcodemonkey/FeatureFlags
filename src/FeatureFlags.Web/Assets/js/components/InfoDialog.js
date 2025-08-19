@@ -26,7 +26,7 @@ class InfoDialog extends BaseDialog {
      * @param {Event} event Click event that triggers the dialog.
      */
     handleEvent(event) {
-        const target = this.findTarget(event);
+        const target = event.target.closest('[data-dialog-content]');
         const { dialogContent, dialogOk } = target.dataset;
         if (!(dialogContent && dialogOk)) {
             return;

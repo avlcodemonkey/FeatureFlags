@@ -157,10 +157,7 @@ class Table extends BaseComponent {
      * Initialize table by loading settings from sessionStorage, processing HTML to add event handlers, and fetching data from the server.
      */
     constructor() {
-        super();
-
-        // set the prefix to use when querying/caching elements
-        super.elementPrefix = 'table';
+        super('table');
 
         this.key = this.dataset.key;
         this.srcUrl = this.dataset.srcUrl;
