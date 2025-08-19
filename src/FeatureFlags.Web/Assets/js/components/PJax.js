@@ -73,10 +73,7 @@ class PJax extends BaseComponent {
      * Initialize pjax by setting up event listeners.
      */
     constructor() {
-        super();
-
-        // set the prefix to use when querying/caching elements
-        super.elementPrefix = 'pjax';
+        super('pjax');
 
         if (this.dataset.version) {
             this.#version = this.dataset.version;

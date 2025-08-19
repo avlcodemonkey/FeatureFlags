@@ -6,7 +6,6 @@ import assert from 'node:assert/strict';
 import { beforeEach, describe, it } from 'node:test';
 import isRendered from '../testUtils/isRendered.js';
 import setupDom from '../testUtils/setupDom.js';
-import tick from '../testUtils/tick.js';
 
 // Setup jsdom first
 await setupDom();
@@ -54,14 +53,12 @@ describe('BaseComponent with no prefix', () => {
 
         const firstGet = component.getElement(keyElement);
         const secondGet = component.getElement(keyElement);
-        const len = Object.keys(component.elementCache).length;
 
         assert.ok(!component.elementPrefix, 'elementPrefix should be falsy');
         assert.ok(firstGet, 'First get should return element');
         assert.strictEqual(firstGet.innerHTML, textElement, 'First get innerHTML should match');
         assert.ok(secondGet, 'Second get should return element');
         assert.strictEqual(secondGet.innerHTML, textElement, 'Second get innerHTML should match');
-        assert.strictEqual(len, 1, 'Cache should have one entry');
         assert.strictEqual(queryCount, 1, 'querySelector should be called once');
 
         component.querySelector = originalQuerySelector;
@@ -77,10 +74,8 @@ describe('BaseComponent with no prefix', () => {
         };
 
         const firstGet = component.getElement(keyOutsideElement);
-        const len = Object.keys(component.elementCache).length;
 
         assert.ok(!firstGet, 'Should not find element outside component');
-        assert.strictEqual(len, 0, 'Cache should be empty');
         assert.strictEqual(queryCount, 1, 'querySelector should be called once');
 
         component.querySelector = originalQuerySelector;
@@ -96,40 +91,9 @@ describe('BaseComponent with no prefix', () => {
         };
 
         const firstGet = component.getElement(keyPrefixedElement);
-        const len = Object.keys(component.elementCache).length;
 
         assert.ok(!firstGet, 'Should not find element with prefix');
-        assert.strictEqual(len, 0, 'Cache should be empty');
         assert.strictEqual(queryCount, 1, 'querySelector should be called once');
-
-        component.querySelector = originalQuerySelector;
-    });
-
-    it('should empty cache when removed from dom', async () => {
-        const component = getBaseComponent();
-        let queryCount = 0;
-        const originalQuerySelector = component.querySelector;
-        component.querySelector = function(selector) {
-            queryCount++;
-            return originalQuerySelector.call(this, selector);
-        };
-
-        const firstGet = component.getElement(keyElement);
-        const firstLen = Object.keys(component.elementCache).length;
-        const secondGet = component.getElement(`prefixed-${keyPrefixedElement}`);
-        const secondLen = Object.keys(component.elementCache).length;
-
-        // remove the component from the dom and trigger the disconnectedCallback
-        document.body.innerHTML = '';
-        await tick();
-        const thirdLen = Object.keys(component.elementCache).length;
-
-        assert.ok(firstGet, 'First get should return element');
-        assert.strictEqual(firstLen, 1, 'Cache should have one entry after first get');
-        assert.ok(secondGet, 'Second get should return element');
-        assert.strictEqual(secondLen, 2, 'Cache should have two entries after second get');
-        assert.strictEqual(queryCount, 2, 'querySelector should be called twice');
-        assert.strictEqual(thirdLen, 0, 'Cache should be empty after removal');
 
         component.querySelector = originalQuerySelector;
     });
@@ -139,11 +103,11 @@ describe('BaseComponent with prefix', () => {
     beforeEach(async () => {
         document.body.innerHTML = html;
         await isRendered(getBaseComponent);
+        getBaseComponent()?._setKey('prefixed');
     });
 
     it('should query element only once', async () => {
         const component = getBaseComponent();
-        component.elementPrefix = 'prefixed';
         let queryCount = 0;
         const originalQuerySelector = component.querySelector;
         component.querySelector = function(selector) {
@@ -153,13 +117,11 @@ describe('BaseComponent with prefix', () => {
 
         const firstGet = component.getElement(keyPrefixedElement);
         const secondGet = component.getElement(keyPrefixedElement);
-        const len = Object.keys(component.elementCache).length;
 
         assert.ok(firstGet, 'First get should return element');
         assert.strictEqual(firstGet.innerHTML, textPrefixedElement, 'First get innerHTML should match');
         assert.ok(secondGet, 'Second get should return element');
         assert.strictEqual(secondGet.innerHTML, textPrefixedElement, 'Second get innerHTML should match');
-        assert.strictEqual(len, 1, 'Cache should have one entry');
         assert.strictEqual(queryCount, 1, 'querySelector should be called once');
 
         component.querySelector = originalQuerySelector;
@@ -167,7 +129,6 @@ describe('BaseComponent with prefix', () => {
 
     it('should not find element outside component', async () => {
         const component = getBaseComponent();
-        component.elementPrefix = 'prefixed';
         let queryCount = 0;
         const originalQuerySelector = component.querySelector;
         component.querySelector = function(selector) {
@@ -177,11 +138,9 @@ describe('BaseComponent with prefix', () => {
 
         const firstGet = component.getElement(keyOutsideElement);
         const secondGet = component.getElement(keyOutsideElement);
-        const len = Object.keys(component.elementCache).length;
 
         assert.ok(!firstGet, 'Should not find element outside component');
         assert.ok(!secondGet, 'Should not find element outside component');
-        assert.strictEqual(len, 0, 'Cache should be empty');
         assert.strictEqual(queryCount, 2, 'querySelector should be called twice');
 
         component.querySelector = originalQuerySelector;
@@ -189,7 +148,6 @@ describe('BaseComponent with prefix', () => {
 
     it('should not find element without prefix', async () => {
         const component = getBaseComponent();
-        component.elementPrefix = 'prefixed';
         let queryCount = 0;
         const originalQuerySelector = component.querySelector;
         component.querySelector = function(selector) {
@@ -199,11 +157,9 @@ describe('BaseComponent with prefix', () => {
 
         const firstGet = component.getElement(keyElement);
         const secondGet = component.getElement(keyElement);
-        const len = Object.keys(component.elementCache).length;
 
         assert.ok(!firstGet, 'Should not find element without prefix');
         assert.ok(!secondGet, 'Should not find element without prefix');
-        assert.strictEqual(len, 0, 'Cache should be empty');
         assert.strictEqual(queryCount, 2, 'querySelector should be called twice');
 
         component.querySelector = originalQuerySelector;

@@ -22,10 +22,7 @@ class List extends BaseComponent {
      * Initialize a new instance of the List component.
      */
     constructor() {
-        super();
-
-        // set the prefix to use when querying/caching elements
-        super.elementPrefix = 'list';
+        super('list');
 
         // register listener for the add button
         const btn = this.getElement(Elements.AddButton);

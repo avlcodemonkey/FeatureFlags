@@ -6,21 +6,23 @@ class BaseComponent extends HTMLElement {
      * Stores commonly queried DOM elements as kvp to improve performance.
      * @type {object}
      */
-    elementCache = {};
+    #elementCache = {};
 
     /**
      * Prefix for finding elements via data attributes, and caching elements in memory.
      * @type {string}
      */
-    elementPrefix = undefined;
+    #elementPrefix = '';
 
     /**
      * Initialize the component.
+     * @param {string} key Key for the component, used to identify it.
      */
-    constructor() {
+    constructor(key) {
         super();
 
-        this.elementCache = {};
+        this.#elementPrefix = key ?? '';
+        this.#elementCache = {};
     }
 
     /**
@@ -28,7 +30,7 @@ class BaseComponent extends HTMLElement {
      * Don't want to keep references to any elements that have been removed.
      */
     disconnectedCallback() {
-        this.elementCache = {};
+        this.#elementCache = {};
     }
 
     /**
@@ -38,15 +40,26 @@ class BaseComponent extends HTMLElement {
      * @returns {HTMLElement|null} Element to find, or null if not found.
      */
     getElement(elementKey) {
-        const key = this.elementPrefix ? `${this.elementPrefix}-${elementKey}` : elementKey;
+        const key = this.#elementPrefix ? `${this.#elementPrefix}-${elementKey}` : elementKey;
 
-        if (!this.elementCache[key]) {
+        if (!this.#elementCache[key]) {
             const element = this.querySelector(`[data-${key}]`);
             if (element) {
-                this.elementCache[key] = element;
+                this.#elementCache[key] = element;
             }
         }
-        return this.elementCache[key];
+        return this.#elementCache[key];
+    }
+
+    /**
+     * Sets the prefix for finding elements via data attributes, and caching elements in memory.
+     * This is used for testing purposes only. Key should be set via the constructor.
+     * @param {string} key Key to set as the prefix for element queries.
+     */
+    _setKey(key) {
+        if (key) {
+            this.#elementPrefix = key;
+        }
     }
 }
 
