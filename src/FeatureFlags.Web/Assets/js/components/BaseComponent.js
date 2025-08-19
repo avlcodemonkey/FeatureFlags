@@ -56,7 +56,7 @@ class BaseComponent extends HTMLElement {
      * This is used for testing purposes only. Key should be set via the constructor.
      * @param {string} key Key to set as the prefix for element queries.
      */
-    setKey(key) {
+    _setKey(key) {
         if (key) {
             this.#elementPrefix = key;
         }

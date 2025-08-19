@@ -103,7 +103,7 @@ describe('BaseComponent with prefix', () => {
     beforeEach(async () => {
         document.body.innerHTML = html;
         await isRendered(getBaseComponent);
-        getBaseComponent()?.setKey('prefixed');
+        getBaseComponent()?._setKey('prefixed');
     });
 
     it('should query element only once', async () => {
