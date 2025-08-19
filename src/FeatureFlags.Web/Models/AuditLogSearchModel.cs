@@ -36,7 +36,7 @@ public sealed record AuditLogSearchModel {
     /// Gets or sets the start date for the audit log search range.
     /// </summary>
     [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.StartDate))]
-    public DateOnly? StartDate { get; set; } = DateOnly.FromDateTime(DateTime.Now.AddDays(-30));
+    public DateOnly? StartDate { get; set; } = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
 
     /// <summary>
     /// Gets or sets the end date for the audit log search range.
