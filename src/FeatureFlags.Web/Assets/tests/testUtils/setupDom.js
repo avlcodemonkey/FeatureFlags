@@ -35,10 +35,6 @@ async function setupDom(html, baseUrl) {
                 // do nothing
             };
 
-            global.console.error = () => {
-                // do nothing
-            }; // Silence console in tests
-
             resolve(dom);
         });
     });

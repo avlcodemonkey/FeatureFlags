@@ -558,6 +558,16 @@ describe('nilla-pjax', () => {
             });
         };
 
+        // Patch pushState to capture arguments
+        let pushStateCalled = false;
+        let pushStateArgs = null;
+        const originalPushState = window.history.pushState;
+        window.history.pushState = function(state, unused, url) {
+            pushStateCalled = true;
+            pushStateArgs = { state, url };
+            return originalPushState.apply(this, arguments);
+        };
+
         // Act: simulate submit event on valid form
         const form = document.getElementById('test-form');
         const event = new window.Event('submit', { bubbles: true, cancelable: true });
@@ -572,8 +582,13 @@ describe('nilla-pjax', () => {
         );
         assert.strictEqual(document.title, 'Form Title', 'Document title should be updated after form submit');
         assert.ok(!indicator.classList.contains('pjax-request'), 'Loading indicator should be hidden after fetch');
+        assert.ok(pushStateCalled, 'pushState should be called after form navigation');
+        assert.ok(pushStateArgs && typeof pushStateArgs.state === 'object', 'pushState should be called with a state object');
+        assert.ok(pushStateArgs.url.includes('/form'), 'pushState should be called with the correct URL');
 
+        // Cleanup
         global.fetch = originalFetch;
+        window.history.pushState = originalPushState;
     });
 
     it('should not request a page if form has exclude attribute', async () => {
@@ -708,5 +723,114 @@ describe('nilla-pjax', () => {
         global.fetch = originalFetch;
     });
 
-    // @TODO add tests for custom header logic
+    it('should send custom headers on link navigation', async () => {
+        // Arrange
+        const expectedVersion = '1.2.3';
+        let headersChecked = false;
+        const originalFetch = global.fetch;
+        global.fetch = async (url, opts) => {
+            const headers = opts.headers;
+            assert.strictEqual(headers['x-requested-with'], 'XMLHttpRequest', 'Should set X-Requested-With header');
+            assert.strictEqual(headers['x-pjax'], true, 'Should set X-PJAX header');
+            assert.strictEqual(headers['x-pjax-version'], expectedVersion, 'Should set X-PJAX-Version header');
+            headersChecked = true;
+            return new Response('<span>Header Test</span>', { status: 200, headers: { 'Content-Type': 'text/html' } });
+        };
+
+        // Act
+        const link = document.getElementById('test-link');
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+        await new Promise(resolve => setTimeout(resolve, 30));
+
+        // Assert
+        assert.ok(headersChecked, 'Custom headers should be checked in fetch');
+        global.fetch = originalFetch;
+    });
+
+    it('should send custom headers on form submission', async () => {
+        // Arrange
+        const expectedVersion = '1.2.3';
+        let headersChecked = false;
+        const originalFetch = global.fetch;
+        global.fetch = async (url, opts) => {
+            const headers = opts.headers;
+            assert.strictEqual(headers['x-requested-with'], 'XMLHttpRequest', 'Should set X-Requested-With header');
+            assert.strictEqual(headers['x-pjax'], true, 'Should set X-PJAX header');
+            assert.strictEqual(headers['x-pjax-version'], expectedVersion, 'Should set X-PJAX-Version header');
+            headersChecked = true;
+            return new Response('<span>Header Test</span>', { status: 200, headers: { 'Content-Type': 'text/html' } });
+        };
+
+        // Act
+        const form = document.getElementById('test-form');
+        const event = new window.Event('submit', { bubbles: true, cancelable: true });
+        event.preventDefault();
+        form.dispatchEvent(event);
+
+        await new Promise(resolve => setTimeout(resolve, 30));
+
+        // Assert
+        assert.ok(headersChecked, 'Custom headers should be checked in fetch');
+        global.fetch = originalFetch;
+    });
+
+    it('should update document title if x-pjax-title header is present', async () => {
+        // Arrange: patch fetch to return a response with x-pjax-title
+        const originalFetch = global.fetch;
+        global.fetch = async () => {
+            return new Response('<span>Title Test</span>', {
+                status: 200,
+                headers: { 'Content-Type': 'text/html', 'x-pjax-title': 'New Custom Title' },
+            });
+        };
+
+        // Act: simulate link click
+        const link = document.getElementById('test-link');
+        link.href = 'https://localhost/trigger-push-title'; // Ensure href is different from initial
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+        await new Promise(resolve => setTimeout(resolve, 30));
+
+        // Assert: document title should be updated
+        assert.strictEqual(document.title, 'New Custom Title', 'Document title should be updated from x-pjax-title header');
+
+        // Cleanup
+        global.fetch = originalFetch;
+    });
+
+    it('should update history with x-pjax-push-url header', async () => {
+        // Arrange: patch fetch to return a response with x-pjax-push-url
+        const originalFetch = global.fetch;
+        let pushStateCalled = false;
+        let pushedUrl = null;
+        const originalPushState = window.history.pushState;
+        window.history.pushState = function(state, unused, url) {
+            pushStateCalled = true;
+            pushedUrl = url;
+            return originalPushState.apply(this, arguments);
+        };
+
+        global.fetch = async () => {
+            return new Response('<span>PushUrl Test</span>', {
+                status: 200,
+                headers: { 'Content-Type': 'text/html', 'x-pjax-push-url': '/custom-url' },
+            });
+        };
+
+        // Act: simulate link click
+        const link = document.getElementById('test-link');
+        link.href = 'https://localhost/trigger-push-url'; // Ensure href is different from initial
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+        await new Promise(resolve => setTimeout(resolve, 30));
+
+        // Assert: pushState should be called with custom URL
+        assert.ok(pushStateCalled, 'pushState should be called when x-pjax-push-url header is present');
+        assert.strictEqual(pushedUrl, '/custom-url', 'pushState should use URL from x-pjax-push-url header');
+
+        // Cleanup
+        global.fetch = originalFetch;
+        window.history.pushState = originalPushState;
+    });
 });

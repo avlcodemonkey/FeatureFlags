@@ -91,9 +91,9 @@ class PJax extends BaseComponent {
         this.addEventListener('submit', this.#submitListener);
 
         // create a state object for the current page with out special properties
-        window.history.replaceState({ url: document.location.href, title: document.title }, '');
+        window.history.replaceState({ url: window.location.href, title: document.title }, '');
 
-        const currentUrl = new URL(document.location.href);
+        const currentUrl = new URL(window.location.href);
         this.#currentUrlForHistory = currentUrl.pathname;
         this.#origin = currentUrl.origin;
     }
@@ -166,7 +166,7 @@ class PJax extends BaseComponent {
         }
 
         // Ignore anchors on the same page
-        if (url.pathname === document.location.pathname && url.hash.length > 0) {
+        if (url.pathname === window.location.pathname && url.hash.length > 0) {
             return;
         }
 
@@ -179,7 +179,7 @@ class PJax extends BaseComponent {
         event.preventDefault();
 
         // Take no action if we are already on requested page
-        if (document.location.href === target.href) {
+        if (window.location.href === target.href) {
             return;
         }
 
@@ -320,7 +320,7 @@ class PJax extends BaseComponent {
 
         // reload the page if the refresh header was included
         if (response.headers.has(HttpHeaders.PJaxRefresh)) {
-            document.location.href = requestUrl.href;
+            window.location.assign(requestUrl);
             return;
         }
 
