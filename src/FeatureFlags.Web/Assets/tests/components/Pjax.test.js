@@ -827,7 +827,7 @@ describe('nilla-pjax', () => {
 
         // Assert: pushState should be called with custom URL
         assert.ok(pushStateCalled, 'pushState should be called when x-pjax-push-url header is present');
-        assert.strictEqual(pushedUrl, '/custom-url1', 'pushState should use URL from x-pjax-push-url header');
+        assert.strictEqual(pushedUrl, '/custom-url', 'pushState should use URL from x-pjax-push-url header');
 
         // Cleanup
         global.fetch = originalFetch;
