@@ -8,7 +8,6 @@ import FetchError from '../errors/FetchError.js';
 import { formToObject, objectToForm } from '../utils/formData.js';
 import renderTemplate from '../utils/renderTemplate.js';
 import BaseComponent from './BaseComponent.js';
-import TableSort from './TableSort.js';
 
 /**
  * Enum for identifiers to query DOM elements.
@@ -36,6 +35,23 @@ const Elements = Object.freeze({
     Status: 'status',
     MaxResults: 'max-results',
 });
+
+/**
+ * Table sort settings.
+ */
+class TableSort {
+    /**
+     * Name of property to sort on.
+     * @type {string}
+     */
+    property = '';
+
+    /**
+     * Direction to sort this property.
+     * @type {TableSortDirection}
+     */
+    direction = undefined;
+}
 
 /**
  * @typedef IndexedRow

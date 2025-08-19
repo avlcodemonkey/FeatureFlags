@@ -5,6 +5,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      all:
+        patterns: ["*"]
 
   # Node
   - package-ecosystem: "npm"
@@ -12,6 +15,9 @@ updates:
     directory: "/src/FeatureFlags.Web/"
     schedule:
       interval: "weekly"
+    groups:
+      all:
+        patterns: ["*"]
 
   # DotNet SDK
   - package-ecosystem: "dotnet-sdk"
@@ -19,6 +25,9 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday" # updates are mostly released on Tuesday
+    groups:
+      all:
+        patterns: ["*"]
 
   # DotNet
   - package-ecosystem: "nuget"
@@ -26,3 +35,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      all:
+        patterns: ["*"]

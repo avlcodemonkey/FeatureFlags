@@ -79,3 +79,8 @@ Github actions are used for continuous integration.  The repo is configured to o
 - Release package to nuget for client project
     - Add instructions for using the package in readme
 - Add serilog with appSetting configuration for structured logging
+
+
+### Misc
+
+ - Use `npm run test -- --watch` to watch tests
