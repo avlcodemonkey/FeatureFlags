@@ -17,11 +17,8 @@ async function onError(msg, url, lineNum, columnNum, error) {
     body.append('stack', error?.stack);
 
     // save error message to server
-    try {
-        navigator.sendBeacon('/Error/LogJavascriptError', body);
-    } catch (ex) {
+    if (!navigator.sendBeacon('/Error/LogJavascriptError', body)) {
         console.error(`Unable to log error to server: ${msg}`);
-        console.error(ex);
     }
 }
 
