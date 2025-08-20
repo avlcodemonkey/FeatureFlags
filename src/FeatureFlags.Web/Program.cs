@@ -6,8 +6,19 @@ using FeatureFlags.Services;
 using FeatureFlags.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Serilog;
+using Serilog.Events;
+
+// minimal logger config while host is being built
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+// now add proper logging configuration
 builder.ConfigureLogging();
 
 builder.Services
