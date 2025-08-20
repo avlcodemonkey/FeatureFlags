@@ -1,3 +1,6 @@
+using Serilog;
+using Serilog.Formatting.Compact;
+
 namespace FeatureFlags.Extensions.Program;
 
 /// <summary>
@@ -7,13 +10,24 @@ public static class WebApplicationBuilderExtensions {
     /// <summary>
     /// Configures logging for the application.
     /// </summary>
+    /// <remarks>
+    /// This is very simple for now, but it can be expanded later as needed.
+    /// </remarks>
     public static WebApplicationBuilder ConfigureLogging(this WebApplicationBuilder builder) {
-        builder.Logging.ClearProviders();
+        var isDevelopment = builder.Environment.IsDevelopment();
 
-        // in a cloud environment logging to console is normally the simplest option
-        builder.Logging.AddSimpleConsole(options => {
-            options.IncludeScopes = true;
-            options.SingleLine = false;
+        builder.Services.AddSerilog((services, loggerConfiguration) => {
+            loggerConfiguration.ReadFrom.Configuration(builder.Configuration)
+                .ReadFrom.Services(services)
+                .Enrich.FromLogContext();
+
+            if (isDevelopment) {
+                // Use default console formatting for development
+                loggerConfiguration.WriteTo.Console();
+            } else {
+                // Use CompactJsonFormatter for non-development environments
+                loggerConfiguration.WriteTo.Console(new CompactJsonFormatter());
+            }
         });
 
         return builder;
