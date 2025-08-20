@@ -1,4 +1,3 @@
-using FeatureFlags.Attributes;
 using FeatureFlags.Exceptions;
 using FeatureFlags.Extensions;
 using FeatureFlags.Models;
@@ -53,7 +52,7 @@ public class ErrorController(ILogger<ErrorController> logger) : BaseController(l
     /// </summary>
     /// <param name="error">Error details from the client.</param>
     /// <remarks>Ajax only to make a spamming a bit harder.</remarks>
-    [HttpPost, AjaxRequestOnly]
+    [HttpPost]
     public IActionResult LogJavascriptError(JavascriptError error) {
         Logger.LogError(new JavascriptException(error.Message), "{Message}\n    at {Url}\n{Stack}", error.Message, error.Url, error.Stack);
         return Ok();
