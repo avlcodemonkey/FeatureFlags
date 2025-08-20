@@ -1,8 +1,3 @@
-import DefaultTimeout from '../constants/Fetch';
-import HttpHeaders from '../constants/HttpHeaders';
-import HttpMethods from '../constants/HttpMethods';
-import FetchError from '../errors/FetchError';
-
 /**
  * Log errors to the backend.
  * @param {string} msg Message associated with the error
@@ -21,21 +16,9 @@ async function onError(msg, url, lineNum, columnNum, error) {
     body.append('url', document.location.href);
     body.append('stack', error?.stack);
 
-    const headers = {};
-    headers[HttpHeaders.RequestedWith] = 'XMLHttpRequest';
-
     // save error message to server
     try {
-        const response = await fetch('/Error/LogJavascriptError', {
-            method: HttpMethods.POST,
-            signal: AbortSignal.timeout(DefaultTimeout),
-            headers,
-            body,
-        });
-
-        if (!response.ok) {
-            throw new FetchError(`HTTP ${response.status}: ${response.statusText}`);
-        }
+        navigator.sendBeacon('/Error/LogJavascriptError', body);
     } catch (ex) {
         console.error(`Unable to log error to server: ${msg}`);
         console.error(ex);
