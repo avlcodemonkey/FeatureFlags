@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      all:
+      actions:
         patterns: ["*"]
 
   # Node
@@ -16,7 +16,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      all:
+      npm:
         patterns: ["*"]
 
   # DotNet SDK
@@ -26,7 +26,7 @@ updates:
       interval: "weekly"
       day: "wednesday" # updates are mostly released on Tuesday
     groups:
-      all:
+      dotnet:
         patterns: ["*"]
 
   # DotNet
@@ -36,5 +36,5 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      all:
+      nuget:
         patterns: ["*"]
