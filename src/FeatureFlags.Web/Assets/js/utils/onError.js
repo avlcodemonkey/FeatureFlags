@@ -22,4 +22,4 @@ async function onError(msg, url, lineNum, columnNum, error) {
     }
 }
 
-window.onerror = onError;
+export default onError;
