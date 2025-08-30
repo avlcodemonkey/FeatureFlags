@@ -241,6 +241,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter Type.
+        /// </summary>
+        public static string FilterType {
+            get {
+                return ResourceManager.GetString("FilterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to flag.
         /// </summary>
         public static string FlagLower {
@@ -273,6 +282,15 @@ namespace FeatureFlags.Resources {
         public static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage Filter.
+        /// </summary>
+        public static string PercentageFilter {
+            get {
+                return ResourceManager.GetString("PercentageFilter", resourceCulture);
             }
         }
         
@@ -318,6 +336,24 @@ namespace FeatureFlags.Resources {
         public static string SuccessSavingFlag {
             get {
                 return ResourceManager.GetString("SuccessSavingFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Targeting Filter.
+        /// </summary>
+        public static string TargetingFilter {
+            get {
+                return ResourceManager.GetString("TargetingFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Window Filter.
+        /// </summary>
+        public static string TimeWindowFilter {
+            get {
+                return ResourceManager.GetString("TimeWindowFilter", resourceCulture);
             }
         }
         

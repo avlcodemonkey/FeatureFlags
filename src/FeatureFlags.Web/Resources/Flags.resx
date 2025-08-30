@@ -207,4 +207,16 @@
   <data name="Details" xml:space="preserve">
     <value>Details</value>
   </data>
+  <data name="PercentageFilter" xml:space="preserve">
+    <value>Percentage Filter</value>
+  </data>
+  <data name="TargetingFilter" xml:space="preserve">
+    <value>Targeting Filter</value>
+  </data>
+  <data name="TimeWindowFilter" xml:space="preserve">
+    <value>Time Window Filter</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Filter Type</value>
+  </data>
 </root>

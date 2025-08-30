@@ -1,0 +1,44 @@
+@using FeatureFlags.Constants;
+@using FeatureFlags.Models
+@using FeatureFlags.Resources;
+@using FeatureFlags.Services
+@model FeatureFlagFilterModel
+
+<div data-list-item>
+    <nilla-display-toggle>
+        <div class="row reverse">
+            <div class="col is-vertical-align is-right">
+                <nilla-confirm>
+                    <button class="button dark" type="button" data-list-remove-button data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmDeleteFilter">
+                        <icon name="Delete" label="@Core.Delete" />
+                    </button>
+                </nilla-confirm>
+            </div>
+            <div class="col">
+                <div>
+                    <label for="FilterType">@Flags.FilterType</label>
+                    <div class="input-group">
+                        <select name="FilterType" value="@Model.FilterType" required data-display-toggle-trigger>
+                            <option></option>
+                            <option value="1" data-display-toggle-target="targetingFilter">@Flags.TargetingFilter</option>
+                            <option value="2" data-display-toggle-target="timeWindowFilter">@Flags.TimeWindowFilter</option>
+                            <option value="3" data-display-toggle-target="percentageFilter">@Flags.PercentageFilter</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row is-hidden" data-display-toggle="targetingFilter">
+            Targeting
+        </div>
+
+        <div class="row is-hidden" data-display-toggle="timeWindowFilter">
+            Time Window
+        </div>
+
+        <div class="row is-hidden" data-display-toggle="percentageFilter">
+            Percentage
+        </div>
+    </nilla-display-toggle>
+</div>

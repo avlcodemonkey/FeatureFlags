@@ -15,7 +15,7 @@
 
     <partial name="_Alerts" />
 
-    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
+    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")" class="feature-flag-container">
         <h4>@Flags.Details</h4>
         <hr />
 
@@ -32,22 +32,7 @@
             <div class="col">
                 <nilla-list>
                     <template data-list-template>
-                        <div data-list-item>
-                            @* @todo move into a partial that can be re-used to render existing filters *@
-                            <div class="text-right">
-                                <nilla-confirm>
-                                    <button class="button dark" type="button" data-list-remove-button data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmDeleteFilter">
-                                        <icon name="Delete" label="@Core.Delete" />
-                                    </button>
-                                </nilla-confirm>
-                            </div>
-                            <div>
-                                <label>
-                                    Filter
-                                    <div class="input-group"><input maxlength="100" name="Filter" required type="text" value="1234 qwewqeqwe"></div>
-                                </label>
-                            </div>
-                        </div>
+                        <partial name="_Filter" model="@(new FeatureFlagFilterModel())" />
                     </template>
 
                     <div class="row">
@@ -67,6 +52,7 @@
 
                     <div data-list-container>
                         @* @todo render existing filters when editing *@
+                        <partial name="_Filter" model="@(new FeatureFlagFilterModel())" />
                     </div>
                 </nilla-list>
             </div>
