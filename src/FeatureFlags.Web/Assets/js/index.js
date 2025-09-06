@@ -14,6 +14,8 @@ import './components/Autocomplete.js';
 import './components/CopyToClipboard.js';
 import './components/List.js';
 import './components/DisplayToggle.js';
+import './components/SliderInput.js';
+import './components/DateTimeInput.js';
 
 // import anything else
 import setupLuxbarToggle from './luxbar.js';

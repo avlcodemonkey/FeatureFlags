@@ -15,7 +15,7 @@ class DisplayToggle extends HTMLElement {
      * @param {Event} event Change event.
      */
     handleEvent(event) {
-        /** @type {SelectElement} */
+        /** @type {HTMLSelectElement} */
         const selectEl = event.target;
         if (!selectEl) {
             return;
@@ -23,15 +23,13 @@ class DisplayToggle extends HTMLElement {
 
         /** @type {string} */
         const target = selectEl.options[selectEl.selectedIndex]?.dataset.displayToggleTarget;
-        if (target) {
-            this.querySelectorAll('[data-display-toggle]').forEach((/** @type {HTMLElement} */ el) => {
-                if (el.dataset.displayToggle !== target) {
-                    el.classList.add('is-hidden');
-                } else {
-                    el.classList.remove('is-hidden');
-                }
-            });
-        }
+        this.querySelectorAll('[data-display-toggle]').forEach((/** @type {HTMLElement} */ el) => {
+            if (!target || el.dataset.displayToggle !== target) {
+                el.classList.add('is-hidden');
+            } else {
+                el.classList.remove('is-hidden');
+            }
+        });
     }
 }
 

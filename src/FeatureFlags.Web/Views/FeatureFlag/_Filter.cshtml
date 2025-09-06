@@ -1,7 +1,8 @@
-@using FeatureFlags.Constants;
+@using FeatureFlags.Constants
 @using FeatureFlags.Models
-@using FeatureFlags.Resources;
+@using FeatureFlags.Resources
 @using FeatureFlags.Services
+@using Microsoft.FeatureManagement.FeatureFilters
 @model FeatureFlagFilterModel
 
 <div data-list-item>
@@ -16,29 +17,94 @@
             </div>
             <div class="col">
                 <div>
-                    <label for="FilterType">@Flags.FilterType</label>
-                    <div class="input-group">
-                        <select name="FilterType" value="@Model.FilterType" required data-display-toggle-trigger>
-                            <option></option>
-                            <option value="1" data-display-toggle-target="targetingFilter">@Flags.TargetingFilter</option>
-                            <option value="2" data-display-toggle-target="timeWindowFilter">@Flags.TimeWindowFilter</option>
-                            <option value="3" data-display-toggle-target="percentageFilter">@Flags.PercentageFilter</option>
-                        </select>
-                    </div>
+                    <label>
+                        @Flags.FilterType
+                        <span class="input-group">
+                            <select name="Filters.FilterType" value="@Model.FilterType" required data-display-toggle-trigger>
+                                <option></option>
+                                <option value="@FilterTypes.Targeting" data-display-toggle-target="targetingFilter">@Flags.TargetingFilter</option>
+                                <option value="@FilterTypes.TimeWindow" data-display-toggle-target="timeWindowFilter">@Flags.TimeWindowFilter</option>
+                                <option value="@FilterTypes.Percentage" data-display-toggle-target="percentageFilter">@Flags.PercentageFilter</option>
+                                <option value="@FilterTypes.JSON" data-display-toggle-target="jsonFilter">@Flags.JSONFilter</option>
+                            </select>
+                        </span>
+                    </label>
                 </div>
             </div>
         </div>
 
         <div class="row is-hidden" data-display-toggle="targetingFilter">
-            Targeting
+            <div class="col">
+
+            </div>
         </div>
 
         <div class="row is-hidden" data-display-toggle="timeWindowFilter">
-            Time Window
+            <div class="col-6">
+                <nilla-datetime-input>
+                    <label>
+                        @Flags.TimeStart
+                        <span class="input-group">
+                            <input type="datetime-local" value="@Model.TimeStart" data-datetime-local>
+                            <input name="Filters.TimeStart" type="hidden" value="@Model.TimeStart" data-datetime-hidden>
+                        </span>
+                    </label>
+                </nilla-datetime-input>
+            </div>
+            <div class="col-6">
+                <nilla-datetime-input>
+                    <label>
+                        @Flags.TimeEnd
+                        <span class="input-group">
+                            <input type="datetime-local" value="@Model.TimeEnd" data-datetime-local>
+                            <input name="Filters.TimeEnd" type="hidden" value="@Model.TimeEnd" data-datetime-hidden>
+                        </span>
+                    </label>
+                </nilla-datetime-input>
+            </div>
+            <div class="col">
+                <label>
+                    @Flags.RecurrencePattern
+                    <span class="input-group">
+                        <select name="Filters.TimeRecurrencePatternType" value="@Model.TimeRecurrencePatternType">
+                            <option></option>
+                            <option value="@RecurrencePatternType.Daily">@Flags.Daily</option>
+                            <option value="@RecurrencePatternType.Weekly">@Flags.Weekly</option>
+                        </select>
+                    </span>
+                </label>
+            </div>
         </div>
 
         <div class="row is-hidden" data-display-toggle="percentageFilter">
-            Percentage
+            <div class="col">
+                <nilla-slider-input>
+                    <div class="row">
+                        <div class="col col-6-md">
+                            <label for="Percentage">@Flags.Percentage</label>
+                            <input type="number" name="Filters.PercentageValue" value="@(Model.PercentageValue ?? 0)" min="0" max="100" step="1" data-slider-text />
+                        </div>
+                        <div class="col col-6-md is-vertical-align">
+                            <span class="p-1">0</span>
+                            <span class="is-full-width">
+                                <input type="range" value="@(Model.PercentageValue ?? 0)" min="0" max="100" step="1" data-slider-range />
+                            </span>
+                            <span class="p-1">100</span>
+                        </div>
+                    </div>
+                </nilla-slider-input>
+            </div>
+        </div>
+
+        <div class="row is-hidden" data-display-toggle="jsonFilter">
+            <div class="col">
+                <label>
+                    @Flags.JSON
+                    <span class="input-group">
+                        <textarea name="Filters.JSON" rows="10">@(Model.JSON ?? "")</textarea>
+                    </span>
+                </label>
+            </div>
         </div>
     </nilla-display-toggle>
 </div>

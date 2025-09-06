@@ -219,4 +219,34 @@
   <data name="FilterType" xml:space="preserve">
     <value>Filter Type</value>
   </data>
+  <data name="JSONFilter" xml:space="preserve">
+    <value>JSON Filter</value>
+  </data>
+  <data name="JSON" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
+  <data name="RecurrencePattern" xml:space="preserve">
+    <value>Recurrence Pattern</value>
+  </data>
+  <data name="TimeEnd" xml:space="preserve">
+    <value>End Time</value>
+  </data>
+  <data name="TimeStart" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="ExcludeUsers" xml:space="preserve">
+    <value>Exclude Users</value>
+  </data>
+  <data name="TargetUsers" xml:space="preserve">
+    <value>Target Users</value>
+  </data>
+  <data name="Daily" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="Weekly" xml:space="preserve">
+    <value>Weekly</value>
+  </data>
 </root>

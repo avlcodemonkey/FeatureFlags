@@ -18,4 +18,9 @@ public enum FilterTypes {
     /// Percentage filter type.
     /// </summary>
     Percentage = 3,
+
+    /// <summary>
+    /// JSON filter type.
+    /// </summary>
+    JSON = 4,
 }

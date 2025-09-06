@@ -15,7 +15,7 @@
 
     <partial name="_Alerts" />
 
-    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")" class="feature-flag-container">
+    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
         <h4>@Flags.Details</h4>
         <hr />
 
@@ -51,8 +51,13 @@
                     </div>
 
                     <div data-list-container>
-                        @* @todo render existing filters when editing *@
-                        <partial name="_Filter" model="@(new FeatureFlagFilterModel())" />
+                        @if (Model.Filters?.Any() == true)
+                        {
+                            foreach (var filter in Model.Filters)
+                            {
+                                <partial name="_Filter" model="@filter" />
+                            }
+                        }
                     </div>
                 </nilla-list>
             </div>

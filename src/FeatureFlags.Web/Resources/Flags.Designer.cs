@@ -124,6 +124,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Daily.
+        /// </summary>
+        public static string Daily {
+            get {
+                return ResourceManager.GetString("Daily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Details.
         /// </summary>
         public static string Details {
@@ -223,6 +232,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exclude Users.
+        /// </summary>
+        public static string ExcludeUsers {
+            get {
+                return ResourceManager.GetString("ExcludeUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filters are conditions for determining the state of the feature flag.  Flags with no filters will always evaluate to false.  Create at least one filter to enable the flag..
         /// </summary>
         public static string FilterIntro {
@@ -268,6 +286,24 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to JSON.
+        /// </summary>
+        public static string JSON {
+            get {
+                return ResourceManager.GetString("JSON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JSON Filter.
+        /// </summary>
+        public static string JSONFilter {
+            get {
+                return ResourceManager.GetString("JSONFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Flags.
         /// </summary>
         public static string MenuItem {
@@ -286,11 +322,29 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Percentage.
+        /// </summary>
+        public static string Percentage {
+            get {
+                return ResourceManager.GetString("Percentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Percentage Filter.
         /// </summary>
         public static string PercentageFilter {
             get {
                 return ResourceManager.GetString("PercentageFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recurrence Pattern.
+        /// </summary>
+        public static string RecurrencePattern {
+            get {
+                return ResourceManager.GetString("RecurrencePattern", resourceCulture);
             }
         }
         
@@ -349,6 +403,33 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Target Users.
+        /// </summary>
+        public static string TargetUsers {
+            get {
+                return ResourceManager.GetString("TargetUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Time.
+        /// </summary>
+        public static string TimeEnd {
+            get {
+                return ResourceManager.GetString("TimeEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Time.
+        /// </summary>
+        public static string TimeStart {
+            get {
+                return ResourceManager.GetString("TimeStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time Window Filter.
         /// </summary>
         public static string TimeWindowFilter {
@@ -363,6 +444,15 @@ namespace FeatureFlags.Resources {
         public static string ViewAll {
             get {
                 return ResourceManager.GetString("ViewAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weekly.
+        /// </summary>
+        public static string Weekly {
+            get {
+                return ResourceManager.GetString("Weekly", resourceCulture);
             }
         }
     }
