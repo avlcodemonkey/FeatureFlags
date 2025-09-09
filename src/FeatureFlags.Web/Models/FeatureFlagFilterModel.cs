@@ -20,7 +20,7 @@ public sealed record FeatureFlagFilterModel : IAuditedModel {
     /// Gets the type of the filter.
     /// </summary>
     [Display(ResourceType = typeof(Flags), Name = nameof(Flags.FilterType))]
-    [IsRequired, IsStringLength(100)]
+    [IsRequired]
     public FilterTypes FilterType { get; init; }
 
     #region Targeting
@@ -59,8 +59,44 @@ public sealed record FeatureFlagFilterModel : IAuditedModel {
     /// Add-on recurrence rule allows the time window defined by Start and End to recur.
     /// The rule specifies how often the time window repeats.
     /// </summary>
-    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.RecurrencePattern))]
-    public RecurrencePatternType? TimeRecurrencePatternType { get; set; }
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceType))]
+    public RecurrencePatternType? TimeRecurrenceType { get; set; }
+
+    /// <summary>
+    /// Specifies the number of days/weeks between each occurrence.
+    /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceInterval))]
+    public int? TimeRecurrenceInterval { get; set; }
+
+    /// <summary>
+    /// Specifies on which days of the week the event occurs.
+    /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceDaysOfWeek))]
+    public List<string>? TimeRecurrenceDaysOfWeek { get; set; }
+
+    /// <summary>
+    /// Specifies which day is considered the first day of the week.
+    /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceFirstDayOfWeek))]
+    public string? TimeRecurrenceFirstDayOfWeek { get; set; }
+
+    /// <summary>
+    /// Specifies how the recurrence ends.
+    /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceRangeType))]
+    public RecurrenceRangeType? TimeRecurrenceRangeType { get; set; }
+
+    /// <summary>
+    /// Specifies the end date for the event.
+    /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceEndDate))]
+    public DateTimeOffset? TimeRecurrenceEndDate { get; set; }
+
+    /// <summary>
+    /// Specifies the number of occurrences for the event to occur.
+    /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceNumberOfOccurrences))]
+    public int? TimeRecurrenceNumberOfOccurrences { get; set; }
 
     #endregion TimeWindow
 

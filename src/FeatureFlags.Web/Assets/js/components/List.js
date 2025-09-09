@@ -64,7 +64,10 @@ class List extends BaseComponent {
         const container = this.getElement(Elements.Container);
 
         if (template && container) {
-            container.insertAdjacentHTML('beforeend', template.innerHTML);
+            // create a guid to use as a unique index for the copy
+            const newGuid = crypto.randomUUID();
+            const html = template.innerHTML.replaceAll('{{~~index~~}}', newGuid);
+            container.insertAdjacentHTML('beforeend', html);
             this.#renderEmptyMessage();
         }
     }

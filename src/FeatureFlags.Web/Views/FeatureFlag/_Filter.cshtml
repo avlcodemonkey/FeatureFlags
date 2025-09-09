@@ -5,8 +5,14 @@
 @using Microsoft.FeatureManagement.FeatureFilters
 @model FeatureFlagFilterModel
 
+@{
+    var index = Model.Id > 0 ? Model.Id.ToString() : "{{~~index~~}}";
+}
+
 <div data-list-item>
     <nilla-display-toggle>
+        <input type="hidden" name="Filters.Index" value="@index" />
+        <input type="hidden" name="Filters[@index].Id" value="@Model.Id" />
         <div class="row reverse">
             <div class="col is-vertical-align is-right">
                 <nilla-confirm>
@@ -20,12 +26,12 @@
                     <label>
                         @Flags.FilterType
                         <span class="input-group">
-                            <select name="Filters.FilterType" value="@Model.FilterType" required data-display-toggle-trigger>
+                            <select name="Filters[@index].FilterType" value="@Model.FilterType" required data-display-toggle-trigger>
                                 <option></option>
-                                <option value="@FilterTypes.Targeting" data-display-toggle-target="targetingFilter">@Flags.TargetingFilter</option>
-                                <option value="@FilterTypes.TimeWindow" data-display-toggle-target="timeWindowFilter">@Flags.TimeWindowFilter</option>
-                                <option value="@FilterTypes.Percentage" data-display-toggle-target="percentageFilter">@Flags.PercentageFilter</option>
-                                <option value="@FilterTypes.JSON" data-display-toggle-target="jsonFilter">@Flags.JSONFilter</option>
+                                <option value="@((int)FilterTypes.Targeting)" data-display-toggle-target="targetingFilter">@Flags.TargetingFilter</option>
+                                <option value="@((int)FilterTypes.TimeWindow)" data-display-toggle-target="timeWindowFilter">@Flags.TimeWindowFilter</option>
+                                <option value="@((int)FilterTypes.Percentage)" data-display-toggle-target="percentageFilter">@Flags.PercentageFilter</option>
+                                <option value="@((int)FilterTypes.JSON)" data-display-toggle-target="jsonFilter">@Flags.JSONFilter</option>
                             </select>
                         </span>
                     </label>
@@ -46,7 +52,7 @@
                         @Flags.TimeStart
                         <span class="input-group">
                             <input type="datetime-local" value="@Model.TimeStart" data-datetime-local>
-                            <input name="Filters.TimeStart" type="hidden" value="@Model.TimeStart" data-datetime-hidden>
+                            <input name="Filters[@index].TimeStart" type="hidden" value="@Model.TimeStart" data-datetime-hidden>
                         </span>
                     </label>
                 </nilla-datetime-input>
@@ -57,20 +63,87 @@
                         @Flags.TimeEnd
                         <span class="input-group">
                             <input type="datetime-local" value="@Model.TimeEnd" data-datetime-local>
-                            <input name="Filters.TimeEnd" type="hidden" value="@Model.TimeEnd" data-datetime-hidden>
+                            <input name="Filters[@index].TimeEnd" type="hidden" value="@Model.TimeEnd" data-datetime-hidden>
                         </span>
                     </label>
                 </nilla-datetime-input>
             </div>
-            <div class="col">
+            <div class="col-6">
                 <label>
-                    @Flags.RecurrencePattern
+                    @Flags.TimeRecurrenceType
                     <span class="input-group">
-                        <select name="Filters.TimeRecurrencePatternType" value="@Model.TimeRecurrencePatternType">
+                        <select name="Filters[@index].TimeRecurrenceType" value="@Model.TimeRecurrenceType">
                             <option></option>
-                            <option value="@RecurrencePatternType.Daily">@Flags.Daily</option>
-                            <option value="@RecurrencePatternType.Weekly">@Flags.Weekly</option>
+                            <option value="@((int)RecurrencePatternType.Daily)">@Flags.Daily</option>
+                            <option value="@((int)RecurrencePatternType.Weekly)">@Flags.Weekly</option>
                         </select>
+                    </span>
+                </label>
+            </div>
+            <div class="col-6">
+                <label>
+                    @Flags.TimeRecurrenceInterval
+                    <span class="input-group">
+                        <input type="number" name="Filters[@index].TimeRecurrenceInterval" value="@Model.TimeRecurrenceInterval" min="1" max="100" step="1">
+                    </span>
+                </label>
+            </div>
+            <div class="col-6">
+                <label>
+                    @Flags.TimeRecurrenceDaysOfWeek
+                    <form-checkbox name="Filters[@index].TimeRecurrenceDaysOfWeek" value="Sunday" label="@Flags.Sunday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Sunday") == true" />
+                    <form-checkbox name="Filters[@index].TimeRecurrenceDaysOfWeek" value="Monday" label="@Flags.Monday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Monday") == true" />
+                    <form-checkbox name="Filters[@index].TimeRecurrenceDaysOfWeek" value="Tuesday" label="@Flags.Tuesday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Tuesday") == true" />
+                    <form-checkbox name="Filters[@index].TimeRecurrenceDaysOfWeek" value="Wednesday" label="@Flags.Wednesday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Wednesday") == true" />
+                    <form-checkbox name="Filters[@index].TimeRecurrenceDaysOfWeek" value="Thursday" label="@Flags.Thursday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Thursday") == true" />
+                    <form-checkbox name="Filters[@index].TimeRecurrenceDaysOfWeek" value="Friday" label="@Flags.Friday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Friday") == true" />
+                    <form-checkbox name="Filters[@index].TimeRecurrenceDaysOfWeek" value="Saturday" label="@Flags.Saturday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Saturday") == true" />
+                </label>
+            </div>
+            <div class="col-6">
+                <label>
+                    @Flags.TimeRecurrenceFirstDayOfWeek
+                    <span class="input-group">
+                        <select name="Filters[@index].TimeRecurrenceFirstDayOfWeek" value="@Model.TimeRecurrenceFirstDayOfWeek">
+                            <option value="Sunday">@Flags.Sunday</option>
+                            <option value="Monday">@Flags.Monday</option>
+                            <option value="Tuesday">@Flags.Tuesday</option>
+                            <option value="Wednesday">@Flags.Wednesday</option>
+                            <option value="Thursday">@Flags.Thursday</option>
+                            <option value="Friday">@Flags.Friday</option>
+                            <option value="Saturday">@Flags.Saturday</option>
+                        </select>
+                    </span>
+                </label>
+            </div>
+            <div class="col-12">
+                <label>
+                    @Flags.TimeRecurrenceRangeType
+                    <span class="input-group">
+                        <select name="Filters[@index].TimeRecurrenceRangeType" value="@Model.TimeRecurrenceRangeType">
+                            <option value="@((int)RecurrenceRangeType.NoEnd)">@Flags.RangeTypeNoEnd</option>
+                            <option value="@((int)RecurrenceRangeType.EndDate)">@Flags.RangeTypeEndDate</option>
+                            <option value="@((int)RecurrenceRangeType.Numbered)">@Flags.RangeTypeNumbered</option>
+                        </select>
+                    </span>
+                </label>
+            </div>
+            <div class="col-6">
+                <nilla-datetime-input>
+                    <label>
+                        @Flags.TimeRecurrenceEndDate
+                        <span class="input-group">
+                            <input type="datetime-local" value="@Model.TimeRecurrenceEndDate" data-datetime-local>
+                            <input name="Filters[@index].TimeRecurrenceEndDate" type="hidden" value="@Model.TimeRecurrenceEndDate" data-datetime-hidden>
+                        </span>
+                    </label>
+                </nilla-datetime-input>
+            </div>
+            <div class="col-6">
+                <label>
+                    @Flags.TimeRecurrenceNumberOfOccurrences
+                    <span class="input-group">
+                        <input type="number" name="Filters[@index].TimeRecurrenceNumberOfOccurrences" value="@Model.TimeRecurrenceNumberOfOccurrences" min="1" max="100" step="1">
                     </span>
                 </label>
             </div>
@@ -82,7 +155,7 @@
                     <div class="row">
                         <div class="col col-6-md">
                             <label for="Percentage">@Flags.Percentage</label>
-                            <input type="number" name="Filters.PercentageValue" value="@(Model.PercentageValue ?? 0)" min="0" max="100" step="1" data-slider-text />
+                            <input type="number" name="Filters[@index].PercentageValue" value="@(Model.PercentageValue ?? 0)" min="0" max="100" step="1" data-slider-text />
                         </div>
                         <div class="col col-6-md is-vertical-align">
                             <span class="p-1">0</span>
@@ -101,7 +174,7 @@
                 <label>
                     @Flags.JSON
                     <span class="input-group">
-                        <textarea name="Filters.JSON" rows="10">@(Model.JSON ?? "")</textarea>
+                        <textarea name="Filters[@index].JSON" rows="10">@(Model.JSON ?? "")</textarea>
                     </span>
                 </label>
             </div>

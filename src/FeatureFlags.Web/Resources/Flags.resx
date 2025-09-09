@@ -228,8 +228,8 @@
   <data name="Percentage" xml:space="preserve">
     <value>Percentage</value>
   </data>
-  <data name="RecurrencePattern" xml:space="preserve">
-    <value>Recurrence Pattern</value>
+  <data name="TimeRecurrenceType" xml:space="preserve">
+    <value>Repeats</value>
   </data>
   <data name="TimeEnd" xml:space="preserve">
     <value>End Time</value>
@@ -248,5 +248,56 @@
   </data>
   <data name="Weekly" xml:space="preserve">
     <value>Weekly</value>
+  </data>
+  <data name="TimeRecurrenceInterval" xml:space="preserve">
+    <value>Interval</value>
+  </data>
+  <data name="TimeRecurrenceFirstDayOfWeek" xml:space="preserve">
+    <value>First Day of Week</value>
+  </data>
+  <data name="TimeRecurrenceRangeType" xml:space="preserve">
+    <value>Range Type</value>
+  </data>
+  <data name="TimeRecurrenceEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="TimeRecurrenceNumberOfOccurrences" xml:space="preserve">
+    <value>Number of Occurrences</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="RangeTypeNoEnd" xml:space="preserve">
+    <value>No End</value>
+  </data>
+  <data name="TimeRangeTypeEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="RangeTypeEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="RangeTypeNumbered" xml:space="preserve">
+    <value>Numbered</value>
+  </data>
+  <data name="TimeRecurrenceDaysOfWeek" xml:space="preserve">
+    <value>Days of Week</value>
   </data>
 </root>

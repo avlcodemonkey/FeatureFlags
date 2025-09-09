@@ -286,6 +286,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Friday.
+        /// </summary>
+        public static string Friday {
+            get {
+                return ResourceManager.GetString("Friday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to JSON.
         /// </summary>
         public static string JSON {
@@ -309,6 +318,15 @@ namespace FeatureFlags.Resources {
         public static string MenuItem {
             get {
                 return ResourceManager.GetString("MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monday.
+        /// </summary>
+        public static string Monday {
+            get {
+                return ResourceManager.GetString("Monday", resourceCulture);
             }
         }
         
@@ -340,11 +358,29 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recurrence Pattern.
+        ///   Looks up a localized string similar to End Date.
         /// </summary>
-        public static string RecurrencePattern {
+        public static string RangeTypeEndDate {
             get {
-                return ResourceManager.GetString("RecurrencePattern", resourceCulture);
+                return ResourceManager.GetString("RangeTypeEndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No End.
+        /// </summary>
+        public static string RangeTypeNoEnd {
+            get {
+                return ResourceManager.GetString("RangeTypeNoEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Numbered.
+        /// </summary>
+        public static string RangeTypeNumbered {
+            get {
+                return ResourceManager.GetString("RangeTypeNumbered", resourceCulture);
             }
         }
         
@@ -354,6 +390,15 @@ namespace FeatureFlags.Resources {
         public static string RequirementType {
             get {
                 return ResourceManager.GetString("RequirementType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturday.
+        /// </summary>
+        public static string Saturday {
+            get {
+                return ResourceManager.GetString("Saturday", resourceCulture);
             }
         }
         
@@ -394,6 +439,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sunday.
+        /// </summary>
+        public static string Sunday {
+            get {
+                return ResourceManager.GetString("Sunday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Targeting Filter.
         /// </summary>
         public static string TargetingFilter {
@@ -412,11 +466,92 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Thursday.
+        /// </summary>
+        public static string Thursday {
+            get {
+                return ResourceManager.GetString("Thursday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End Time.
         /// </summary>
         public static string TimeEnd {
             get {
                 return ResourceManager.GetString("TimeEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Date.
+        /// </summary>
+        public static string TimeRangeTypeEndDate {
+            get {
+                return ResourceManager.GetString("TimeRangeTypeEndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Days of Week.
+        /// </summary>
+        public static string TimeRecurrenceDaysOfWeek {
+            get {
+                return ResourceManager.GetString("TimeRecurrenceDaysOfWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Date.
+        /// </summary>
+        public static string TimeRecurrenceEndDate {
+            get {
+                return ResourceManager.GetString("TimeRecurrenceEndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First Day of Week.
+        /// </summary>
+        public static string TimeRecurrenceFirstDayOfWeek {
+            get {
+                return ResourceManager.GetString("TimeRecurrenceFirstDayOfWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval.
+        /// </summary>
+        public static string TimeRecurrenceInterval {
+            get {
+                return ResourceManager.GetString("TimeRecurrenceInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of Occurrences.
+        /// </summary>
+        public static string TimeRecurrenceNumberOfOccurrences {
+            get {
+                return ResourceManager.GetString("TimeRecurrenceNumberOfOccurrences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Range Type.
+        /// </summary>
+        public static string TimeRecurrenceRangeType {
+            get {
+                return ResourceManager.GetString("TimeRecurrenceRangeType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repeats.
+        /// </summary>
+        public static string TimeRecurrenceType {
+            get {
+                return ResourceManager.GetString("TimeRecurrenceType", resourceCulture);
             }
         }
         
@@ -439,11 +574,29 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tuesday.
+        /// </summary>
+        public static string Tuesday {
+            get {
+                return ResourceManager.GetString("Tuesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View All Flags.
         /// </summary>
         public static string ViewAll {
             get {
                 return ResourceManager.GetString("ViewAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wednesday.
+        /// </summary>
+        public static string Wednesday {
+            get {
+                return ResourceManager.GetString("Wednesday", resourceCulture);
             }
         }
         
