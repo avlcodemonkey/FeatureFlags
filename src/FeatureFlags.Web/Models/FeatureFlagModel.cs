@@ -39,7 +39,7 @@ public sealed record FeatureFlagModel : IAuditedModel, IVersionedModel {
     /// List of feature filters.
     /// </summary>
     [Display(ResourceType = typeof(Flags), Name = nameof(Flags.Filters))]
-    public List<FeatureFlagFilterModel>? Filters { get; init; }
+    public IEnumerable<FeatureFlagFilterModel>? Filters { get; init; }
 
     /// <summary>
     /// Gets the date and time when the feature flag was last updated.

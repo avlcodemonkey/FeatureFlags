@@ -26,6 +26,12 @@ public class FeatureFlag : IAuditedEntity, IVersionedEntity {
     public int RequirementType { get; set; }
 
     /// <summary>
+    /// Gets or sets the collection of filters applied to the feature flag.
+    /// </summary>
+    [ForeignKey(nameof(FeatureFlagFilter.FeatureFlagId))]
+    public List<FeatureFlagFilter> Filters { get; set; } = new List<FeatureFlagFilter>();
+
+    /// <summary>
     /// When flag was created.
     /// </summary>
     /// <remarks>

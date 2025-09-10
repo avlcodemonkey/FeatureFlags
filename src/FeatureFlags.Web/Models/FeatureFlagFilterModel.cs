@@ -29,13 +29,13 @@ public sealed record FeatureFlagFilterModel : IAuditedModel {
     /// Includes users in the target audience by name.
     /// </summary>
     [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TargetUsers))]
-    public List<string>? TargetUsers { get; set; }
+    public IEnumerable<string>? TargetUsers { get; set; }
 
     /// <summary>
     /// Excludes users in the audience by name.
     /// </summary>
     [Display(ResourceType = typeof(Flags), Name = nameof(Flags.ExcludeUsers))]
-    public List<string>? ExcludeUsers { get; set; }
+    public IEnumerable<string>? ExcludeUsers { get; set; }
 
     #endregion Targeting
 
@@ -45,15 +45,17 @@ public sealed record FeatureFlagFilterModel : IAuditedModel {
     /// An optional start time used to determine when a feature configured to use the <see cref="TimeWindowFilter"/> feature filter should be enabled.
     /// If no start time is specified the time window is considered to have already started.
     /// </summary>
+    /// <remarks>Will always be provided in UTC.</remarks>
     [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeStart))]
-    public DateTimeOffset? TimeStart { get; set; }
+    public DateTime? TimeStart { get; set; }
 
     /// <summary>
     /// An optional end time used to determine when a feature configured to use the <see cref="TimeWindowFilter"/> feature filter should be enabled.
     /// If no end time is specified the time window is considered to never end.
     /// </summary>
+    /// <remarks>Will always be provided in UTC.</remarks>
     [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeEnd))]
-    public DateTimeOffset? TimeEnd { get; set; }
+    public DateTime? TimeEnd { get; set; }
 
     /// <summary>
     /// Add-on recurrence rule allows the time window defined by Start and End to recur.
@@ -72,7 +74,7 @@ public sealed record FeatureFlagFilterModel : IAuditedModel {
     /// Specifies on which days of the week the event occurs.
     /// </summary>
     [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceDaysOfWeek))]
-    public List<string>? TimeRecurrenceDaysOfWeek { get; set; }
+    public IEnumerable<string>? TimeRecurrenceDaysOfWeek { get; set; }
 
     /// <summary>
     /// Specifies which day is considered the first day of the week.
@@ -89,8 +91,9 @@ public sealed record FeatureFlagFilterModel : IAuditedModel {
     /// <summary>
     /// Specifies the end date for the event.
     /// </summary>
+    /// <remarks>Will always be provided in UTC.</remarks>
     [Display(ResourceType = typeof(Flags), Name = nameof(Flags.TimeRecurrenceEndDate))]
-    public DateTimeOffset? TimeRecurrenceEndDate { get; set; }
+    public DateTime? TimeRecurrenceEndDate { get; set; }
 
     /// <summary>
     /// Specifies the number of occurrences for the event to occur.

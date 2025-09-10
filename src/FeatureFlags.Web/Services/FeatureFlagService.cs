@@ -70,7 +70,58 @@ public sealed class FeatureFlagService(FeatureFlagsDbContext dbContext) : IFeatu
         featureFlag.Status = featureFlagModel.Status;
         featureFlag.RequirementType = (int)featureFlagModel.RequirementType;
 
-        // @todo add support for zero to many filters
+        // Map filters
+        var existingFilters = new Dictionary<int, FeatureFlagFilter>();
+        if (featureFlag.Id > 0 && featureFlagModel.Filters?.Any() == true) {
+            existingFilters = (await _DbContext.FeatureFlagFilters.Include(x => x.Users).Where(x => x.FeatureFlagId == featureFlag.Id).ToListAsync(cancellationToken))
+                .ToDictionary(x => x.Id, x => x);
+        }
+
+        featureFlag.Filters = featureFlagModel.Filters?.Select(filterModel => {
+            FeatureFlagFilter filter;
+            if (filterModel.Id > 0 && existingFilters.TryGetValue(filterModel.Id, out var existingFilter)) {
+                filter = existingFilter;
+            } else {
+                filter = new FeatureFlagFilter { FeatureFlagId = featureFlag.Id };
+            }
+
+            filter.FilterType = (int)filterModel.FilterType;
+
+            // Targeting: map TargetUsers and ExcludeUsers to FeatureFlagFilterUser entities
+            var users = new List<FeatureFlagFilterUser>();
+            users.AddRange(filterModel.TargetUsers?.Select(u => {
+                var user = filter.Users.FirstOrDefault(x => x.User == u) ?? new FeatureFlagFilterUser { FeatureFlagFilterId = filterModel.Id, User = u };
+                user.Include = true;
+                return user;
+            }) ?? []);
+            users.AddRange(filterModel.ExcludeUsers?.Select(u => {
+                var user = filter.Users.FirstOrDefault(x => x.User == u) ?? new FeatureFlagFilterUser { FeatureFlagFilterId = filterModel.Id, User = u };
+                user.Include = false;
+                return user;
+            }) ?? []);
+            filter.Users = users;
+
+            // TimeWindow
+            filter.TimeStart = filterModel.TimeStart;
+            filter.TimeEnd = filterModel.TimeEnd;
+            filter.TimeRecurrenceType = filterModel.TimeRecurrenceType.HasValue ? (int)filterModel.TimeRecurrenceType.Value : null;
+            filter.TimeRecurrenceInterval = filterModel.TimeRecurrenceInterval;
+            filter.TimeRecurrenceDaysOfWeek = filterModel.TimeRecurrenceDaysOfWeek != null
+                ? string.Join(",", filterModel.TimeRecurrenceDaysOfWeek)
+                : null;
+            filter.TimeRecurrenceFirstDayOfWeek = filterModel.TimeRecurrenceFirstDayOfWeek;
+            filter.TimeRecurrenceRangeType = filterModel.TimeRecurrenceRangeType.HasValue ? (int)filterModel.TimeRecurrenceRangeType.Value : null;
+            filter.TimeRecurrenceEndDate = filterModel.TimeRecurrenceEndDate;
+            filter.TimeRecurrenceNumberOfOccurrences = filterModel.TimeRecurrenceNumberOfOccurrences;
+
+            // Percentage
+            filter.PercentageValue = filterModel.PercentageValue;
+
+            // JSON
+            filter.JSON = filterModel.JSON;
+
+            return filter;
+        }).ToList() ?? [];
     }
 
     /// <summary>

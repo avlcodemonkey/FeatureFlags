@@ -3,6 +3,7 @@ using System;
 using FeatureFlags.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeatureFlags.Domain.Migrations
 {
     [DbContext(typeof(FeatureFlagsDbContext))]
-    partial class FeatureFlagsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250910204010_AddFeatureFlagFilters")]
+    partial class AddFeatureFlagFilters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -171,14 +174,14 @@ namespace FeatureFlags.Domain.Migrations
                     b.Property<int?>("PercentageValue")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("TimeEnd")
+                    b.Property<DateTimeOffset?>("TimeEnd")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TimeRecurrenceDaysOfWeek")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("TimeRecurrenceEndDate")
+                    b.Property<DateTimeOffset?>("TimeRecurrenceEndDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TimeRecurrenceFirstDayOfWeek")
@@ -197,7 +200,7 @@ namespace FeatureFlags.Domain.Migrations
                     b.Property<int?>("TimeRecurrenceType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("TimeStart")
+                    b.Property<DateTimeOffset?>("TimeStart")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedDate")

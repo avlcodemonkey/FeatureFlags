@@ -16,6 +16,7 @@ public sealed class FeatureFlagsDbContext : DbContext {
     public DbSet<ApiKey> ApiKeys { get; set; } = null!;
     public DbSet<AuditLog> AuditLog { get; set; } = null!;
     public DbSet<FeatureFlag> FeatureFlags { get; set; } = null!;
+    public DbSet<FeatureFlagFilter> FeatureFlagFilters { get; set; } = null!;
     public DbSet<Language> Languages { get; set; } = null!;
     public DbSet<Permission> Permissions { get; set; } = null!;
     public DbSet<RolePermission> RolePermissions { get; set; } = null!;

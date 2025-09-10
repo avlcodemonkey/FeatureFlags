@@ -7,6 +7,7 @@ class DisplayToggle extends HTMLElement {
 
         this.querySelectorAll('[data-display-toggle-trigger]').forEach((toggle) => {
             toggle.addEventListener('change', this);
+            this.#toggleContent(toggle);
         });
     }
 
@@ -21,6 +22,15 @@ class DisplayToggle extends HTMLElement {
             return;
         }
 
+        this.#toggleContent(selectEl);
+    }
+
+    /**
+     * Show/hide content based on the selected target.
+     * @param {HTMLSelectElement} selectEl
+     * @private
+     */
+    #toggleContent(selectEl) {
         /** @type {string} */
         const target = selectEl.options[selectEl.selectedIndex]?.dataset.displayToggleTarget;
         this.querySelectorAll('[data-display-toggle]').forEach((/** @type {HTMLElement} */ el) => {

@@ -1,5 +1,7 @@
+import { formatDate } from '../utils/formatDate.js';
+
 /**
- * Converts a local datetime input to an ISO 8601 string in a hidden input.
+ * Connects local datetime input value to UTC for a hidden input and vice-versa on load.
  */
 class DateTimeInput extends HTMLElement {
     constructor() {
@@ -8,17 +10,30 @@ class DateTimeInput extends HTMLElement {
         const localInput = this.querySelector('[data-datetime-local]');
         const hiddenInput = this.querySelector('[data-datetime-hidden]');
         if (localInput && hiddenInput) {
-            const setHiddenValue = () => {
+            if (hiddenInput.value && !localInput.value) {
+                // convert utc time to local value for date input to use
+                const date = new Date(hiddenInput.value);
+                if (isNaN(date.getTime())) {
+                    localInput.value = '';
+                } else {
+                    // input expects date in format "yyyy-MM-ddThh:mm" followed by optional ":ss" or ":ss.SSS".
+                    localInput.value = formatDate(date, 'YYYY-MM-DDTHH:mm:ss'); // .toISOString().replace('Z', '');
+                }
+            };
+
+            localInput.addEventListener('change', () => {
+                if (!localInput.value) {
+                    return;
+                }
+
+                // convert value from date input to UTC for saving
                 const date = new Date(localInput.value);
                 if (isNaN(date.getTime())) {
                     hiddenInput.value = '';
                 } else {
                     hiddenInput.value = date.toISOString();
                 }
-            };
-            setHiddenValue();
-
-            localInput.addEventListener('change', setHiddenValue);
+            });
         }
     }
 }

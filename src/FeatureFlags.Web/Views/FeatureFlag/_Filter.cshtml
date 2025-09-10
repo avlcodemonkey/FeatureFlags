@@ -26,12 +26,20 @@
                     <label>
                         @Flags.FilterType
                         <span class="input-group">
-                            <select name="Filters[@index].FilterType" value="@Model.FilterType" required data-display-toggle-trigger>
+                            <select name="Filters[@index].FilterType" id="Filters[@index].FilterType" asp-for="FilterType" required data-display-toggle-trigger>
                                 <option></option>
-                                <option value="@((int)FilterTypes.Targeting)" data-display-toggle-target="targetingFilter">@Flags.TargetingFilter</option>
-                                <option value="@((int)FilterTypes.TimeWindow)" data-display-toggle-target="timeWindowFilter">@Flags.TimeWindowFilter</option>
-                                <option value="@((int)FilterTypes.Percentage)" data-display-toggle-target="percentageFilter">@Flags.PercentageFilter</option>
-                                <option value="@((int)FilterTypes.JSON)" data-display-toggle-target="jsonFilter">@Flags.JSONFilter</option>
+                                <option value="@((int)FilterTypes.Targeting)" data-display-toggle-target="targetingFilter">
+                                    @Flags.TargetingFilter
+                                </option>
+                                <option value="@((int)FilterTypes.TimeWindow)" data-display-toggle-target="timeWindowFilter">
+                                    @Flags.TimeWindowFilter
+                                </option>
+                                <option value="@((int)FilterTypes.Percentage)" data-display-toggle-target="percentageFilter">
+                                    @Flags.PercentageFilter
+                                </option>
+                                <option value="@((int)FilterTypes.JSON)" data-display-toggle-target="jsonFilter">
+                                    @Flags.JSONFilter
+                                </option>
                             </select>
                         </span>
                     </label>
@@ -51,9 +59,9 @@
                     <label>
                         @Flags.TimeStart
                         <span class="input-group">
-                            <input type="datetime-local" value="@Model.TimeStart" data-datetime-local>
-                            <input name="Filters[@index].TimeStart" type="hidden" value="@Model.TimeStart" data-datetime-hidden>
+                            <input type="datetime-local" data-datetime-local>
                         </span>
+                        <input name="Filters[@index].TimeStart" type="hidden" value="@Model.TimeStart?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")" data-datetime-hidden>
                     </label>
                 </nilla-datetime-input>
             </div>
@@ -62,9 +70,9 @@
                     <label>
                         @Flags.TimeEnd
                         <span class="input-group">
-                            <input type="datetime-local" value="@Model.TimeEnd" data-datetime-local>
-                            <input name="Filters[@index].TimeEnd" type="hidden" value="@Model.TimeEnd" data-datetime-hidden>
+                            <input type="datetime-local" data-datetime-local>
                         </span>
+                        <input name="Filters[@index].TimeEnd" type="hidden" value="@Model.TimeEnd?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")" data-datetime-hidden>
                     </label>
                 </nilla-datetime-input>
             </div>
@@ -72,7 +80,7 @@
                 <label>
                     @Flags.TimeRecurrenceType
                     <span class="input-group">
-                        <select name="Filters[@index].TimeRecurrenceType" value="@Model.TimeRecurrenceType">
+                        <select name="Filters[@index].TimeRecurrenceType" id="Filters[@index].TimeRecurrenceType" asp-for="TimeRecurrenceType">
                             <option></option>
                             <option value="@((int)RecurrencePatternType.Daily)">@Flags.Daily</option>
                             <option value="@((int)RecurrencePatternType.Weekly)">@Flags.Weekly</option>
@@ -104,7 +112,7 @@
                 <label>
                     @Flags.TimeRecurrenceFirstDayOfWeek
                     <span class="input-group">
-                        <select name="Filters[@index].TimeRecurrenceFirstDayOfWeek" value="@Model.TimeRecurrenceFirstDayOfWeek">
+                        <select name="Filters[@index].TimeRecurrenceFirstDayOfWeek" id="Filters[@index].TimeRecurrenceFirstDayOfWeek" asp-for="@Model.TimeRecurrenceFirstDayOfWeek">
                             <option value="Sunday">@Flags.Sunday</option>
                             <option value="Monday">@Flags.Monday</option>
                             <option value="Tuesday">@Flags.Tuesday</option>
@@ -120,7 +128,7 @@
                 <label>
                     @Flags.TimeRecurrenceRangeType
                     <span class="input-group">
-                        <select name="Filters[@index].TimeRecurrenceRangeType" value="@Model.TimeRecurrenceRangeType">
+                        <select name="Filters[@index].TimeRecurrenceRangeType" id="Filters[@index].TimeRecurrenceRangeType" asp-for="@Model.TimeRecurrenceRangeType">
                             <option value="@((int)RecurrenceRangeType.NoEnd)">@Flags.RangeTypeNoEnd</option>
                             <option value="@((int)RecurrenceRangeType.EndDate)">@Flags.RangeTypeEndDate</option>
                             <option value="@((int)RecurrenceRangeType.Numbered)">@Flags.RangeTypeNumbered</option>
@@ -133,9 +141,9 @@
                     <label>
                         @Flags.TimeRecurrenceEndDate
                         <span class="input-group">
-                            <input type="datetime-local" value="@Model.TimeRecurrenceEndDate" data-datetime-local>
-                            <input name="Filters[@index].TimeRecurrenceEndDate" type="hidden" value="@Model.TimeRecurrenceEndDate" data-datetime-hidden>
+                            <input type="datetime-local" data-datetime-local>
                         </span>
+                        <input name="Filters[@index].TimeRecurrenceEndDate" type="hidden" value="@Model.TimeRecurrenceEndDate?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")" data-datetime-hidden>
                     </label>
                 </nilla-datetime-input>
             </div>
