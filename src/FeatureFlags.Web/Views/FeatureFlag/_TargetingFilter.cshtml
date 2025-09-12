@@ -1,0 +1,102 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Models
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using Microsoft.FeatureManagement.FeatureFilters
+@model FeatureFlagFilterModel
+
+<div class="row is-hidden" data-display-toggle="targetingFilter">
+    <div class="col">
+        <nilla-list>
+            <template data-list-template>
+                <div data-list-item>
+                    <span class="input-group">
+                        <input type="text" name="Filters[@Model.Index].TargetUsers" placeholder="@Flags.UserIdentity" />
+                        <button class="button dark p-1" type="button" data-list-remove-button>
+                            <icon name="Remove" label="@Core.Delete" />
+                        </button>
+                    </span>
+                </div>
+            </template>
+
+            <div class="row">
+                <div class="col">
+                    <h5>@Flags.TargetUsers</h5>
+                </div>
+                <div class="col text-right">
+                    <button class="button primary p-1" type="button" data-list-add-button>
+                        <icon name="Add" label="@Core.Add" />
+                    </button>
+                </div>
+            </div>
+
+            <div data-list-empty-message>
+                <i>@Flags.TargetUsersIntro</i>
+            </div>
+
+            <div data-list-container>
+                @if (Model.TargetUsers?.Any() == true)
+                {
+                    foreach (var user in Model.TargetUsers)
+                    {
+                        <div data-list-item>
+                            <span class="input-group">
+                                <input type="text" name="Filters[@Model.Index].TargetUsers" placeholder="@Flags.UserIdentity" value="@user" />
+                                <button class="button dark p-1" type="button" data-list-remove-button>
+                                    <icon name="Remove" label="@Core.Delete" />
+                                </button>
+                            </span>
+                        </div>
+                    }
+                }
+            </div>
+        </nilla-list>
+    </div>
+
+    <div class="col">
+        <nilla-list>
+            <template data-list-template>
+                <div data-list-item>
+                    <span class="input-group">
+                        <input type="text" name="Filters[@Model.Index].ExcludeUsers" placeholder="@Flags.UserIdentity" />
+                        <button class="button dark p-1" type="button" data-list-remove-button>
+                            <icon name="Remove" label="@Core.Delete" />
+                        </button>
+                    </span>
+                </div>
+            </template>
+
+            <div class="row">
+                <div class="col">
+                    <h5>@Flags.ExcludeUsers</h5>
+                </div>
+                <div class="col text-right">
+                    <button class="button primary p-1" type="button" data-list-add-button>
+                        <icon name="Add" label="@Core.Add" />
+                    </button>
+                </div>
+            </div>
+
+            <div data-list-empty-message>
+                <i>@Flags.ExcludeUsersIntro</i>
+            </div>
+
+            <div data-list-container>
+                @if (Model.ExcludeUsers?.Any() == true)
+                {
+                    foreach (var user in Model.ExcludeUsers)
+                    {
+                        <div data-list-item>
+                            <span class="input-group">
+                                <input type="text" name="Filters[@Model.Index].ExcludeUsers" placeholder="@Flags.UserIdentity" value="@user" />
+                                <button class="button dark p-1" type="button" data-list-remove-button>
+                                    <icon name="Remove" label="@Core.Delete" />
+                                </button>
+                            </span>
+                        </div>
+                    }
+                }
+            </div>
+        </nilla-list>
+    </div>
+</div>

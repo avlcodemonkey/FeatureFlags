@@ -44,7 +44,12 @@ details {
     }
 }
 
-.is-bottom-right {
+.is-end-align {
+    display: flex;
+    align-items: end;
+}
+
+.is-end-right {
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;

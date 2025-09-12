@@ -1,0 +1,26 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Models
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using Microsoft.FeatureManagement.FeatureFilters
+@model FeatureFlagFilterModel
+
+<div class="row is-hidden" data-display-toggle="percentageFilter">
+    <div class="col">
+        <nilla-slider-input>
+            <div class="row">
+                <div class="col">
+                    <label for="Percentage">@Flags.Percentage</label>
+                    <input type="number" name="Filters[@Model.Index].PercentageValue" value="@(Model.PercentageValue ?? 0)" min="0" max="100" step="1" data-slider-text />
+                </div>
+                <div class="col is-end-align">
+                    <span class="range-label">0</span>
+                    <span class="is-full-width">
+                        <input type="range" value="@(Model.PercentageValue ?? 0)" min="0" max="100" step="1" data-slider-range />
+                    </span>
+                    <span class="range-label">100</span>
+                </div>
+            </div>
+        </nilla-slider-input>
+    </div>
+</div>

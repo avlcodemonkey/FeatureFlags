@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using FeatureFlags.Constants;
 using FeatureFlags.Resources;
 using FeatureFlags.Validators;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.FeatureManagement.FeatureFilters;
 
 namespace FeatureFlags.Models;
@@ -122,6 +123,12 @@ public sealed record FeatureFlagFilterModel : IAuditedModel {
     public string? JSON { get; set; }
 
     #endregion JSON
+
+    /// <summary>
+    /// Unique index to use for rendering the UI.
+    /// </summary>
+    [BindNever]
+    public string Index => Id > 0 ? Id.ToString() : FilterConstants.IndexPlaceholder;
 
     /// <summary>
     /// Gets the date and time when the feature flag was last updated.

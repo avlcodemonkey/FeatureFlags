@@ -1,0 +1,17 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Models
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using Microsoft.FeatureManagement.FeatureFilters
+@model FeatureFlagFilterModel
+
+<div class="row is-hidden" data-display-toggle="jsonFilter">
+    <div class="col">
+        <label>
+            @Flags.JSON
+            <span class="input-group">
+                <textarea name="Filters[@Model.Index].JSON" rows="10">@(Model.JSON ?? "")</textarea>
+            </span>
+        </label>
+    </div>
+</div>

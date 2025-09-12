@@ -165,7 +165,7 @@ namespace FeatureFlags.Domain.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("JSON")
-                        .HasMaxLength(2000)
+                        .HasMaxLength(4000)
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("PercentageValue")

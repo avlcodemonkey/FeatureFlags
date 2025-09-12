@@ -300,4 +300,13 @@
   <data name="TimeRecurrenceDaysOfWeek" xml:space="preserve">
     <value>Days of Week</value>
   </data>
+  <data name="UserIdentity" xml:space="preserve">
+    <value>User (Identity.Name)</value>
+  </data>
+  <data name="TargetUsersIntro" xml:space="preserve">
+    <value>Add users to target.</value>
+  </data>
+  <data name="ExcludeUsersIntro" xml:space="preserve">
+    <value>Add users to exclude.</value>
+  </data>
 </root>

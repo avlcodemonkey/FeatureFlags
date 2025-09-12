@@ -15,7 +15,7 @@
 
     <partial name="_Alerts" />
 
-    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
+    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")" class="feature-flag-container">
         <h4>@Flags.Details</h4>
         <hr />
 
@@ -30,7 +30,7 @@
 
         <div class="row">
             <div class="col">
-                <nilla-list>
+                <nilla-list data-list-index-placeholder="@FilterConstants.IndexPlaceholder">
                     <template data-list-template>
                         <partial name="_Filter" model="@(new FeatureFlagFilterModel())" />
                     </template>
@@ -40,7 +40,7 @@
                             <h4>@Flags.Filters</h4>
                         </div>
                         <div class="col text-right">
-                            <button class="button primary" type="button" data-list-add-button>
+                            <button class="button primary p-1" type="button" data-list-add-button>
                                 <icon name="Add" label="@Core.Add" />
                             </button>
                         </div>

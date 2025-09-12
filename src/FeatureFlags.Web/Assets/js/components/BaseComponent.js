@@ -43,10 +43,22 @@ class BaseComponent extends HTMLElement {
         const key = this.#elementPrefix ? `${this.#elementPrefix}-${elementKey}` : elementKey;
 
         if (!this.#elementCache[key]) {
-            const element = this.querySelector(`[data-${key}]`);
-            if (element) {
-                this.#elementCache[key] = element;
-            }
+            const componentName = this.nodeName;
+            this.querySelectorAll(`[data-${key}]`).forEach((x) => {
+                // handle nested components by searching for matching parent node
+                // use a while loop instead of closest() since jsdom closest() doesn't seem to work right
+                let el = x;
+                while (el.nodeName !== componentName) {
+                    // Move up to the parent node
+                    el = el.parentNode;
+                    if (!el) {
+                        break;
+                    }
+                }
+                if (el && el === this) {
+                    this.#elementCache[key] = x;
+                }
+            });
         }
         return this.#elementCache[key];
     }

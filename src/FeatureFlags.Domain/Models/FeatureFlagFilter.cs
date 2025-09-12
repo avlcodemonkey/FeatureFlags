@@ -99,7 +99,7 @@ public class FeatureFlagFilter : IAuditedEntity {
     /// <summary>
     /// Gets or sets the filter as JSON-encoded string.
     /// </summary>
-    [StringLength(2000)]
+    [StringLength(4000)]
     public string? JSON { get; set; }
 
     #endregion JSON

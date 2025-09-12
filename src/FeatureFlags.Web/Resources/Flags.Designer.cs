@@ -241,6 +241,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add users to exclude..
+        /// </summary>
+        public static string ExcludeUsersIntro {
+            get {
+                return ResourceManager.GetString("ExcludeUsersIntro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filters are conditions for determining the state of the feature flag.  Flags with no filters will always evaluate to false.  Create at least one filter to enable the flag..
         /// </summary>
         public static string FilterIntro {
@@ -466,6 +475,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add users to target..
+        /// </summary>
+        public static string TargetUsersIntro {
+            get {
+                return ResourceManager.GetString("TargetUsersIntro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thursday.
         /// </summary>
         public static string Thursday {
@@ -579,6 +597,15 @@ namespace FeatureFlags.Resources {
         public static string Tuesday {
             get {
                 return ResourceManager.GetString("Tuesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User (Identity.Name).
+        /// </summary>
+        public static string UserIdentity {
+            get {
+                return ResourceManager.GetString("UserIdentity", resourceCulture);
             }
         }
         

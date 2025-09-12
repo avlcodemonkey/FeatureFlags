@@ -5,9 +5,13 @@ class DisplayToggle extends HTMLElement {
     constructor() {
         super();
 
+        const componentName = this.nodeName;
         this.querySelectorAll('[data-display-toggle-trigger]').forEach((toggle) => {
-            toggle.addEventListener('change', this);
-            this.#toggleContent(toggle);
+            // handle nested components by comparing closest to this
+            if (toggle.closest(componentName) === this) {
+                toggle.addEventListener('change', this);
+                this.#toggleContent(toggle);
+            }
         });
     }
 
@@ -27,17 +31,25 @@ class DisplayToggle extends HTMLElement {
 
     /**
      * Show/hide content based on the selected target.
-     * @param {HTMLSelectElement} selectEl
+     * @param {HTMLSelectElement} selectEl Select element that triggered the change.
      * @private
      */
     #toggleContent(selectEl) {
         /** @type {string} */
+        const componentName = this.nodeName;
+
+        /** @type {string} */
         const target = selectEl.options[selectEl.selectedIndex]?.dataset.displayToggleTarget;
+
         this.querySelectorAll('[data-display-toggle]').forEach((/** @type {HTMLElement} */ el) => {
-            if (!target || el.dataset.displayToggle !== target) {
-                el.classList.add('is-hidden');
-            } else {
-                el.classList.remove('is-hidden');
+            // make sure element is child of this component, not another nested one
+            if (el.closest(componentName) === this) {
+                const toggles = (el.dataset.displayToggle || '').split(',').map(x => x.trim());
+                if (!(target && toggles.some(x => x === target))) {
+                    el.classList.add('is-hidden');
+                } else {
+                    el.classList.remove('is-hidden');
+                }
             }
         });
     }

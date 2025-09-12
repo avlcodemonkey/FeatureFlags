@@ -301,4 +301,13 @@
   <data name="TimeRecurrenceDaysOfWeek" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="UserIdentity" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="TargetUsersIntro" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ExcludeUsersIntro" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>
