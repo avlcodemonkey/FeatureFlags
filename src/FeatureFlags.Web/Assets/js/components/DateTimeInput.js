@@ -23,6 +23,7 @@ class DateTimeInput extends HTMLElement {
 
             localInput.addEventListener('change', () => {
                 if (!localInput.value) {
+                    hiddenInput.value = '';
                     return;
                 }
 
