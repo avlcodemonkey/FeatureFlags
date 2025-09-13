@@ -653,6 +653,6 @@ public class FeatureFlagServiceTests {
     private async Task InvokeMapToEntity(FeatureFlagModel model, FeatureFlag entity) {
         // Use reflection to invoke private method
         var method = typeof(FeatureFlagService).GetMethod("MapToEntity", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        await (Task)method.Invoke(_FeatureFlagService, new object[] { model, entity, default(CancellationToken) });
+        await (Task)method!.Invoke(_FeatureFlagService, new object[] { model, entity, default(CancellationToken) })!;
     }
 }
