@@ -8,7 +8,16 @@ class DisplayToggle extends HTMLElement {
         const componentName = this.nodeName;
         this.querySelectorAll('[data-display-toggle-trigger]').forEach((toggle) => {
             // handle nested components by comparing closest to this
-            if (toggle.closest(componentName) === this) {
+            let node = toggle;
+            while (node.nodeName !== componentName) {
+                // Move up to the parent node
+                node = node.parentNode;
+                if (!node) {
+                    break;
+                }
+            }
+
+            if (node && node === this) {
                 toggle.addEventListener('change', this);
                 this.#toggleContent(toggle);
             }
@@ -42,8 +51,18 @@ class DisplayToggle extends HTMLElement {
         const target = selectEl.options[selectEl.selectedIndex]?.dataset.displayToggleTarget;
 
         this.querySelectorAll('[data-display-toggle]').forEach((/** @type {HTMLElement} */ el) => {
-            // make sure element is child of this component, not another nested one
-            if (el.closest(componentName) === this) {
+            // handle nested components by searching for matching parent node
+            // use a while loop instead of closest() since jsdom closest() doesn't seem to work right
+            let node = el;
+            while (node.nodeName !== componentName) {
+                // Move up to the parent node
+                node = node.parentNode;
+                if (!node) {
+                    break;
+                }
+            }
+
+            if (node && node === this) {
                 const toggles = (el.dataset.displayToggle || '').split(',').map(x => x.trim());
                 if (!(target && toggles.some(x => x === target))) {
                     el.classList.add('is-hidden');
