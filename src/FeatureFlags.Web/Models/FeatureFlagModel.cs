@@ -8,7 +8,7 @@ namespace FeatureFlags.Models;
 /// <summary>
 /// Represents a system feature flag.
 /// </summary>
-public sealed record FeatureFlagModel : IAuditedModel, IVersionedModel {
+public sealed record FeatureFlagModel : IAuditedModel, IVersionedModel, IValidatableObject {
     /// <summary>
     /// Gets the unique identifier for the feature flag.
     /// </summary>
@@ -45,4 +45,11 @@ public sealed record FeatureFlagModel : IAuditedModel, IVersionedModel {
     /// Gets the date and time when the feature flag was last updated.
     /// </summary>
     public DateTime UpdatedDate { get; init; }
+
+    /// <summary>
+    /// Custom validation logic.
+    /// </summary>
+    /// <param name="validationContext">Context in which the validation is performed. Provides info about the object being validated.</param>
+    /// <returns><see cref="IEnumerable{T}"/> of <see cref="ValidationResult"/> validation errors, or an empty collection if valid.</returns>
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => throw new NotImplementedException();
 }
