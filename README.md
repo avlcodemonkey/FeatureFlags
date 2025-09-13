@@ -62,12 +62,12 @@ Github actions are used for continuous integration.  The repo is configured to o
     - ~~Use auth for httpClient. Add header with API key.~~
     - ~~Add api key in appsettings.~~
 - ~~Use new feature definition provider in web project.~~
-- Add UI support for filters
-    - Users can add as many filters as they want
-    - Percentage of users - just pick a percentage using a range input
-    - Time window - pick start and end time, recurrence
-    - Targeting - set patterns to include or exclude users like `email@domain.com`
-        - Allow targeting users by email or group/role
+- ~~Add UI support for filters~~
+    - ~~Users can add as many filters as they want~~
+    - ~~Percentage of users - just pick a percentage using a range input~~
+    - ~~Time window - pick start and end time, recurrence~~
+    - ~~Targeting - set patterns to include or exclude users like `email@domain.com`~~
+        - ~~Allow targeting users by email~~
 - Persistent percentage custom filter
     - Like built in percentage but saves user to database so they always get the same value
     - Build UI to support this
@@ -78,7 +78,7 @@ Github actions are used for continuous integration.  The repo is configured to o
 - Build out readme to explain how to use the feature flag solution
 - Release package to nuget for client project
     - Add instructions for using the package in readme
-- Add serilog with appSetting configuration for structured logging
+- ~~Add serilog with appSetting configuration for structured logging~~
 
 
 ### Misc
