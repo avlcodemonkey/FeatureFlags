@@ -167,3 +167,57 @@ describe('BaseComponent with prefix', () => {
         component.querySelectorAll = originalQuerySelectorAll;
     });
 });
+
+describe('BaseComponent parentNode logic', () => {
+    beforeEach(async () => {
+        // Simulate nested nilla-base components
+        document.body.innerHTML = `
+            <nilla-base id="outer">
+                <nilla-base id="inner">
+                    <div data-nested-key>nested value</div>
+                </nilla-base>
+            </nilla-base>
+        `;
+        await isRendered(() => document.getElementById('outer'));
+        await isRendered(() => document.getElementById('inner'));
+    });
+
+    it('should only cache element if it belongs to the correct component (inner)', () => {
+        const inner = document.getElementById('inner');
+        const outer = document.getElementById('outer');
+        // The inner component should find its own element
+        const el = inner.getElement('nested-key');
+        assert.ok(el, 'Inner component should find its nested element');
+        assert.strictEqual(el.innerHTML, 'nested value', 'Inner element value should match');
+        // The outer component should NOT find the inner element
+        const elOuter = outer.getElement('nested-key');
+        assert.ok(!elOuter, 'Outer component should not find inner component\'s element');
+    });
+
+    it('should not cache element if parentNode does not match component', () => {
+        // Add an element outside any nilla-base
+        const orphanDiv = document.createElement('div');
+        orphanDiv.setAttribute('data-orphan-key', 'true');
+        orphanDiv.innerHTML = 'orphan value';
+        document.body.appendChild(orphanDiv);
+
+        const inner = document.getElementById('inner');
+        const el = inner.getElement('orphan-key');
+        assert.ok(!el, 'Should not find element outside component');
+    });
+
+    it('should handle deeply nested elements', () => {
+        // Add a deeply nested element inside inner
+        const inner = document.getElementById('inner');
+        const deepDiv = document.createElement('div');
+        deepDiv.setAttribute('data-deep-key', 'true');
+        deepDiv.innerHTML = 'deep value';
+        const wrapper = document.createElement('div');
+        wrapper.appendChild(deepDiv);
+        inner.appendChild(wrapper);
+
+        const el = inner.getElement('deep-key');
+        assert.ok(el, 'Should find deeply nested element');
+        assert.strictEqual(el.innerHTML, 'deep value', 'Deep element value should match');
+    });
+});
