@@ -27,6 +27,9 @@ class InfoDialog extends BaseDialog {
      */
     handleEvent(event) {
         const target = event.target.closest('[data-dialog-content]');
+        if (!target) {
+            return;
+        }
         const { dialogContent, dialogOk } = target.dataset;
         if (!(dialogContent && dialogOk)) {
             return;

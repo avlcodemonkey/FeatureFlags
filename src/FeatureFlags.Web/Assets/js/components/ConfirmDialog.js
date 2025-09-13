@@ -32,6 +32,9 @@ class ConfirmDialog extends BaseDialog {
         }
 
         const target = event.target.closest('[data-dialog-content]');
+        if (!target) {
+            return;
+        }
         const { dialogContent, dialogOk, dialogCancel } = target.dataset;
         if (!(dialogContent && dialogOk && dialogCancel)) {
             return;
