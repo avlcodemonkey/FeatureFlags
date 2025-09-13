@@ -258,7 +258,6 @@ class PJax extends BaseComponent {
 
             await this.#processResponse(url, updateHistory, response);
         } catch (error) {
-            console.error(error);
             await this.#handleResponseError(error);
         } finally {
             this.#hideLoadingIndicator();

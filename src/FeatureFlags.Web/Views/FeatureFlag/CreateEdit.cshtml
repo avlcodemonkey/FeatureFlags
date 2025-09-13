@@ -15,7 +15,7 @@
 
     <partial name="_Alerts" />
 
-    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
+    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")" class="feature-flag-container">
         <h4>@Flags.Details</h4>
         <hr />
 
@@ -30,24 +30,9 @@
 
         <div class="row">
             <div class="col">
-                <nilla-list>
+                <nilla-list data-list-index-placeholder="@FilterConstants.IndexPlaceholder">
                     <template data-list-template>
-                        <div data-list-item>
-                            @* @todo move into a partial that can be re-used to render existing filters *@
-                            <div class="text-right">
-                                <nilla-confirm>
-                                    <button class="button dark" type="button" data-list-remove-button data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmDeleteFilter">
-                                        <icon name="Delete" label="@Core.Delete" />
-                                    </button>
-                                </nilla-confirm>
-                            </div>
-                            <div>
-                                <label>
-                                    Filter
-                                    <div class="input-group"><input maxlength="100" name="Filter" required type="text" value="1234 qwewqeqwe"></div>
-                                </label>
-                            </div>
-                        </div>
+                        <partial name="_Filter" model="@(new FeatureFlagFilterModel())" />
                     </template>
 
                     <div class="row">
@@ -55,7 +40,7 @@
                             <h4>@Flags.Filters</h4>
                         </div>
                         <div class="col text-right">
-                            <button class="button primary" type="button" data-list-add-button>
+                            <button class="button primary p-1" type="button" data-list-add-button>
                                 <icon name="Add" label="@Core.Add" />
                             </button>
                         </div>
@@ -66,7 +51,13 @@
                     </div>
 
                     <div data-list-container>
-                        @* @todo render existing filters when editing *@
+                        @if (Model.Filters?.Any() == true)
+                        {
+                            foreach (var filter in Model.Filters)
+                            {
+                                <partial name="_Filter" model="@filter" />
+                            }
+                        }
                     </div>
                 </nilla-list>
             </div>

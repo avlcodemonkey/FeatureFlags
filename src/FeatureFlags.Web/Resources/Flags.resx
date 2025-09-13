@@ -207,4 +207,106 @@
   <data name="Details" xml:space="preserve">
     <value>Details</value>
   </data>
+  <data name="PercentageFilter" xml:space="preserve">
+    <value>Percentage Filter</value>
+  </data>
+  <data name="TargetingFilter" xml:space="preserve">
+    <value>Targeting Filter</value>
+  </data>
+  <data name="TimeWindowFilter" xml:space="preserve">
+    <value>Time Window Filter</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Filter Type</value>
+  </data>
+  <data name="JSONFilter" xml:space="preserve">
+    <value>JSON Filter</value>
+  </data>
+  <data name="JSON" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
+  <data name="TimeRecurrenceType" xml:space="preserve">
+    <value>Repeats</value>
+  </data>
+  <data name="TimeEnd" xml:space="preserve">
+    <value>End Time</value>
+  </data>
+  <data name="TimeStart" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="ExcludeUsers" xml:space="preserve">
+    <value>Exclude Users</value>
+  </data>
+  <data name="TargetUsers" xml:space="preserve">
+    <value>Target Users</value>
+  </data>
+  <data name="Daily" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="Weekly" xml:space="preserve">
+    <value>Weekly</value>
+  </data>
+  <data name="TimeRecurrenceInterval" xml:space="preserve">
+    <value>Interval</value>
+  </data>
+  <data name="TimeRecurrenceFirstDayOfWeek" xml:space="preserve">
+    <value>First Day of Week</value>
+  </data>
+  <data name="TimeRecurrenceRangeType" xml:space="preserve">
+    <value>Range Type</value>
+  </data>
+  <data name="TimeRecurrenceEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="TimeRecurrenceNumberOfOccurrences" xml:space="preserve">
+    <value>Number of Occurrences</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="RangeTypeNoEnd" xml:space="preserve">
+    <value>No End</value>
+  </data>
+  <data name="TimeRangeTypeEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="RangeTypeEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="RangeTypeNumbered" xml:space="preserve">
+    <value>Numbered</value>
+  </data>
+  <data name="TimeRecurrenceDaysOfWeek" xml:space="preserve">
+    <value>Days of Week</value>
+  </data>
+  <data name="UserIdentity" xml:space="preserve">
+    <value>User (Identity.Name)</value>
+  </data>
+  <data name="TargetUsersIntro" xml:space="preserve">
+    <value>Add users to target.</value>
+  </data>
+  <data name="ExcludeUsersIntro" xml:space="preserve">
+    <value>Add users to exclude.</value>
+  </data>
 </root>

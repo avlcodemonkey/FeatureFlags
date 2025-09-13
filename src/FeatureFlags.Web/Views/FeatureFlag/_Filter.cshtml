@@ -1,0 +1,51 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Models
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using Microsoft.FeatureManagement.FeatureFilters
+@model FeatureFlagFilterModel
+
+<div class="filter-border" data-list-item>
+    <nilla-display-toggle>
+        <input type="hidden" name="Filters.Index" value="@Model.Index" />
+        <input type="hidden" name="Filters[@Model.Index].Id" value="@Model.Id" />
+        <div class="row reverse">
+            <div class="col is-vertical-align is-right">
+                <nilla-confirm>
+                    <button class="button dark p-1" type="button" data-list-remove-button data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmDeleteFilter">
+                        <icon name="Delete" label="@Core.Delete" />
+                    </button>
+                </nilla-confirm>
+            </div>
+            <div class="col">
+                <div>
+                    <label>
+                        @Flags.FilterType
+                        <span class="input-group">
+                            <select name="Filters[@Model.Index].FilterType" id="Filters[@Model.Index].FilterType" asp-for="FilterType" required data-display-toggle-trigger>
+                                <option></option>
+                                <option value="@((int)FilterTypes.Targeting)" data-display-toggle-target="targetingFilter">
+                                    @Flags.TargetingFilter
+                                </option>
+                                <option value="@((int)FilterTypes.TimeWindow)" data-display-toggle-target="timeWindowFilter">
+                                    @Flags.TimeWindowFilter
+                                </option>
+                                <option value="@((int)FilterTypes.Percentage)" data-display-toggle-target="percentageFilter">
+                                    @Flags.PercentageFilter
+                                </option>
+                                <option value="@((int)FilterTypes.JSON)" data-display-toggle-target="jsonFilter">
+                                    @Flags.JSONFilter
+                                </option>
+                            </select>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <partial name="_TargetingFilter" />
+        <partial name="_TimeWindowFilter" />
+        <partial name="_PercentageFilter" />
+        <partial name="_JsonFilter" />
+    </nilla-display-toggle>
+</div>

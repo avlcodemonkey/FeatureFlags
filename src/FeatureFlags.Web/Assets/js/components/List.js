@@ -19,10 +19,18 @@ const Elements = Object.freeze({
  */
 class List extends BaseComponent {
     /**
+     * Placeholder for substituting a unique index for the item.
+     * @type {string}
+     */
+    #indexPlaceholder = '';
+
+    /**
      * Initialize a new instance of the List component.
      */
     constructor() {
         super('list');
+
+        this.#indexPlaceholder = this.dataset.listIndexPlaceholder;
 
         // register listener for the add button
         const btn = this.getElement(Elements.AddButton);
@@ -38,7 +46,10 @@ class List extends BaseComponent {
         if (container) {
             container.addEventListener('click', (event) => {
                 if (event.target.closest('button')?.matches(`[data-list-${Elements.RemoveButton}]`)) {
-                    /** @type {HTMLInputElement} */
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    /** @type {HTMLElement} */
                     const item = event.target.closest(`[data-list-${Elements.Item}]`);
                     if (item) {
                         item.parentNode.removeChild(item);
@@ -64,7 +75,12 @@ class List extends BaseComponent {
         const container = this.getElement(Elements.Container);
 
         if (template && container) {
-            container.insertAdjacentHTML('beforeend', template.innerHTML);
+            let html = template.innerHTML;
+            if (this.#indexPlaceholder) {
+                // create a guid to use as a unique index for the copy
+                html = html.replaceAll(this.#indexPlaceholder, crypto.randomUUID());
+            }
+            container.insertAdjacentHTML('beforeend', html);
             this.#renderEmptyMessage();
         }
     }

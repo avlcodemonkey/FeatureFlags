@@ -36,6 +36,12 @@ public sealed record FeatureFlagModel : IAuditedModel, IVersionedModel {
     public RequirementType RequirementType { get; init; }
 
     /// <summary>
+    /// List of feature filters.
+    /// </summary>
+    [Display(ResourceType = typeof(Flags), Name = nameof(Flags.Filters))]
+    public IEnumerable<FeatureFlagFilterModel>? Filters { get; init; }
+
+    /// <summary>
     /// Gets the date and time when the feature flag was last updated.
     /// </summary>
     public DateTime UpdatedDate { get; init; }

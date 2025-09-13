@@ -1,0 +1,129 @@
+@using FeatureFlags.Constants
+@using FeatureFlags.Models
+@using FeatureFlags.Resources
+@using FeatureFlags.Services
+@using Microsoft.FeatureManagement.FeatureFilters
+@model FeatureFlagFilterModel
+
+<div class="is-hidden" data-display-toggle="timeWindowFilter">
+    <div class="row">
+        <div class="col">
+            <nilla-datetime-input>
+                <label>
+                    @Flags.TimeStart
+                    <span class="input-group">
+                        <input type="datetime-local" data-datetime-local>
+                    </span>
+                    <input name="Filters[@Model.Index].TimeStart" type="hidden" value="@Model.TimeStart?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")" data-datetime-hidden>
+                </label>
+            </nilla-datetime-input>
+        </div>
+        <div class="col">
+            <nilla-datetime-input>
+                <label>
+                    @Flags.TimeEnd
+                    <span class="input-group">
+                        <input type="datetime-local" data-datetime-local>
+                    </span>
+                    <input name="Filters[@Model.Index].TimeEnd" type="hidden" value="@Model.TimeEnd?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")" data-datetime-hidden>
+                </label>
+            </nilla-datetime-input>
+        </div>
+    </div>
+
+    <nilla-display-toggle>
+        <div class="row">
+            <div class="col">
+                <label>
+                    @Flags.TimeRecurrenceType
+                    <span class="input-group">
+                        <select name="Filters[@Model.Index].TimeRecurrenceType" id="Filters[@Model.Index].TimeRecurrenceType" asp-for="TimeRecurrenceType" data-display-toggle-trigger>
+                            <option></option>
+                            <option value="@((int)RecurrencePatternType.Daily)" data-display-toggle-target="recurrenceTypeDaily">@Flags.Daily</option>
+                            <option value="@((int)RecurrencePatternType.Weekly)" data-display-toggle-target="recurrenceTypeWeekly">@Flags.Weekly</option>
+                        </select>
+                    </span>
+                </label>
+            </div>
+            <div class="col">
+                <label data-display-toggle="recurrenceTypeDaily,recurrenceTypeWeekly">
+                    @Flags.TimeRecurrenceInterval
+                    <span class="input-group">
+                        <input type="number" name="Filters[@Model.Index].TimeRecurrenceInterval" value="@Model.TimeRecurrenceInterval" min="1" max="100" step="1">
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row" data-display-toggle="recurrenceTypeWeekly">
+            <div class="col">
+                <label>
+                    @Flags.TimeRecurrenceDaysOfWeek
+                    <form-checkbox name="Filters[@Model.Index].TimeRecurrenceDaysOfWeek" value="Sunday" label="@Flags.Sunday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Sunday") == true" />
+                    <form-checkbox name="Filters[@Model.Index].TimeRecurrenceDaysOfWeek" value="Monday" label="@Flags.Monday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Monday") == true" />
+                    <form-checkbox name="Filters[@Model.Index].TimeRecurrenceDaysOfWeek" value="Tuesday" label="@Flags.Tuesday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Tuesday") == true" />
+                    <form-checkbox name="Filters[@Model.Index].TimeRecurrenceDaysOfWeek" value="Wednesday" label="@Flags.Wednesday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Wednesday") == true" />
+                    <form-checkbox name="Filters[@Model.Index].TimeRecurrenceDaysOfWeek" value="Thursday" label="@Flags.Thursday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Thursday") == true" />
+                    <form-checkbox name="Filters[@Model.Index].TimeRecurrenceDaysOfWeek" value="Friday" label="@Flags.Friday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Friday") == true" />
+                    <form-checkbox name="Filters[@Model.Index].TimeRecurrenceDaysOfWeek" value="Saturday" label="@Flags.Saturday" checked="@Model.TimeRecurrenceDaysOfWeek?.Contains("Saturday") == true" />
+                </label>
+            </div>
+            <div class="col">
+                <label>
+                    @Flags.TimeRecurrenceFirstDayOfWeek
+                    <span class="input-group">
+                        <select name="Filters[@Model.Index].TimeRecurrenceFirstDayOfWeek" id="Filters[@Model.Index].TimeRecurrenceFirstDayOfWeek" asp-for="@Model.TimeRecurrenceFirstDayOfWeek">
+                            <option value="Sunday">@Flags.Sunday</option>
+                            <option value="Monday">@Flags.Monday</option>
+                            <option value="Tuesday">@Flags.Tuesday</option>
+                            <option value="Wednesday">@Flags.Wednesday</option>
+                            <option value="Thursday">@Flags.Thursday</option>
+                            <option value="Friday">@Flags.Friday</option>
+                            <option value="Saturday">@Flags.Saturday</option>
+                        </select>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div data-display-toggle="recurrenceTypeDaily,recurrenceTypeWeekly">
+            <nilla-display-toggle class="is-full-width">
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            @Flags.TimeRecurrenceRangeType
+                            <span class="input-group">
+                                <select name="Filters[@Model.Index].TimeRecurrenceRangeType" id="Filters[@Model.Index].TimeRecurrenceRangeType" asp-for="@Model.TimeRecurrenceRangeType" data-display-toggle-trigger>
+                                    <option value="@((int)RecurrenceRangeType.NoEnd)">@Flags.RangeTypeNoEnd</option>
+                                    <option value="@((int)RecurrenceRangeType.EndDate)" data-display-toggle-target="rangeTypeEndDate">@Flags.RangeTypeEndDate</option>
+                                    <option value="@((int)RecurrenceRangeType.Numbered)" data-display-toggle-target="rangeTypeNumbered">@Flags.RangeTypeNumbered</option>
+                                </select>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <div class="is-hidden" data-display-toggle="rangeTypeEndDate">
+                            <nilla-datetime-input>
+                                <label>
+                                    @Flags.TimeRecurrenceEndDate
+                                    <span class="input-group">
+                                        <input type="datetime-local" data-datetime-local>
+                                    </span>
+                                    <input name="Filters[@Model.Index].TimeRecurrenceEndDate" type="hidden" value="@Model.TimeRecurrenceEndDate?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")" data-datetime-hidden>
+                                </label>
+                            </nilla-datetime-input>
+                        </div>
+                        <div class="is-hidden" data-display-toggle="rangeTypeNumbered">
+                            <label>
+                                @Flags.TimeRecurrenceNumberOfOccurrences
+                                <span class="input-group">
+                                    <input type="number" name="Filters[@Model.Index].TimeRecurrenceNumberOfOccurrences" value="@Model.TimeRecurrenceNumberOfOccurrences" min="1" max="100" step="1">
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </nilla-display-toggle>
+        </div>
+    </nilla-display-toggle>
+</div>

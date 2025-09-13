@@ -1,3 +1,5 @@
+import { findClosestComponent } from '../utils/findClosestComponent.js';
+
 /**
  * Extend the HTMLElement class to provide common functionality for custom components.
  */
@@ -43,10 +45,15 @@ class BaseComponent extends HTMLElement {
         const key = this.#elementPrefix ? `${this.#elementPrefix}-${elementKey}` : elementKey;
 
         if (!this.#elementCache[key]) {
-            const element = this.querySelector(`[data-${key}]`);
-            if (element) {
-                this.#elementCache[key] = element;
-            }
+            const componentName = this.nodeName;
+            this.querySelectorAll(`[data-${key}]`).forEach((x) => {
+                // handle nested components by searching for matching parent node
+                // use a while loop instead of closest() since jsdom closest() doesn't seem to work right
+                const el = findClosestComponent(x, componentName);
+                if (el && el === this) {
+                    this.#elementCache[key] = x;
+                }
+            });
         }
         return this.#elementCache[key];
     }

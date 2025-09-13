@@ -1,3 +1,7 @@
+.p-1 {
+    padding: 1rem;
+}
+
 .p-2 {
     padding: 2rem;
 }
@@ -40,7 +44,12 @@ details {
     }
 }
 
-.is-bottom-right {
+.is-end-align {
+    display: flex;
+    align-items: end;
+}
+
+.is-end-right {
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;

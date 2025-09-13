@@ -1,13 +1,15 @@
-nilla-list {
-    [data-list-item] {
+.feature-flag-container {
+    .filter-border {
         border-radius: 4px;
         border: 1px solid var(--color-light-grey);
         padding: 1rem;
         width: 100%;
         margin-bottom: 2rem;
+    }
 
-        [data-list-remove-button] {
-            padding: 1rem;
-        }
+    .range-label {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-bottom: .5rem;
     }
 }
