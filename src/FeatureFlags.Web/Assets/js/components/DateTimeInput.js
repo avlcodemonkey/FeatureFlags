@@ -1,7 +1,7 @@
 import { formatDate } from '../utils/formatDate.js';
 
 /**
- * Connects local datetime input value to UTC for a hidden input and vice-versa on load.
+ * Web component that synchronizes a datetime-local input with a hidden UTC datetime input.
  */
 class DateTimeInput extends HTMLElement {
     constructor() {
