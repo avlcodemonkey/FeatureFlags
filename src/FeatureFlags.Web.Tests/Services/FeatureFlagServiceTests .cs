@@ -3,6 +3,7 @@ using FeatureFlags.Models;
 using FeatureFlags.Resources;
 using FeatureFlags.Services;
 using FeatureFlags.Web.Tests.Fixtures;
+using Microsoft.FeatureManagement.FeatureFilters;
 
 namespace FeatureFlags.Web.Tests.Services;
 
@@ -315,5 +316,343 @@ public class FeatureFlagServiceTests {
 
         // assert
         Assert.False(result);
+    }
+
+    [Fact]
+    public async Task MapToEntity_MapsBasicProperties() {
+        var model = new FeatureFlagModel {
+            Name = "TestFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        Assert.Equal(model.Name, entity.Name);
+        Assert.Equal(model.Status, entity.Status);
+        Assert.Equal((int)model.RequirementType, entity.RequirementType);
+    }
+
+    [Fact]
+    public async Task MapToEntity_MapsTargetingFilter() {
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.Targeting,
+            TargetUsers = new[] { "user1", "user2" },
+            ExcludeUsers = new[] { "user3" }
+        };
+        var model = new FeatureFlagModel {
+            Name = "TargetingFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Equal((int)Constants.FilterTypes.Targeting, filter.FilterType);
+        Assert.Equal(3, filter.Users.Count);
+        Assert.Contains(filter.Users, u => u.User == "user1" && u.Include);
+        Assert.Contains(filter.Users, u => u.User == "user2" && u.Include);
+        Assert.Contains(filter.Users, u => u.User == "user3" && !u.Include);
+    }
+
+    [Fact]
+    public async Task MapToEntity_MapsTimeWindowFilter() {
+        var now = DateTime.UtcNow;
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.TimeWindow,
+            TimeStart = now,
+            TimeEnd = now.AddHours(1),
+            TimeRecurrenceType = RecurrencePatternType.Weekly,
+            TimeRecurrenceInterval = 2,
+            TimeRecurrenceDaysOfWeek = new[] { "Monday", "Wednesday" },
+            TimeRecurrenceFirstDayOfWeek = "Monday",
+            TimeRecurrenceRangeType = RecurrenceRangeType.EndDate,
+            TimeRecurrenceEndDate = now.AddDays(7)
+        };
+        var model = new FeatureFlagModel {
+            Name = "TimeWindowFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Equal((int)Constants.FilterTypes.TimeWindow, filter.FilterType);
+        Assert.Equal(now, filter.TimeStart);
+        Assert.Equal(now.AddHours(1), filter.TimeEnd);
+        Assert.Equal((int)RecurrencePatternType.Weekly, filter.TimeRecurrenceType);
+        Assert.Equal(2, filter.TimeRecurrenceInterval);
+        Assert.Equal("Monday,Wednesday", filter.TimeRecurrenceDaysOfWeek);
+        Assert.Equal("Monday", filter.TimeRecurrenceFirstDayOfWeek);
+        Assert.Equal((int)RecurrenceRangeType.EndDate, filter.TimeRecurrenceRangeType);
+        Assert.Equal(now.AddDays(7), filter.TimeRecurrenceEndDate);
+    }
+
+    [Fact]
+    public async Task MapToEntity_MapsPercentageFilter() {
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.Percentage,
+            PercentageValue = 42
+        };
+        var model = new FeatureFlagModel {
+            Name = "PercentageFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Equal((int)Constants.FilterTypes.Percentage, filter.FilterType);
+        Assert.Equal(42, filter.PercentageValue);
+    }
+
+    [Fact]
+    public async Task MapToEntity_MapsJSONFilter() {
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.JSON,
+            JSON = "{\"key\":\"value\"}"
+        };
+        var model = new FeatureFlagModel {
+            Name = "JsonFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Equal((int)Constants.FilterTypes.JSON, filter.FilterType);
+        Assert.Equal("{\"key\":\"value\"}", filter.JSON);
+    }
+
+    [Fact]
+    public async Task MapToEntity_ClearsPropertiesForNonMatchingFilterTypes() {
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.Percentage,
+            TimeStart = DateTime.UtcNow,
+            TimeEnd = DateTime.UtcNow.AddHours(1),
+            JSON = "{\"shouldBeNull\":true}",
+            PercentageValue = 42
+        };
+        var model = new FeatureFlagModel {
+            Name = "ClearFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Null(filter.TimeStart);
+        Assert.Null(filter.TimeEnd);
+        Assert.Null(filter.JSON);
+        Assert.Equal(42, filter.PercentageValue); // If PercentageValue is set, otherwise null
+    }
+
+    [Fact]
+    public async Task MapToEntity_MapsMultipleFiltersOfDifferentTypes() {
+        var now = DateTime.UtcNow;
+        var model = new FeatureFlagModel {
+            Name = "MultiFilterFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] {
+                new FeatureFlagFilterModel {
+                    FilterType = Constants.FilterTypes.Targeting,
+                    TargetUsers = new[] { "userA" }
+                },
+                new FeatureFlagFilterModel {
+                    FilterType = Constants.FilterTypes.TimeWindow,
+                    TimeStart = now,
+                    TimeEnd = now.AddMinutes(30)
+                },
+                new FeatureFlagFilterModel {
+                    FilterType = Constants.FilterTypes.Percentage,
+                    PercentageValue = 99
+                },
+                new FeatureFlagFilterModel {
+                    FilterType = Constants.FilterTypes.JSON,
+                    JSON = "{\"enabled\":true}"
+                }
+            }
+        };
+        var entity = new FeatureFlag();
+        await InvokeMapToEntity(model, entity);
+
+        Assert.Equal(4, entity.Filters.Count);
+        Assert.Contains(entity.Filters, f => f.FilterType == (int)Constants.FilterTypes.Targeting && f.Users.Any(u => u.User == "userA"));
+        Assert.Contains(entity.Filters, f => f.FilterType == (int)Constants.FilterTypes.TimeWindow && f.TimeStart == now);
+        Assert.Contains(entity.Filters, f => f.FilterType == (int)Constants.FilterTypes.Percentage && f.PercentageValue == 99);
+        Assert.Contains(entity.Filters, f => f.FilterType == (int)Constants.FilterTypes.JSON && f.JSON == "{\"enabled\":true}");
+    }
+
+    [Fact]
+    public async Task MapToEntity_HandlesNullAndEmptyFilters() {
+        var modelWithNull = new FeatureFlagModel {
+            Name = "NullFiltersFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = null
+        };
+        var entityNull = new FeatureFlag();
+        await InvokeMapToEntity(modelWithNull, entityNull);
+        Assert.Empty(entityNull.Filters);
+
+        var modelWithEmpty = new FeatureFlagModel {
+            Name = "EmptyFiltersFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = Array.Empty<FeatureFlagFilterModel>()
+        };
+        var entityEmpty = new FeatureFlag();
+        await InvokeMapToEntity(modelWithEmpty, entityEmpty);
+        Assert.Empty(entityEmpty.Filters);
+    }
+
+    [Fact]
+    public async Task MapToEntity_ReusesExistingFilterById() {
+        var existingFilter = new FeatureFlagFilter {
+            Id = 123,
+            FilterType = (int)Constants.FilterTypes.Targeting,
+            Users = new List<FeatureFlagFilterUser> { new() { User = "existingUser", Include = false } }
+        };
+        var existingFlag = new FeatureFlag {
+            Name = "ReuseFilterFlag",
+            Status = true,
+            RequirementType = (int)Constants.RequirementType.All,
+            Filters = [existingFilter]
+        };
+        var dbContext = _Fixture.CreateContext();
+        dbContext.FeatureFlags.Add(existingFlag);
+        dbContext.SaveChanges();
+
+        var filterModel = new FeatureFlagFilterModel {
+            Id = 123,
+            FilterType = Constants.FilterTypes.Targeting,
+            TargetUsers = new[] { "existingUser" }
+        };
+        var model = new FeatureFlagModel {
+            Name = "ReuseFilterFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag { Id = existingFilter.FeatureFlagId };
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Equal(123, filter.Id);
+        Assert.Contains(filter.Users, u => u.User == "existingUser" && u.Include);
+    }
+
+    [Fact]
+    public async Task MapToEntity_ClearsUsersForNonTargetingFilter() {
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.Percentage,
+            TargetUsers = new[] { "shouldNotAppear" }
+        };
+        var model = new FeatureFlagModel {
+            Name = "ClearUsersFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Empty(filter.Users);
+    }
+
+    [Fact]
+    public async Task MapToEntity_ClearsRecurrencePropertiesWhenNotSet() {
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.TimeWindow,
+            TimeStart = DateTime.UtcNow,
+            TimeEnd = DateTime.UtcNow.AddHours(1),
+            TimeRecurrenceType = null
+        };
+        var model = new FeatureFlagModel {
+            Name = "ClearRecurrenceFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Null(filter.TimeRecurrenceInterval);
+        Assert.Null(filter.TimeRecurrenceDaysOfWeek);
+        Assert.Null(filter.TimeRecurrenceFirstDayOfWeek);
+        Assert.Null(filter.TimeRecurrenceRangeType);
+        Assert.Null(filter.TimeRecurrenceEndDate);
+        Assert.Null(filter.TimeRecurrenceNumberOfOccurrences);
+    }
+
+    [Fact]
+    public async Task MapToEntity_HandlesNullAndEmptyUserLists() {
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.Targeting,
+            TargetUsers = null,
+            ExcludeUsers = Array.Empty<string>()
+        };
+        var model = new FeatureFlagModel {
+            Name = "NullUserListsFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Empty(filter.Users);
+    }
+
+    [Fact]
+    public async Task MapToEntity_ClearsPercentageAndJSONForNonMatchingTypes() {
+        var filterModel = new FeatureFlagFilterModel {
+            FilterType = Constants.FilterTypes.TimeWindow,
+            PercentageValue = 77,
+            JSON = "{\"shouldBeNull\":true}"
+        };
+        var model = new FeatureFlagModel {
+            Name = "ClearOtherPropsFlag",
+            Status = true,
+            RequirementType = Constants.RequirementType.All,
+            Filters = new[] { filterModel }
+        };
+        var entity = new FeatureFlag();
+
+        await InvokeMapToEntity(model, entity);
+
+        var filter = entity.Filters.Single();
+        Assert.Null(filter.PercentageValue);
+        Assert.Null(filter.JSON);
+    }
+
+    private async Task InvokeMapToEntity(FeatureFlagModel model, FeatureFlag entity) {
+        // Use reflection to invoke private method
+        var method = typeof(FeatureFlagService).GetMethod("MapToEntity", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        await (Task)method.Invoke(_FeatureFlagService, new object[] { model, entity, default(CancellationToken) });
     }
 }
