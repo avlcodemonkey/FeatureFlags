@@ -1,3 +1,5 @@
+import { findClosestComponent } from '../utils/findClosestComponent.js';
+
 /**
  * Dismissable alert web component.
  */
@@ -5,8 +7,12 @@ class Alert extends HTMLElement {
     constructor() {
         super();
 
+        const componentName = this.nodeName;
         this.querySelectorAll('[data-dismiss]').forEach((btn) => {
-            btn.addEventListener('click', this);
+            const el = findClosestComponent(btn, componentName);
+            if (el && el === this) {
+                btn.addEventListener('click', this);
+            }
         });
     }
 

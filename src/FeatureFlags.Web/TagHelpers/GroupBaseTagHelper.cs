@@ -116,7 +116,6 @@ public class GroupBaseTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelp
         var button = new TagBuilder("button");
         button.AddCssClass("button success button-icon");
         button.MergeAttribute("type", "button");
-        button.MergeAttribute("role", "button");
         button.MergeAttribute("data-dialog-content", HelpText!.Replace("\"", "&quot;"));
         button.MergeAttribute("data-dialog-ok", Core.Okay);
         button.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("Icons/_CircleInformation"));

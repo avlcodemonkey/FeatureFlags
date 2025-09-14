@@ -61,6 +61,42 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use the JSON filter to create more complex filters than the UI currently allows.  The JSON value will be added to the list of client_filters..
+        /// </summary>
+        public static string AboutJson {
+            get {
+                return ResourceManager.GetString("AboutJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the percentage filter to turn a feature on or off based on a set percentage. Users will be randomly included based on the percentage..
+        /// </summary>
+        public static string AboutPercentage {
+            get {
+                return ResourceManager.GetString("AboutPercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the targeting filter to turn a feature on or off for specific users.  Any user in the target list will evaluate to true.  Any user in the exclude list will evaluate to false. For more complex targeting, use the JSON filter..
+        /// </summary>
+        public static string AboutTargeting {
+            get {
+                return ResourceManager.GetString("AboutTargeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the time window filter to turn a feature on or off on a schedule..
+        /// </summary>
+        public static string AboutTimeWindow {
+            get {
+                return ResourceManager.GetString("AboutTimeWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
         public static string Active {
@@ -187,6 +223,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred validating filters.  Check the filters for details..
+        /// </summary>
+        public static string ErrorCheckFilters {
+            get {
+                return ResourceManager.GetString("ErrorCheckFilters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error occurred deleting flag..
         /// </summary>
         public static string ErrorDeletingFlag {
@@ -201,6 +246,15 @@ namespace FeatureFlags.Resources {
         public static string ErrorDuplicateName {
             get {
                 return ResourceManager.GetString("ErrorDuplicateName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JSON is required..
+        /// </summary>
+        public static string ErrorJsonRequired {
+            get {
+                return ResourceManager.GetString("ErrorJsonRequired", resourceCulture);
             }
         }
         
@@ -223,11 +277,92 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Percentage is required and must be between 0 and 100..
+        /// </summary>
+        public static string ErrorPercentageOutOfRange {
+            get {
+                return ResourceManager.GetString("ErrorPercentageOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one day of the week must be selected..
+        /// </summary>
+        public static string ErrorRecurrenceDaysOfWeekRequired {
+            get {
+                return ResourceManager.GetString("ErrorRecurrenceDaysOfWeekRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Range end date is required..
+        /// </summary>
+        public static string ErrorRecurrenceEndDateRequired {
+            get {
+                return ResourceManager.GetString("ErrorRecurrenceEndDateRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First day of week is required..
+        /// </summary>
+        public static string ErrorRecurrenceFirstDayOfWeekRequired {
+            get {
+                return ResourceManager.GetString("ErrorRecurrenceFirstDayOfWeekRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval is required and must be greater than zero..
+        /// </summary>
+        public static string ErrorRecurrenceIntervalRequired {
+            get {
+                return ResourceManager.GetString("ErrorRecurrenceIntervalRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of occurrences is required..
+        /// </summary>
+        public static string ErrorRecurrenceNumberOfOccurrencesRequired {
+            get {
+                return ResourceManager.GetString("ErrorRecurrenceNumberOfOccurrencesRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error occurred saving flag..
         /// </summary>
         public static string ErrorSavingFlag {
             get {
                 return ResourceManager.GetString("ErrorSavingFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one user must be targeted or excluded..
+        /// </summary>
+        public static string ErrorTargetingNoUsers {
+            get {
+                return ResourceManager.GetString("ErrorTargetingNoUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start time or end time one is required..
+        /// </summary>
+        public static string ErrorTimeStartOrEndRequired {
+            get {
+                return ResourceManager.GetString("ErrorTimeStartOrEndRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End date must be after start date..
+        /// </summary>
+        public static string ErrorTimeWindowEndBeforeStart {
+            get {
+                return ResourceManager.GetString("ErrorTimeWindowEndBeforeStart", resourceCulture);
             }
         }
         
@@ -502,15 +637,6 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to End Date.
-        /// </summary>
-        public static string TimeRangeTypeEndDate {
-            get {
-                return ResourceManager.GetString("TimeRangeTypeEndDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Days of Week.
         /// </summary>
         public static string TimeRecurrenceDaysOfWeek {
@@ -520,7 +646,7 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to End Date.
+        ///   Looks up a localized string similar to Range End Date.
         /// </summary>
         public static string TimeRecurrenceEndDate {
             get {

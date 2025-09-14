@@ -73,4 +73,19 @@ public static class ControllerExtensions {
             viewData[ViewProperties.Message] = message;
         }
     }
+
+    /// <summary>
+    /// Retrieves a list of error messages associated with a specific filter in the model state.
+    /// </summary>
+    /// <param name="modelState">The <see cref="ModelStateDictionary"/> containing validation state and errors.</param>
+    /// <param name="index">The index of the filter to retrieve errors for.</param>
+    /// <returns>List of error messages for the specified filter. The list will be empty if no errors are found.</returns>
+    public static List<string> GetFilterErrors(this ModelStateDictionary modelState, string index) {
+        var filterKeyPrefix = $"Filters[{index}]";
+        return modelState
+            .Where(kvp => kvp.Key.StartsWith(filterKeyPrefix))
+            .SelectMany(kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage) ?? [])
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+    }
 }
