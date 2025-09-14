@@ -51,5 +51,5 @@ public sealed record FeatureFlagModel : IAuditedModel, IVersionedModel, IValidat
     /// </summary>
     /// <param name="validationContext">Context in which the validation is performed. Provides info about the object being validated.</param>
     /// <returns><see cref="IEnumerable{T}"/> of <see cref="ValidationResult"/> validation errors, or an empty collection if valid.</returns>
-    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => throw new NotImplementedException();
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => FeatureFlagValidator.Validate(this);
 }

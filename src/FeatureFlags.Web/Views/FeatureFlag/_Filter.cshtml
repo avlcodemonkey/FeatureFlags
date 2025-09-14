@@ -1,21 +1,65 @@
 @using FeatureFlags.Constants
+@using FeatureFlags.Extensions
 @using FeatureFlags.Models
 @using FeatureFlags.Resources
 @using FeatureFlags.Services
 @using Microsoft.FeatureManagement.FeatureFilters
 @model FeatureFlagFilterModel
 
+@{
+    var filterErrorMessage = string.Join(" <br />", this.ViewContext.ModelState.GetFilterErrors(Model.Index));
+}
+
 <div class="filter-border" data-list-item>
+    @if (!string.IsNullOrWhiteSpace(filterErrorMessage))
+    {
+        <partial name="_Alert" model="new AlertModel { Content = filterErrorMessage, AlertType = AlertType.Error }" />
+    }
+
     <nilla-display-toggle>
+        @* Filter.Index is used for model binding. Filters[@Model.Index].Index is used for validation errors. *@
         <input type="hidden" name="Filters.Index" value="@Model.Index" />
+        <input type="hidden" name="Filters[@Model.Index].Index" value="@Model.Index" />
         <input type="hidden" name="Filters[@Model.Index].Id" value="@Model.Id" />
         <div class="row reverse">
-            <div class="col is-vertical-align is-right">
-                <nilla-confirm>
-                    <button class="button dark p-1" type="button" data-list-remove-button data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmDeleteFilter">
-                        <icon name="Delete" label="@Core.Delete" />
-                    </button>
-                </nilla-confirm>
+            <div class="col is-end-align">
+                <div class="row is-full-width">
+                    @if (this.ViewContext.HttpContext?.Session.IsEnabled(SessionProperties.Help) == true) {
+                        <div class="col">
+                            <nilla-info data-display-toggle="targetingFilter">
+                                <button class="button success button-icon" data-dialog-content="@Flags.AboutTargeting" data-dialog-ok="Okay" type="button">
+                                    <partial name="Icons/_CircleInformation" />
+                                    <span class="is-visually-hidden">@Core.Help</span>
+                                </button>
+                            </nilla-info>
+                            <nilla-info data-display-toggle="timeWindowFilter">
+                                <button class="button success button-icon" data-dialog-content="@Flags.AboutTimeWindow" data-dialog-ok="Okay" type="button">
+                                    <partial name="Icons/_CircleInformation" />
+                                    <span class="is-visually-hidden">@Core.Help</span>
+                                </button>
+                            </nilla-info>
+                            <nilla-info data-display-toggle="percentageFilter">
+                                <button class="button success button-icon" data-dialog-content="@Flags.AboutPercentage" data-dialog-ok="Okay" type="button">
+                                    <partial name="Icons/_CircleInformation" />
+                                    <span class="is-visually-hidden">@Core.Help</span>
+                                </button>
+                            </nilla-info>
+                            <nilla-info data-display-toggle="jsonFilter">
+                                <button class="button success button-icon" data-dialog-content="@Flags.AboutJson" data-dialog-ok="Okay" type="button">
+                                    <partial name="Icons/_CircleInformation" />
+                                    <span class="is-visually-hidden">@Core.Help</span>
+                                </button>
+                            </nilla-info>
+                        </div>
+                    }
+                    <div class="col is-right">
+                        <nilla-confirm>
+                            <button class="button dark p-1" type="button" data-list-remove-button data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmDeleteFilter">
+                                <icon name="Delete" label="@Core.Delete" />
+                            </button>
+                        </nilla-confirm>
+                    </div>
+                </div>
             </div>
             <div class="col">
                 <div>

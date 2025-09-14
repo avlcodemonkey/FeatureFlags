@@ -5,6 +5,7 @@ using FeatureFlags.Models;
 using FeatureFlags.Resources;
 using FeatureFlags.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FeatureFlags.Controllers;
 
@@ -70,7 +71,32 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
     /// </summary>
     private async Task<IActionResult> Save(FeatureFlagModel model, CancellationToken cancellationToken = default) {
         if (!ModelState.IsValid) {
-            return ViewWithError(_CreateEditView, model, ModelState);
+            var filterErrors = new List<ModelError>();
+            var modelErrors = new List<ModelError>();
+
+            foreach (var entry in ModelState) {
+                var errors = entry.Value.Errors;
+                if (errors.Count == 0) {
+                    continue;
+                }
+
+                if (entry.Key.StartsWith(nameof(FeatureFlagModel.Filters))) {
+                    filterErrors.AddRange(errors);
+                } else {
+                    modelErrors.AddRange(errors);
+                }
+            }
+
+            var errorMessages = new List<string>();
+            if (modelErrors.Count != 0) {
+                errorMessages.AddRange(modelErrors.Select(x => x.ErrorMessage));
+            }
+            if (filterErrors.Count != 0) {
+                errorMessages.Add(Flags.ErrorCheckFilters);
+            }
+            ViewData.AddError(string.Join(" <br />", errorMessages));
+
+            return View(_CreateEditView, model);
         }
 
         (var success, var message) = await _FeatureFlagService.SaveFeatureFlagAsync(model, cancellationToken);

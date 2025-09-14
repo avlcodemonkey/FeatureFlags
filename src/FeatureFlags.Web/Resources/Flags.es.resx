@@ -289,9 +289,6 @@
   <data name="RangeTypeNoEnd" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="TimeRangeTypeEndDate" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="RangeTypeEndDate" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
@@ -308,6 +305,51 @@
     <value />
   </data>
   <data name="ExcludeUsersIntro" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorTargetingNoUsers" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorTimeWindowEndBeforeStart" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorRecurrenceIntervalRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorRecurrenceDaysOfWeekRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorRecurrenceFirstDayOfWeekRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorRecurrenceEndDateRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorRecurrenceNumberOfOccurrencesRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorPercentageOutOfRange" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorJsonRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorCheckFilters" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="AboutTargeting" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="AboutTimeWindow" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="AboutJson" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="AboutPercentage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorTimeStartOrEndRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

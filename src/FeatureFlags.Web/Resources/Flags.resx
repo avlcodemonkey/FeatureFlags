@@ -259,7 +259,7 @@
     <value>Range Type</value>
   </data>
   <data name="TimeRecurrenceEndDate" xml:space="preserve">
-    <value>End Date</value>
+    <value>Range End Date</value>
   </data>
   <data name="TimeRecurrenceNumberOfOccurrences" xml:space="preserve">
     <value>Number of Occurrences</value>
@@ -288,9 +288,6 @@
   <data name="RangeTypeNoEnd" xml:space="preserve">
     <value>No End</value>
   </data>
-  <data name="TimeRangeTypeEndDate" xml:space="preserve">
-    <value>End Date</value>
-  </data>
   <data name="RangeTypeEndDate" xml:space="preserve">
     <value>End Date</value>
   </data>
@@ -308,5 +305,50 @@
   </data>
   <data name="ExcludeUsersIntro" xml:space="preserve">
     <value>Add users to exclude.</value>
+  </data>
+  <data name="ErrorTargetingNoUsers" xml:space="preserve">
+    <value>At least one user must be targeted or excluded.</value>
+  </data>
+  <data name="ErrorTimeWindowEndBeforeStart" xml:space="preserve">
+    <value>End date must be after start date.</value>
+  </data>
+  <data name="ErrorRecurrenceIntervalRequired" xml:space="preserve">
+    <value>Interval is required and must be greater than zero.</value>
+  </data>
+  <data name="ErrorRecurrenceDaysOfWeekRequired" xml:space="preserve">
+    <value>At least one day of the week must be selected.</value>
+  </data>
+  <data name="ErrorRecurrenceFirstDayOfWeekRequired" xml:space="preserve">
+    <value>First day of week is required.</value>
+  </data>
+  <data name="ErrorRecurrenceEndDateRequired" xml:space="preserve">
+    <value>Range end date is required.</value>
+  </data>
+  <data name="ErrorRecurrenceNumberOfOccurrencesRequired" xml:space="preserve">
+    <value>Number of occurrences is required.</value>
+  </data>
+  <data name="ErrorPercentageOutOfRange" xml:space="preserve">
+    <value>Percentage is required and must be between 0 and 100.</value>
+  </data>
+  <data name="ErrorJsonRequired" xml:space="preserve">
+    <value>JSON is required.</value>
+  </data>
+  <data name="ErrorCheckFilters" xml:space="preserve">
+    <value>An error occurred validating filters.  Check the filters for details.</value>
+  </data>
+  <data name="AboutTargeting" xml:space="preserve">
+    <value>Use the targeting filter to turn a feature on or off for specific users.  Any user in the target list will evaluate to true.  Any user in the exclude list will evaluate to false. For more complex targeting, use the JSON filter.</value>
+  </data>
+  <data name="AboutTimeWindow" xml:space="preserve">
+    <value>Use the time window filter to turn a feature on or off on a schedule.</value>
+  </data>
+  <data name="AboutJson" xml:space="preserve">
+    <value>Use the JSON filter to create more complex filters than the UI currently allows.  The JSON value will be added to the list of client_filters.</value>
+  </data>
+  <data name="AboutPercentage" xml:space="preserve">
+    <value>Use the percentage filter to turn a feature on or off based on a set percentage. Users will be randomly included based on the percentage.</value>
+  </data>
+  <data name="ErrorTimeStartOrEndRequired" xml:space="preserve">
+    <value>Start time or end time one is required.</value>
   </data>
 </root>
