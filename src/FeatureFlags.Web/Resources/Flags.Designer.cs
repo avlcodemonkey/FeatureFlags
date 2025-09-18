@@ -250,6 +250,24 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred building the feature definition.  Check the filter configuration..
+        /// </summary>
+        public static string ErrorInvalidFilterConfiguration {
+            get {
+                return ResourceManager.GetString("ErrorInvalidFilterConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid JSON format..
+        /// </summary>
+        public static string ErrorJsonInvalidFormat {
+            get {
+                return ResourceManager.GetString("ErrorJsonInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to JSON is required..
         /// </summary>
         public static string ErrorJsonRequired {
@@ -331,11 +349,29 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The range end date value must be after the start date..
+        /// </summary>
+        public static string ErrorRecurrrenceEndDateValueOutOfRange {
+            get {
+                return ResourceManager.GetString("ErrorRecurrrenceEndDateValueOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error occurred saving flag..
         /// </summary>
         public static string ErrorSavingFlag {
             get {
                 return ResourceManager.GetString("ErrorSavingFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start date is not a valid first occurrence..
+        /// </summary>
+        public static string ErrorStartDateNotValid {
+            get {
+                return ResourceManager.GetString("ErrorStartDateNotValid", resourceCulture);
             }
         }
         
@@ -354,6 +390,15 @@ namespace FeatureFlags.Resources {
         public static string ErrorTimeStartOrEndRequired {
             get {
                 return ResourceManager.GetString("ErrorTimeStartOrEndRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time window duration cannot be longer than how frequently it occurs or be longer than 10 years..
+        /// </summary>
+        public static string ErrorTimeWindowDuration {
+            get {
+                return ResourceManager.GetString("ErrorTimeWindowDuration", resourceCulture);
             }
         }
         

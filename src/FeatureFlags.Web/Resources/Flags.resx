@@ -351,4 +351,19 @@
   <data name="ErrorTimeStartOrEndRequired" xml:space="preserve">
     <value>Start time or end time one is required.</value>
   </data>
+  <data name="ErrorInvalidFilterConfiguration" xml:space="preserve">
+    <value>An error occurred building the feature definition.  Check the filter configuration.</value>
+  </data>
+  <data name="ErrorJsonInvalidFormat" xml:space="preserve">
+    <value>Invalid JSON format.</value>
+  </data>
+  <data name="ErrorTimeWindowDuration" xml:space="preserve">
+    <value>Time window duration cannot be longer than how frequently it occurs or be longer than 10 years.</value>
+  </data>
+  <data name="ErrorStartDateNotValid" xml:space="preserve">
+    <value>Start date is not a valid first occurrence.</value>
+  </data>
+  <data name="ErrorRecurrrenceEndDateValueOutOfRange" xml:space="preserve">
+    <value>The range end date value must be after the start date.</value>
+  </data>
 </root>

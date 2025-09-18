@@ -352,4 +352,19 @@
   <data name="ErrorTimeStartOrEndRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="ErrorInvalidFilterConfiguration" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorJsonInvalidFormat" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorTimeWindowDuration" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorStartDateNotValid" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ErrorRecurrrenceEndDateValueOutOfRange" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>

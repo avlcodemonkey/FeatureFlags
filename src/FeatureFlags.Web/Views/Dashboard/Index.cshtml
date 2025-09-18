@@ -1,6 +1,7 @@
 @using FeatureFlags.Constants;
 @using FeatureFlags.Resources;
 @using FeatureFlags.Utils;
+@inject FeatureFlags.Services.IFeatureFlagService FeatureFlagService
 
 @{
     ViewData[ViewProperties.Title] = Core.Dashboard;
@@ -10,8 +11,19 @@
         // create a title header for pjax to use since we don't have breadcrumbs on this page
         ViewContext.HttpContext.Response.Headers.Add(PJax.Title, Core.Dashboard);
     }
+
+    // Example usage: get all feature flags (synchronously for demo; prefer async in controllers/view models)
+    var featureFlags = FeatureFlagService.GetAllFeatureFlagsAsync().GetAwaiter().GetResult();
 }
 
 <div id="content" class="dashboard">
     <h1>Dashboard</h1>
+
+    <ul>
+        @foreach (var flag in featureFlags)
+        {
+
+            <li>@flag.Name (<feature name="@flag.Name">Enabled</feature>)</li>
+        }
+    </ul>
 </div>
