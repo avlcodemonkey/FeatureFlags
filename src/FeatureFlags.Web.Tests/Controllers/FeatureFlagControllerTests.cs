@@ -266,4 +266,36 @@ public class FeatureFlagControllerTests {
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Flags.ErrorDeletingFlag, controller.ViewData[ViewProperties.Error]);
     }
+
+    [Fact]
+    public async Task List_ReturnsEmptyList_WhenNoFlags() {
+        var controller = CreateController();
+        _MockFeatureFlagService.Setup(s => s.GetAllFeatureFlagsAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<FeatureFlagModel>());
+
+        var result = await controller.List();
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnValue = Assert.IsType<List<FeatureFlagListResultModel>>(okResult.Value);
+        Assert.Empty(returnValue);
+    }
+
+    [Fact]
+    public async Task Save_ReturnsFilterErrorMessage_WhenFilterValidationFails() {
+        var controller = CreateController();
+        controller.ModelState.AddModelError("Filters[0].SomeProperty", "Filter error");
+        var model = new FeatureFlagModel {
+            Name = "FlagWithFilterError",
+            Status = true,
+            RequirementType = Constants.RequirementType.All
+        };
+
+        var result = await controller.Create(model);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.Contains(Flags.ErrorCheckFilters, controller.ViewData[ViewProperties.Error]?.ToString());
+    }
+
+    // @TODO: Add tests for dynamic feature manager evaluation logic
 }
