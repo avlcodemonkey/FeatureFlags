@@ -3,6 +3,7 @@ using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Services;
 using FeatureFlags.Utils;
+using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 
 namespace FeatureFlags.Extensions.Program;
@@ -64,6 +65,19 @@ public static class ServiceCollectionExtensions {
                 Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = ApiKeyAuthenticationOptions.AuthenticationScheme }
             }, Array.Empty<string>() } });
         });
+        return services;
+    }
+
+    /// <summary>
+    /// Sets up feature flag services using Microsoft.FeatureManagement and appSettings configuration.
+    /// </summary>
+    public static IServiceCollection AddFeatureFlags(this IServiceCollection services) {
+        // configures the feature management dependencies include filters for PercentageFilter, TimeWindowFilter,ContextualTargetingFilter and TargetingFilter
+        // register any custom filter types here also so they can be used when viewing/editing feature flags
+        services.AddScopedFeatureManagement().WithTargeting();
+
+        services.Configure<ConfigurationFeatureDefinitionProviderOptions>(x => x.CustomConfigurationMergingEnabled = true);
+
         return services;
     }
 }

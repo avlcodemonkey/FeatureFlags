@@ -64,7 +64,6 @@ public static class ModelBuilderExtensions {
             new Permission { Id = 15, ControllerName = "FeatureFlag", ActionName = "Enable", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 16, ControllerName = "FeatureFlag", ActionName = "Disable", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 17, ControllerName = "FeatureFlag", ActionName = "Create", CreatedDate = minDate, UpdatedDate = minDate },
-            new Permission { Id = 18, ControllerName = "FeatureFlag", ActionName = "ClearCache", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 19, ControllerName = "ApiKey", ActionName = "Index", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 20, ControllerName = "ApiKey", ActionName = "Create", CreatedDate = minDate, UpdatedDate = minDate },
             new Permission { Id = 21, ControllerName = "ApiKey", ActionName = "Delete", CreatedDate = minDate, UpdatedDate = minDate }

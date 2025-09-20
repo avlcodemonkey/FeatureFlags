@@ -9,11 +9,8 @@ public class CustomFeatureFilterConfiguration {
     /// </summary>
     public string Name { get; set; } = "";
 
-    // @todo this causes a json deserialization error. determine if its needed.
-    /*
     /// <summary>
     /// Gets or sets the configurable parameters that can vary across instances of a feature filter.
     /// </summary>
-    public ConfigurationRoot Parameters { get; set; } = new ConfigurationRoot(new List<IConfigurationProvider>());
-    */
+    public List<KeyValuePair<string, string?>> Parameters { get; set; } = new List<KeyValuePair<string, string?>>();
 }
