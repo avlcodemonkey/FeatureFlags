@@ -218,6 +218,12 @@ public class FeatureFlagValidatorTests {
 
     [Fact]
     public void Validate_ReturnsEmpty_WhenAllFiltersValid() {
+        // get the first monday of 2025
+        var firstMonday = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        while (firstMonday.DayOfWeek != DayOfWeek.Monday) {
+            firstMonday = firstMonday.AddDays(1);
+        }
+
         var model = new FeatureFlagModel {
             Filters = new[]
             {
@@ -231,8 +237,8 @@ public class FeatureFlagValidatorTests {
                 {
                     Index = "1",
                     FilterType = FilterTypes.TimeWindow,
-                    TimeStart = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                    TimeEnd = new DateTime(2025, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+                    TimeStart = firstMonday,
+                    TimeEnd = firstMonday.AddDays(1),
                     TimeRecurrenceType = RecurrencePatternType.Weekly,
                     TimeRecurrenceInterval = 1,
                     TimeRecurrenceDaysOfWeek = new List<string> { "Monday" },
@@ -250,7 +256,7 @@ public class FeatureFlagValidatorTests {
                 {
                     Index = "3",
                     FilterType = FilterTypes.JSON,
-                    JSON = "{}"
+                    JSON = "{ \"name\": \"Test\" }"
                 }
             }
         };

@@ -1,9 +1,9 @@
+using FeatureFlags.Client;
 using FeatureFlags.Constants;
 using FeatureFlags.Services;
 using FeatureFlags.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.FeatureManagement;
 
 namespace FeatureFlags.Controllers;
 
@@ -19,7 +19,7 @@ public class FeatureFlagApiController(IFeatureFlagService featureFlagService) : 
     /// Get all feature flag definitions.
     /// </summary>
     [HttpGet("features")]
-    [ProducesResponseType(typeof(IEnumerable<FeatureDefinition>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<CustomFeatureDefinition>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllFeatureDefinitionsAsync(CancellationToken cancellationToken = default) {
         var featureFlags = (await _FeatureFlagService.GetAllFeatureFlagsAsync(cancellationToken)).Where(x => x.Status);
         var definitions = featureFlags.Select(CustomFeatureDefinitionMapper.MapToCustomFeatureDefinition);

@@ -15,7 +15,7 @@ namespace FeatureFlags.Web.Tests.Controllers;
 public class FeatureFlagControllerTests {
     private readonly Mock<IFeatureFlagService> _MockFeatureFlagService = new();
     private readonly Mock<ILogger<FeatureFlagController>> _MockLogger = new();
-    private readonly Mock<FeatureManager> _MockFeatureManager = new();
+    private readonly FeatureManager _MockFeatureManager;
     private readonly Mock<IUrlHelper> _MockUrlHelper = new();
 
     private readonly string _Url = "/test";
@@ -27,9 +27,10 @@ public class FeatureFlagControllerTests {
         _MockFeatureFlagService.Setup(x => x.GetFeatureFlagByIdAsync(_FlagForFailure.Id, It.IsAny<CancellationToken>())).ReturnsAsync(_FlagForFailure);
         _MockFeatureFlagService.Setup(x => x.SaveFeatureFlagAsync(_FlagForFailure, It.IsAny<CancellationToken>())).ReturnsAsync((false, "message"));
         _MockFeatureFlagService.Setup(x => x.SaveFeatureFlagAsync(_FlagForFailureDisabled, It.IsAny<CancellationToken>())).ReturnsAsync((false, "message"));
+        _MockFeatureManager = new FeatureManager(new Mock<IFeatureDefinitionProvider>().Object);
     }
 
-    private FeatureFlagController CreateController() => new(_MockFeatureFlagService.Object, _MockFeatureManager.Object, _MockLogger.Object) {
+    private FeatureFlagController CreateController() => new(_MockFeatureFlagService.Object, _MockFeatureManager, _MockLogger.Object) {
         ControllerContext = new ControllerContext {
             HttpContext = new DefaultHttpContext()
         },
