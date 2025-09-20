@@ -11,7 +11,35 @@ public class FeatureFlagServiceExtensionsTests {
     public void SelectSingleAsModel_ReturnsProjectedModel() {
         // arrange
         var featureFlag = new FeatureFlag {
-            Id = 1, Name = "test", Status = true, CreatedDate = DateTime.MinValue, UpdatedDate = DateTime.MinValue
+            Id = 1,
+            Name = "test",
+            Status = true,
+            CreatedDate = DateTime.MinValue,
+            UpdatedDate = DateTime.MinValue,
+            Filters = new List<FeatureFlagFilter>
+            {
+                new() {
+                    Id = 10,
+                    FilterType = (int)FilterTypes.Targeting,
+                    Users = new List<FeatureFlagFilterUser>
+                    {
+                        new() { User = "user1", Include = true },
+                        new() { User = "user2", Include = false }
+                    },
+                    TimeStart = DateTime.UtcNow,
+                    TimeEnd = DateTime.UtcNow.AddHours(1),
+                    TimeRecurrenceType = (int)RecurrencePatternType.Weekly,
+                    TimeRecurrenceInterval = 2,
+                    TimeRecurrenceDaysOfWeek = "Monday,Wednesday",
+                    TimeRecurrenceFirstDayOfWeek = "Monday",
+                    TimeRecurrenceRangeType = (int)RecurrenceRangeType.EndDate,
+                    TimeRecurrenceEndDate = DateTime.UtcNow.AddDays(7),
+                    TimeRecurrenceNumberOfOccurrences = 5,
+                    PercentageValue = 75,
+                    JSON = "{\"key\":\"value\"}",
+                    UpdatedDate = DateTime.UtcNow
+                }
+            }
         };
         var featureFlags = new List<FeatureFlag> { featureFlag }.AsQueryable();
 
@@ -26,16 +54,64 @@ public class FeatureFlagServiceExtensionsTests {
         Assert.Equal(featureFlag.Name, singleModel.Name);
         Assert.Equal(featureFlag.Status, singleModel.Status);
         Assert.Equal(featureFlag.UpdatedDate, singleModel.UpdatedDate);
+
+        // Filters mapping assertions
+        var filterModel = Assert.Single(singleModel.Filters!);
+        Assert.Equal(10, filterModel.Id);
+        Assert.Equal(FilterTypes.Targeting, filterModel.FilterType);
+        Assert.Equal(new[] { "user1" }, filterModel.TargetUsers);
+        Assert.Equal(new[] { "user2" }, filterModel.ExcludeUsers);
+        Assert.Equal(featureFlag.Filters[0].TimeStart, filterModel.TimeStart);
+        Assert.Equal(featureFlag.Filters[0].TimeEnd, filterModel.TimeEnd);
+        Assert.Equal(RecurrencePatternType.Weekly, filterModel.TimeRecurrenceType);
+        Assert.Equal(2, filterModel.TimeRecurrenceInterval);
+        Assert.Equal(new[] { "Monday", "Wednesday" }, filterModel.TimeRecurrenceDaysOfWeek);
+        Assert.Equal("Monday", filterModel.TimeRecurrenceFirstDayOfWeek);
+        Assert.Equal(RecurrenceRangeType.EndDate, filterModel.TimeRecurrenceRangeType);
+        Assert.Equal(featureFlag.Filters[0].TimeRecurrenceEndDate, filterModel.TimeRecurrenceEndDate);
+        Assert.Equal(5, filterModel.TimeRecurrenceNumberOfOccurrences);
+        Assert.Equal(75, filterModel.PercentageValue);
+        Assert.Equal("{\"key\":\"value\"}", filterModel.JSON);
+        Assert.Equal(featureFlag.Filters[0].UpdatedDate, filterModel.UpdatedDate);
     }
 
     [Fact]
     public void SelectMultipleAsModel_ReturnsProjectedModels() {
         // arrange
         var featureFlag1 = new FeatureFlag {
-            Id = 1, Name = "test", Status = true, CreatedDate = DateTime.MinValue, UpdatedDate = DateTime.MinValue
+            Id = 1,
+            Name = "test",
+            Status = true,
+            CreatedDate = DateTime.MinValue,
+            UpdatedDate = DateTime.MinValue,
+            Filters = new List<FeatureFlagFilter>
+            {
+                new() {
+                    Id = 10,
+                    FilterType = (int)FilterTypes.Targeting,
+                    Users = new List<FeatureFlagFilterUser>
+                    {
+                        new() { User = "user1", Include = true }
+                    },
+                    UpdatedDate = DateTime.UtcNow
+                }
+            }
         };
         var featureFlag2 = new FeatureFlag {
-            Id = 2, Name = "flag 2", Status = false, CreatedDate = DateTime.MaxValue, UpdatedDate = DateTime.MaxValue
+            Id = 2,
+            Name = "flag 2",
+            Status = false,
+            CreatedDate = DateTime.MaxValue,
+            UpdatedDate = DateTime.MaxValue,
+            Filters = new List<FeatureFlagFilter>
+            {
+                new() {
+                    Id = 20,
+                    FilterType = (int)FilterTypes.Percentage,
+                    PercentageValue = 50,
+                    UpdatedDate = DateTime.UtcNow
+                }
+            }
         };
         var featureFlags = new List<FeatureFlag> { featureFlag1, featureFlag2 }.AsQueryable();
 
@@ -46,22 +122,17 @@ public class FeatureFlagServiceExtensionsTests {
         Assert.NotNull(models);
         Assert.Equal(2, models.Count);
 
-        Assert.Collection(models,
-            x => Assert.Equal(featureFlag1.Id, x.Id),
-            x => Assert.Equal(featureFlag2.Id, x.Id)
-        );
-        Assert.Collection(models,
-            x => Assert.Equal(featureFlag1.Name, x.Name),
-            x => Assert.Equal(featureFlag2.Name, x.Name)
-        );
-        Assert.Collection(models,
-            x => Assert.Equal(featureFlag1.Status, x.Status),
-            x => Assert.Equal(featureFlag2.Status, x.Status)
-        );
-        Assert.Collection(models,
-            x => Assert.Equal(featureFlag1.UpdatedDate, x.UpdatedDate),
-            x => Assert.Equal(featureFlag2.UpdatedDate, x.UpdatedDate)
-        );
+        // Filters mapping assertions for first flag
+        var filterModel1 = Assert.Single(models[0].Filters!);
+        Assert.Equal(10, filterModel1.Id);
+        Assert.Equal(FilterTypes.Targeting, filterModel1.FilterType);
+        Assert.Equal(new[] { "user1" }, filterModel1.TargetUsers);
+
+        // Filters mapping assertions for second flag
+        var filterModel2 = Assert.Single(models[1].Filters!);
+        Assert.Equal(20, filterModel2.Id);
+        Assert.Equal(FilterTypes.Percentage, filterModel2.FilterType);
+        Assert.Equal(50, filterModel2.PercentageValue);
     }
 
     [Fact]

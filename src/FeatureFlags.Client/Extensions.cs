@@ -57,7 +57,12 @@ public static class Extensions {
     /// <returns>A new <see cref="FeatureDefinition"/> object containing the equivalent data from the specified <see cref="CustomFeatureDefinition"/>.</returns>
     public static FeatureDefinition ToFeatureDefinition(this CustomFeatureDefinition featureFlag) => new() {
         Name = featureFlag.Name,
-        EnabledFor = featureFlag.EnabledFor?.Select(x => new FeatureFilterConfiguration { Name = x.Name /*, Parameters = x.Parameters*/ }) ?? [],
+        EnabledFor = featureFlag.EnabledFor?.Select(x => {
+            var parameters = new ConfigurationBuilder()
+                .AddInMemoryCollection(x.Parameters)
+                .Build();
+            return new FeatureFilterConfiguration { Name = x.Name, Parameters = parameters };
+        }),
         RequirementType = featureFlag.RequirementType,
         Status = featureFlag.Status,
         Allocation = featureFlag.Allocation,

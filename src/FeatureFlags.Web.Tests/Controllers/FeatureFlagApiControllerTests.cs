@@ -1,9 +1,9 @@
+using FeatureFlags.Client;
 using FeatureFlags.Controllers;
 using FeatureFlags.Models;
 using FeatureFlags.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.FeatureManagement;
 using Moq;
 
 namespace FeatureFlags.Web.Tests.Controllers;
@@ -34,7 +34,7 @@ public class FeatureFlagApiControllerTests {
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var definitions = Assert.IsType<IEnumerable<FeatureDefinition>>(okResult.Value, exactMatch: false);
+        var definitions = Assert.IsType<IEnumerable<CustomFeatureDefinition>>(okResult.Value, exactMatch: false);
         Assert.Equal(2, definitions.Count());
         Assert.Equal("Flag1", definitions.First().Name);
         Assert.NotNull(definitions.First().EnabledFor);
@@ -59,10 +59,9 @@ public class FeatureFlagApiControllerTests {
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var definitions = Assert.IsType<IEnumerable<FeatureDefinition>>(okResult.Value, exactMatch: false);
-        var definition = Assert.Single(definitions);
-        Assert.Equal("Flag2", definition.Name);
-        Assert.NotNull(definition.EnabledFor);
+        var definitions = Assert.IsType<IEnumerable<CustomFeatureDefinition>>(okResult.Value, exactMatch: false);
+        Assert.NotNull(definitions);
+        Assert.Equal(2, definitions.Count());
     }
 
     [Fact]
@@ -77,7 +76,7 @@ public class FeatureFlagApiControllerTests {
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var definitions = Assert.IsType<IEnumerable<FeatureDefinition>>(okResult.Value, exactMatch: false);
+        var definitions = Assert.IsType<IEnumerable<CustomFeatureDefinition>>(okResult.Value, exactMatch: false);
         Assert.Empty(definitions);
     }
 }

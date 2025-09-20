@@ -10,6 +10,8 @@ namespace FeatureFlags.Validators;
 /// Custom model validator for <see cref="FeatureFlagFilterModel"/>.
 /// </summary>
 public static class FeatureFlagValidator {
+    private const int _DaysPerWeek = 7;
+
     /// <summary>
     /// Validates the specified <see cref="FeatureFlagModel"/> and returns a collection of validation results.
     /// </summary>
@@ -50,44 +52,132 @@ public static class FeatureFlagValidator {
             yield break;
         }
 
+        foreach (var result in ValidateTimeWindowRequiredFields(filter)) {
+            yield return result;
+        }
+
+        foreach (var result in ValidateTimeWindowRecurrenceRules(filter)) {
+            yield return result;
+        }
+
+        foreach (var result in ValidateTimeWindowAdvancedRules(filter)) {
+            yield return result;
+        }
+    }
+
+    private static IEnumerable<ValidationResult> ValidateTimeWindowRequiredFields(FeatureFlagFilterModel filter) {
         if (!filter.TimeStart.HasValue && !filter.TimeEnd.HasValue) {
             yield return ValidationResultFor(filter, Flags.ErrorTimeStartOrEndRequired, nameof(filter.TimeStart));
         }
-
         if (IsEndBeforeStart(filter)) {
             yield return ValidationResultFor(filter, Flags.ErrorTimeWindowEndBeforeStart, nameof(filter.TimeStart));
         }
+        if (IsEndEqualStart(filter)) {
+            yield return ValidationResultFor(filter, Flags.ErrorTimeWindowEndEqualStart, nameof(filter.TimeStart));
+        }
+    }
 
+    private static IEnumerable<ValidationResult> ValidateTimeWindowRecurrenceRules(FeatureFlagFilterModel filter) {
         if (IsRecurrenceIntervalInvalid(filter)) {
             yield return ValidationResultFor(filter, Flags.ErrorRecurrenceIntervalRequired, nameof(filter.TimeRecurrenceInterval));
         }
-
         if (IsWeeklyRecurrenceDaysMissing(filter)) {
             yield return ValidationResultFor(filter, Flags.ErrorRecurrenceDaysOfWeekRequired, nameof(filter.TimeRecurrenceDaysOfWeek));
         }
-
         if (IsWeeklyRecurrenceFirstDayMissing(filter)) {
             yield return ValidationResultFor(filter, Flags.ErrorRecurrenceFirstDayOfWeekRequired, nameof(filter.TimeRecurrenceFirstDayOfWeek));
         }
-
         if (IsEndDateRequired(filter)) {
             yield return ValidationResultFor(filter, Flags.ErrorRecurrenceEndDateRequired, nameof(filter.TimeRecurrenceEndDate));
         }
-
         if (IsNumberOfOccurrencesRequired(filter)) {
             yield return ValidationResultFor(filter, Flags.ErrorRecurrenceNumberOfOccurrencesRequired, nameof(filter.TimeRecurrenceNumberOfOccurrences));
+        }
+    }
+
+    private static IEnumerable<ValidationResult> ValidateTimeWindowAdvancedRules(FeatureFlagFilterModel filter) {
+        if (filter.TimeRecurrenceType is null) {
+            yield break;
+        }
+
+        foreach (var result in ValidateMaxDuration(filter)) {
+            yield return result;
+        }
+
+        foreach (var result in ValidateDailyRecurrenceDuration(filter)) {
+            yield return result;
+        }
+
+        foreach (var result in ValidateWeeklyRecurrenceDurationAndDays(filter)) {
+            yield return result;
+        }
+
+        foreach (var result in ValidateWeeklyRecurrenceStartDay(filter)) {
+            yield return result;
+        }
+
+        foreach (var result in ValidateRecurrenceEndDateRange(filter)) {
+            yield return result;
+        }
+    }
+
+    private static IEnumerable<ValidationResult> ValidateMaxDuration(FeatureFlagFilterModel filter) {
+        if (filter.TimeStart.HasValue && filter.TimeEnd.HasValue && (filter.TimeEnd.Value - filter.TimeStart.Value) >= TimeSpan.FromDays(3650)) {
+            yield return ValidationResultFor(filter, Flags.ErrorTimeWindowDuration, nameof(filter.TimeEnd));
+        }
+    }
+
+    private static IEnumerable<ValidationResult> ValidateDailyRecurrenceDuration(FeatureFlagFilterModel filter) {
+        if (filter.TimeRecurrenceType == RecurrencePatternType.Daily && filter.TimeStart.HasValue && filter.TimeEnd.HasValue) {
+            var intervalDuration = TimeSpan.FromDays(filter.TimeRecurrenceInterval!.Value);
+            var timeWindowDuration = filter.TimeEnd.Value - filter.TimeStart.Value;
+            if (timeWindowDuration > intervalDuration) {
+                yield return ValidationResultFor(filter, Flags.ErrorTimeWindowDuration, nameof(filter.TimeEnd));
+            }
+        }
+    }
+
+    private static IEnumerable<ValidationResult> ValidateWeeklyRecurrenceDurationAndDays(FeatureFlagFilterModel filter) {
+        if (filter.TimeRecurrenceType == RecurrencePatternType.Weekly && filter.TimeStart.HasValue && filter.TimeEnd.HasValue) {
+            var intervalDuration = TimeSpan.FromDays(filter.TimeRecurrenceInterval!.Value * _DaysPerWeek);
+            var timeWindowDuration = filter.TimeEnd.Value - filter.TimeStart.Value;
+
+            if (timeWindowDuration > intervalDuration || !IsDurationCompliantWithDaysOfWeek(timeWindowDuration,
+                filter.TimeRecurrenceInterval.Value, filter.TimeRecurrenceDaysOfWeek!, Enum.Parse<DayOfWeek>(filter.TimeRecurrenceFirstDayOfWeek!, true))) {
+                yield return ValidationResultFor(filter, Flags.ErrorTimeWindowDuration, nameof(filter.TimeEnd));
+            }
+        }
+    }
+
+    private static IEnumerable<ValidationResult> ValidateWeeklyRecurrenceStartDay(FeatureFlagFilterModel filter) {
+        if (filter.TimeRecurrenceType == RecurrencePatternType.Weekly && filter.TimeStart.HasValue && filter.TimeRecurrenceDaysOfWeek != null) {
+            var startDayValid = filter.TimeRecurrenceDaysOfWeek.Any(day => Enum.TryParse<DayOfWeek>(day, true, out var dayOfWeek) &&
+                dayOfWeek == filter.TimeStart.Value.DayOfWeek);
+
+            if (!startDayValid) {
+                yield return ValidationResultFor(filter, Flags.ErrorStartDateNotValid, nameof(filter.TimeStart));
+            }
+        }
+    }
+
+    private static IEnumerable<ValidationResult> ValidateRecurrenceEndDateRange(FeatureFlagFilterModel filter) {
+        if (filter.TimeRecurrenceRangeType == RecurrenceRangeType.EndDate && filter.TimeStart.HasValue &&
+            filter.TimeRecurrenceEndDate.HasValue && filter.TimeRecurrenceEndDate.Value < filter.TimeStart.Value) {
+            yield return ValidationResultFor(filter, Flags.ErrorRecurrrenceEndDateValueOutOfRange, nameof(filter.TimeRecurrenceEndDate));
         }
     }
 
     private static bool IsEndBeforeStart(FeatureFlagFilterModel filter)
         => filter.TimeStart.HasValue && filter.TimeEnd.HasValue && filter.TimeEnd < filter.TimeStart;
 
+    private static bool IsEndEqualStart(FeatureFlagFilterModel filter)
+        => filter.TimeStart.HasValue && filter.TimeEnd.HasValue && filter.TimeEnd == filter.TimeStart;
+
     private static bool IsRecurrenceIntervalInvalid(FeatureFlagFilterModel filter)
         => filter.TimeRecurrenceType.HasValue && (!filter.TimeRecurrenceInterval.HasValue || filter.TimeRecurrenceInterval <= 0);
 
     private static bool IsWeeklyRecurrenceDaysMissing(FeatureFlagFilterModel filter)
-        => filter.TimeRecurrenceType == RecurrencePatternType.Weekly &&
-        (filter.TimeRecurrenceDaysOfWeek == null || !filter.TimeRecurrenceDaysOfWeek.Any());
+        => filter.TimeRecurrenceType == RecurrencePatternType.Weekly && (filter.TimeRecurrenceDaysOfWeek == null || !filter.TimeRecurrenceDaysOfWeek.Any());
 
     private static bool IsWeeklyRecurrenceFirstDayMissing(FeatureFlagFilterModel filter)
         => filter.TimeRecurrenceType == RecurrencePatternType.Weekly && string.IsNullOrWhiteSpace(filter.TimeRecurrenceFirstDayOfWeek);
@@ -98,6 +188,69 @@ public static class FeatureFlagValidator {
     private static bool IsNumberOfOccurrencesRequired(FeatureFlagFilterModel filter)
         => filter.TimeRecurrenceRangeType == RecurrenceRangeType.Numbered &&
             (!filter.TimeRecurrenceNumberOfOccurrences.HasValue || filter.TimeRecurrenceNumberOfOccurrences <= 0);
+
+
+    /// <summary>
+    /// Checks whether the duration is shorter than the minimum gap between recurrence of days of week.
+    /// </summary>
+    /// <param name="duration">The time span of the duration.</param>
+    /// <param name="interval">The recurrence interval.</param>
+    /// <param name="daysOfWeek">The days of the week when the recurrence will occur.</param>
+    /// <param name="firstDayOfWeek">The first day of the week.</param>
+    /// <returns>True if the duration is compliant with days of week, false otherwise.</returns>
+    private static bool IsDurationCompliantWithDaysOfWeek(TimeSpan duration, int interval, IEnumerable<string> daysOfWeek, DayOfWeek firstDayOfWeek) {
+        if (daysOfWeek.Count() == 1) {
+            return true;
+        }
+
+        var sortedDaysOfWeek = SortDaysOfWeek(daysOfWeek.Select<string, DayOfWeek>(x => Enum.Parse<DayOfWeek>(x, true)), firstDayOfWeek);
+        var firstDay = sortedDaysOfWeek[0]; // the closest occurrence day to the first day of week
+        var prev = firstDay;
+        var minGap = TimeSpan.FromDays(_DaysPerWeek);
+
+        for (var i = 1; i < sortedDaysOfWeek.Count; i++) // start from the second day to calculate the gap
+        {
+            var dayOfWeek = sortedDaysOfWeek[i];
+            var gap = TimeSpan.FromDays(CalculateWeeklyDayOffset(dayOfWeek, prev));
+
+            if (gap < minGap) {
+                minGap = gap;
+            }
+
+            prev = dayOfWeek;
+        }
+
+        // It may across weeks. Check the next week if the interval is one week.
+        if (interval == 1) {
+            var gap = TimeSpan.FromDays(CalculateWeeklyDayOffset(firstDay, prev));
+
+            if (gap < minGap) {
+                minGap = gap;
+            }
+        }
+
+        return minGap >= duration;
+    }
+
+    /// <summary>
+    /// Calculates the offset in days between two given days of the week.
+    /// <param name="day1">A day of week.</param>
+    /// <param name="day2">A day of week.</param>
+    /// <returns>The number of days to be added to day2 to reach day1</returns>
+    /// </summary>
+    private static int CalculateWeeklyDayOffset(DayOfWeek day1, DayOfWeek day2) => ((int)day1 - (int)day2 + _DaysPerWeek) % _DaysPerWeek;
+
+    /// <summary>
+    /// Sorts a collection of days of week based on their offsets from a specified first day of week.
+    /// <param name="daysOfWeek">A collection of days of week.</param>
+    /// <param name="firstDayOfWeek">The first day of week.</param>
+    /// <returns>The sorted days of week.</returns>
+    /// </summary>
+    private static List<DayOfWeek> SortDaysOfWeek(IEnumerable<DayOfWeek> daysOfWeek, DayOfWeek firstDayOfWeek) {
+        var result = daysOfWeek.Distinct().ToList(); // dedup
+        result.Sort((x, y) => CalculateWeeklyDayOffset(x, firstDayOfWeek).CompareTo(CalculateWeeklyDayOffset(y, firstDayOfWeek)));
+        return result;
+    }
 
     private static ValidationResult ValidationResultFor(FeatureFlagFilterModel filter, string error, string property)
         => new(error, [$"Filters[{filter.Index}].{property}"]);
@@ -119,6 +272,22 @@ public static class FeatureFlagValidator {
 
         if (string.IsNullOrWhiteSpace(filter.JSON)) {
             yield return new ValidationResult(Flags.ErrorJsonRequired, [$"Filters[{filter.Index}].{nameof(filter.JSON)}"]);
+        }
+
+        // add validation of JSON structure - should have a name and parameters property at the root
+        ValidationResult? validationResult = null;
+        try {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonStream(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(filter.JSON ?? "")))
+                .Build();
+            if (configuration == null || string.IsNullOrWhiteSpace(configuration["name"])) {
+                validationResult = new ValidationResult(Flags.ErrorJsonInvalidFormat, [$"Filters[{filter.Index}].{nameof(filter.JSON)}"]);
+            }
+        } catch {
+            validationResult = new ValidationResult(Flags.ErrorJsonInvalidFormat, [$"Filters[{filter.Index}].{nameof(filter.JSON)}"]);
+        }
+        if (validationResult != null) {
+            yield return validationResult;
         }
     }
 }

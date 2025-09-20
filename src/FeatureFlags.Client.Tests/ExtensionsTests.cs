@@ -91,10 +91,10 @@ public class ExtensionsTests {
         Assert.Equal(customFeatureDefinition.Name, definition.Name);
         Assert.NotNull(definition.EnabledFor);
         Assert.Single(definition.EnabledFor);
-        Assert.Equal(definition.EnabledFor.First().Name, customFeatureDefinition.EnabledFor.First().Name);
+        Assert.Equal("filter name", definition.EnabledFor.First().Name);
         Assert.NotNull(definition.Variants);
         Assert.Single(definition.Variants);
-        Assert.Equal(definition.Variants.First().Name, customFeatureDefinition.Variants.First().Name);
+        Assert.Equal("variant name", definition.Variants.First().Name);
     }
 
     [Fact]
@@ -115,10 +115,14 @@ public class ExtensionsTests {
     }
 
     [Fact]
-    public void ToFeatureDefinition_WithEmptyVariants_ReturnsDefinition() {
+    public void ToFeatureDefinition_WithMultipleEnabledFor_ReturnsAllFilters() {
         // arrange
         var customFeatureDefinition = new CustomFeatureDefinition {
-            Name = "feature name"
+            Name = "feature name",
+            EnabledFor = [
+                new CustomFeatureFilterConfiguration { Name = "filter1" },
+                new CustomFeatureFilterConfiguration { Name = "filter2" }
+            ]
         };
 
         // act
@@ -127,7 +131,9 @@ public class ExtensionsTests {
         // assert
         Assert.NotNull(definition);
         Assert.Equal(customFeatureDefinition.Name, definition.Name);
-        Assert.NotNull(definition.Variants);
-        Assert.Empty(definition.Variants);
+        Assert.NotNull(definition.EnabledFor);
+        Assert.Equal(2, definition.EnabledFor.Count());
+        Assert.Contains(definition.EnabledFor, f => f.Name == "filter1");
+        Assert.Contains(definition.EnabledFor, f => f.Name == "filter2");
     }
 }

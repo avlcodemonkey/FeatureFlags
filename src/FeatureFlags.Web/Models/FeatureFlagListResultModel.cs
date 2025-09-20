@@ -24,5 +24,10 @@ public sealed record FeatureFlagListResultModel : IAuditedModel {
     /// <summary>
     /// Gets the localized status text for the feature flag.
     /// </summary>
-    public string StatusText => Status ? Flags.Active : Flags.Disabled;
+    public string StatusText => Status ? Flags.Active : Flags.Inactive;
+
+    /// <summary>
+    /// Gets the enabled text for the feature flag.
+    /// </summary>
+    public string EvaluationText { get; init; } = "";
 }

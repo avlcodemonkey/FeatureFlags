@@ -12,22 +12,17 @@
 
     <data-table key="featureFlags" src-url="@Url.Action(nameof(FeatureFlagController.List), nameof(FeatureFlagController).StripController())">
         <data-head>
-            <th style="width:@Html.Width(ColumnWidth.DoubleIcon)px">
+            <th style="width:@Html.Width(ColumnWidth.SingleIcon)px">
                 <a authorize-roles="featureflag.create" href="@Url.Action(nameof(FeatureFlagController.Create), nameof(FeatureFlagController).StripController())"
                    class="button primary" title="@Flags.CreateFlag">
                     <icon name="Add" label="@Flags.CreateFlag" />
                 </a>
-                <nilla-confirm authorize-roles="featureflag.clearcache">
-                    <a href="@Url.Action(nameof(FeatureFlagController.ClearCache), nameof(FeatureFlagController).StripController())" class="button primary" title="@Flags.ClearCache"
-                       data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Flags.ConfirmClearCache">
-                        <icon name="Ban" label="@Flags.ClearCache" />
-                    </a>
-                </nilla-confirm>
             </th>
             <th data-property="name">@Flags.Name</th>
             <th data-property="statusText">@Flags.Status</th>
+            <th data-property="evaluationText">@Flags.Enabled</th>
         </data-head>
-        <data-body colspan="3">
+        <data-body colspan="4">
             <td>
                 <a authorize-roles="featureflag.edit" href="@Url.ActionForMustache("Edit")" class="button primary" title="@Flags.EditFlag">
                     <icon name="EditAlt" label="@Flags.EditFlag" />
@@ -42,6 +37,7 @@
             </td>
             <td>{{name}}</td>
             <td>{{statusText}}</td>
+            <td>{{evaluationText}}</td>
         </data-body>
     </data-table>
 </content>

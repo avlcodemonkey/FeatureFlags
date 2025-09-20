@@ -1,11 +1,12 @@
 using FeatureFlags.Attributes;
-using FeatureFlags.Client;
 using FeatureFlags.Extensions;
 using FeatureFlags.Models;
 using FeatureFlags.Resources;
 using FeatureFlags.Services;
+using FeatureFlags.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.FeatureManagement;
 
 namespace FeatureFlags.Controllers;
 
@@ -13,11 +14,11 @@ namespace FeatureFlags.Controllers;
 /// Provides functionality for managing feature flags, including rendering views, enabling or disabling flags,
 /// and clearing the feature flag cache.
 /// </summary>
-public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeatureFlagClient featureFlagClient, ILogger<FeatureFlagController> logger)
+public class FeatureFlagController(IFeatureFlagService featureFlagService, FeatureManager featureManager, ILogger<FeatureFlagController> logger)
     : BaseController(logger) {
 
     private readonly IFeatureFlagService _FeatureFlagService = featureFlagService;
-    private readonly IFeatureFlagClient _FeatureFlagClient = featureFlagClient;
+    private readonly FeatureManager _FeatureManager = featureManager;
 
     private const string _IndexView = "Index";
     private const string _CreateEditView = "CreateEdit";
@@ -32,9 +33,33 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
     /// Returns the feature flag list as json.
     /// </summary>
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List(CancellationToken cancellationToken = default)
-        => Ok((await _FeatureFlagService.GetAllFeatureFlagsAsync(cancellationToken))
-            .Select(x => new FeatureFlagListResultModel { Id = x.Id, Name = x.Name, Status = x.Status }));
+    public async Task<IActionResult> List(CancellationToken cancellationToken = default) {
+        var flags = await _FeatureFlagService.GetAllFeatureFlagsAsync(cancellationToken);
+        if (flags == null || !flags.Any()) {
+            return Ok(new List<FeatureFlagListResultModel>());
+        }
+
+        // create a featureManager with our internal provider to get the status of each flag
+        var dynamicFeatureManager = CreateFeatureManager();
+
+        var flagList = new List<FeatureFlagListResultModel>();
+        foreach (var flag in flags) {
+            var evaluationText = "";
+            // we want to catch any errors here so one bad flag config doesn't break the whole list
+            try {
+                if (await dynamicFeatureManager.IsEnabledAsync(flag.Name, cancellationToken)) {
+                    evaluationText = Flags.Enabled;
+                } else {
+                    evaluationText = Flags.Disabled;
+                }
+            } catch (Exception) {
+                evaluationText = Flags.Error;
+            }
+            flagList.Add(new FeatureFlagListResultModel { Id = flag.Id, Name = flag.Name, Status = flag.Status, EvaluationText = evaluationText });
+        }
+
+        return Ok(flagList);
+    }
 
     /// <summary>
     /// Renders the form to create a feature flag.
@@ -57,6 +82,19 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
         if (model == null) {
             return ViewWithError(_IndexView, null, Core.ErrorInvalidId);
         }
+
+        // create a featureManager with our internal provider to check the status of the flag
+        var dynamicFeatureManager = CreateFeatureManager();
+        var evaluationText = "";
+        try {
+            await dynamicFeatureManager.IsEnabledAsync(model.Name, cancellationToken);
+        } catch (Exception ex) {
+            evaluationText = $"{Flags.ErrorEvaluatingFlag} {ex.Message}";
+        }
+        if (!string.IsNullOrEmpty(evaluationText)) {
+            ViewData.AddError(evaluationText);
+        }
+
         return View(_CreateEditView, model);
     }
 
@@ -122,20 +160,19 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, IFeat
     }
 
     /// <summary>
-    /// Clears the feature flag cache. Renders the index page.
-    /// </summary>
-    [HttpGet]
-    public IActionResult ClearCache() {
-        _FeatureFlagClient.ClearCache();
-        ViewData.AddMessage(Flags.SuccessClearingCache);
-        return IndexWithPushState();
-    }
-
-    /// <summary>
     /// Helper method to add a header to pushState to Index and return the Index action.
     /// </summary>
     private IActionResult IndexWithPushState() {
         AddPushState(nameof(Index));
         return Index();
     }
+
+    /// <summary>
+    /// Creates and initializes a new instance of the <see cref="FeatureManager"/> class.
+    /// Existing <see cref="FeatureManager"/> instance's feature filters will be used to configure the new instance.
+    /// </summary>
+    /// <returns>A new <see cref="FeatureManager"/> instance configured with the available feature filters.</returns>
+    private FeatureManager CreateFeatureManager() => new(new InternalFeatureDefinitionProvider(_FeatureFlagService)) {
+        FeatureFilters = _FeatureManager.FeatureFilters
+    };
 }
