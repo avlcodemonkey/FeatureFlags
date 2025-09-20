@@ -265,4 +265,159 @@ public class FeatureFlagValidatorTests {
 
         Assert.Empty(results);
     }
+
+    [Fact]
+    public void ValidateTimeWindowFilter_ReturnsError_WhenMaxDurationExceeded() {
+        var model = new FeatureFlagModel {
+            Filters = new[]
+            {
+                new FeatureFlagFilterModel
+                {
+                    Index = "0",
+                    FilterType = FilterTypes.TimeWindow,
+                    TimeStart = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    TimeEnd = new DateTime(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    TimeRecurrenceType = RecurrencePatternType.Daily,
+                    TimeRecurrenceInterval = 1
+                }
+            }
+        };
+
+        var results = FeatureFlagValidator.Validate(model);
+
+        Assert.Contains(results, r => r.ErrorMessage == Resources.Flags.ErrorTimeWindowDuration);
+    }
+
+    [Fact]
+    public void ValidateTimeWindowFilter_ReturnsError_WhenDailyRecurrenceDurationExceeded() {
+        var model = new FeatureFlagModel {
+            Filters = new[]
+            {
+                new FeatureFlagFilterModel
+                {
+                    Index = "0",
+                    FilterType = FilterTypes.TimeWindow,
+                    TimeStart = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    TimeEnd = new DateTime(2025, 1, 3, 0, 0, 0, DateTimeKind.Utc),
+                    TimeRecurrenceType = RecurrencePatternType.Daily,
+                    TimeRecurrenceInterval = 1
+                }
+            }
+        };
+
+        var results = FeatureFlagValidator.Validate(model);
+
+        Assert.Contains(results, r => r.ErrorMessage == Resources.Flags.ErrorTimeWindowDuration);
+    }
+
+    [Fact]
+    public void ValidateTimeWindowFilter_ReturnsError_WhenWeeklyRecurrenceDurationExceeded() {
+        var model = new FeatureFlagModel {
+            Filters = new[]
+            {
+                new FeatureFlagFilterModel
+                {
+                    Index = "0",
+                    FilterType = FilterTypes.TimeWindow,
+                    TimeStart = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    TimeEnd = new DateTime(2025, 2, 1, 0, 0, 0, DateTimeKind.Utc),
+                    TimeRecurrenceType = RecurrencePatternType.Weekly,
+                    TimeRecurrenceInterval = 1,
+                    TimeRecurrenceDaysOfWeek = new List<string> { "Monday", "Wednesday" },
+                    TimeRecurrenceFirstDayOfWeek = "Monday"
+                }
+            }
+        };
+
+        var results = FeatureFlagValidator.Validate(model);
+
+        Assert.Contains(results, r => r.ErrorMessage == Resources.Flags.ErrorTimeWindowDuration);
+    }
+
+    [Fact]
+    public void ValidateTimeWindowFilter_ReturnsError_WhenWeeklyStartDayNotValid() {
+        var model = new FeatureFlagModel {
+            Filters = new[]
+            {
+                new FeatureFlagFilterModel
+                {
+                    Index = "0",
+                    FilterType = FilterTypes.TimeWindow,
+                    TimeStart = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), // Wednesday
+                    TimeEnd = new DateTime(2025, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+                    TimeRecurrenceType = RecurrencePatternType.Weekly,
+                    TimeRecurrenceInterval = 1,
+                    TimeRecurrenceDaysOfWeek = new List<string> { "Monday" },
+                    TimeRecurrenceFirstDayOfWeek = "Monday"
+                }
+            }
+        };
+
+        var results = FeatureFlagValidator.Validate(model);
+
+        Assert.Contains(results, r => r.ErrorMessage == Resources.Flags.ErrorStartDateNotValid);
+    }
+
+    [Fact]
+    public void ValidateTimeWindowFilter_ReturnsError_WhenRecurrenceEndDateBeforeStart() {
+        var model = new FeatureFlagModel {
+            Filters = new[]
+            {
+                new FeatureFlagFilterModel
+                {
+                    Index = "0",
+                    FilterType = FilterTypes.TimeWindow,
+                    TimeStart = new DateTime(2025, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+                    TimeRecurrenceType = RecurrencePatternType.Weekly,
+                    TimeRecurrenceInterval = 1,
+                    TimeRecurrenceDaysOfWeek = new List<string> { "Monday" },
+                    TimeRecurrenceFirstDayOfWeek = "Monday",
+                    TimeRecurrenceRangeType = RecurrenceRangeType.EndDate,
+                    TimeRecurrenceEndDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                }
+            }
+        };
+
+        var results = FeatureFlagValidator.Validate(model);
+
+        Assert.Contains(results, r => r.ErrorMessage == Resources.Flags.ErrorRecurrrenceEndDateValueOutOfRange);
+    }
+
+    [Fact]
+    public void ValidateJsonFilter_ReturnsError_WhenJsonInvalidFormat() {
+        var model = new FeatureFlagModel {
+            Filters = new[]
+            {
+                new FeatureFlagFilterModel
+                {
+                    Index = "0",
+                    FilterType = FilterTypes.JSON,
+                    JSON = "{ \"notname\": \"Test\" }"
+                }
+            }
+        };
+
+        var results = FeatureFlagValidator.Validate(model);
+
+        Assert.Contains(results, r => r.ErrorMessage == Resources.Flags.ErrorJsonInvalidFormat);
+    }
+
+    [Fact]
+    public void ValidateJsonFilter_ReturnsError_WhenJsonMalformed() {
+        var model = new FeatureFlagModel {
+            Filters = new[]
+            {
+                new FeatureFlagFilterModel
+                {
+                    Index = "0",
+                    FilterType = FilterTypes.JSON,
+                    JSON = "{ invalid json }"
+                }
+            }
+        };
+
+        var results = FeatureFlagValidator.Validate(model);
+
+        Assert.Contains(results, r => r.ErrorMessage == Resources.Flags.ErrorJsonInvalidFormat);
+    }
 }

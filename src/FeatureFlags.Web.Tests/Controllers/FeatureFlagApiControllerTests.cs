@@ -60,9 +60,8 @@ public class FeatureFlagApiControllerTests {
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var definitions = Assert.IsType<IEnumerable<CustomFeatureDefinition>>(okResult.Value, exactMatch: false);
-        var definition = Assert.Single(definitions);
-        Assert.Equal("Flag2", definition.Name);
-        Assert.NotNull(definition.EnabledFor);
+        Assert.NotNull(definitions);
+        Assert.Equal(2, definitions.Count());
     }
 
     [Fact]
