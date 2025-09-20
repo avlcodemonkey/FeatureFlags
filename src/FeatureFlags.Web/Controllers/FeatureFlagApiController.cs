@@ -21,7 +21,7 @@ public class FeatureFlagApiController(IFeatureFlagService featureFlagService) : 
     [HttpGet("features")]
     [ProducesResponseType(typeof(IEnumerable<CustomFeatureDefinition>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllFeatureDefinitionsAsync(CancellationToken cancellationToken = default) {
-        var featureFlags = (await _FeatureFlagService.GetAllFeatureFlagsAsync(cancellationToken)).Where(x => x.Status);
+        var featureFlags = await _FeatureFlagService.GetAllFeatureFlagsAsync(cancellationToken);
         return Ok(featureFlags.Select(CustomFeatureDefinitionMapper.MapToCustomFeatureDefinition));
     }
 }
