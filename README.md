@@ -14,13 +14,6 @@ Create the SQLite database and seed data using Entity Framework.  Run `dotnet ef
 
 The application uses a feature flag to control access to public user registration.  The `UserRegistration` feature flag is enabled by default, allowing you to create an admin user for your application.  The admin user can then disable the `UserRegistration` feature flag to disable public registration.
 
-A default API key is created named `Default Key` with the value `replace_me_with_a_real_key`.  Add that key to your appSettings or user secrets to use the API key authentication.  You need this to enable user registration.
-```json
-    "FeatureFlags": {
-        "ApiKey": "replace_me_with_a_real_key"
-    }
-```
-
 Start the application and register yourself as a new user.  You will be assigned the `Administrator` role, which has full access to the application.  You can then log in and manage feature flags, users, and API keys.
 
 To secure your application:
@@ -74,11 +67,11 @@ Github actions are used for continuous integration.  The repo is configured to o
     - Add get flag for user API endpoint
         - return default value if user claim is not found (without calling api)
         - if user is not found in db, will set value for user and save to database
-    - Does changing flag config reset existing users?
 - Build out readme to explain how to use the feature flag solution
 - Release package to nuget for client project
     - Add instructions for using the package in readme
 - ~~Add serilog with appSetting configuration for structured logging~~
+- Add sample web project to show how to use the client package
 
 
 ### Misc
