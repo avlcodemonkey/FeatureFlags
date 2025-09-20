@@ -34,12 +34,11 @@ builder.Services
     .AddLocalization(x => x.ResourcesPath = "Resources")
     .AddCustomResponseCompression()
     .AddSwagger()
+    .AddFeatureFlags()
     .AddMvc(options => options.Filters.Add(new RequireHttpsAttribute()))
     .AddRazorRuntimeCompilation()
     .AddDataAnnotationsLocalization()
     .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
-
-builder.AddFeatureFlags();
 
 var app = builder.Build();
 

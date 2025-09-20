@@ -177,12 +177,6 @@
   <data name="SuccessClearingCache" xml:space="preserve">
     <value>Cache cleared successfully.</value>
   </data>
-  <data name="ClearCache" xml:space="preserve">
-    <value>Clear Cache</value>
-  </data>
-  <data name="ConfirmClearCache" xml:space="preserve">
-    <value>Are you sure you want to clear the feature flag cache?</value>
-  </data>
   <data name="ErrorNotFound" xml:space="preserve">
     <value>Feature flag not found.</value>
   </data>
@@ -365,5 +359,17 @@
   </data>
   <data name="ErrorRecurrrenceEndDateValueOutOfRange" xml:space="preserve">
     <value>The range end date value must be after the start date.</value>
+  </data>
+  <data name="ErrorEvaluatingFlag" xml:space="preserve">
+    <value>Error evaluating status of feature flag.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorTimeWindowEndEqualStart" xml:space="preserve">
+    <value>End time cannot equal start time.</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
   </data>
 </root>

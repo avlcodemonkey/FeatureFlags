@@ -60,6 +60,10 @@ public static class FeatureFlagValidator {
             yield return ValidationResultFor(filter, Flags.ErrorTimeWindowEndBeforeStart, nameof(filter.TimeStart));
         }
 
+        if (IsEndEqualStart(filter)) {
+            yield return ValidationResultFor(filter, Flags.ErrorTimeWindowEndEqualStart, nameof(filter.TimeStart));
+        }
+
         if (IsRecurrenceIntervalInvalid(filter)) {
             yield return ValidationResultFor(filter, Flags.ErrorRecurrenceIntervalRequired, nameof(filter.TimeRecurrenceInterval));
         }
@@ -122,6 +126,9 @@ public static class FeatureFlagValidator {
 
     private static bool IsEndBeforeStart(FeatureFlagFilterModel filter)
         => filter.TimeStart.HasValue && filter.TimeEnd.HasValue && filter.TimeEnd < filter.TimeStart;
+
+    private static bool IsEndEqualStart(FeatureFlagFilterModel filter)
+        => filter.TimeStart.HasValue && filter.TimeEnd.HasValue && filter.TimeEnd == filter.TimeStart;
 
     private static bool IsRecurrenceIntervalInvalid(FeatureFlagFilterModel filter)
         => filter.TimeRecurrenceType.HasValue && (!filter.TimeRecurrenceInterval.HasValue || filter.TimeRecurrenceInterval <= 0);

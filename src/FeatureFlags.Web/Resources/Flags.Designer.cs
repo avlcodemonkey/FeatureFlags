@@ -106,24 +106,6 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Clear Cache.
-        /// </summary>
-        public static string ClearCache {
-            get {
-                return ResourceManager.GetString("ClearCache", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to clear the feature flag cache?.
-        /// </summary>
-        public static string ConfirmClearCache {
-            get {
-                return ResourceManager.GetString("ConfirmClearCache", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this filter?.
         /// </summary>
         public static string ConfirmDeleteFilter {
@@ -223,6 +205,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred validating filters.  Check the filters for details..
         /// </summary>
         public static string ErrorCheckFilters {
@@ -246,6 +237,15 @@ namespace FeatureFlags.Resources {
         public static string ErrorDuplicateName {
             get {
                 return ResourceManager.GetString("ErrorDuplicateName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error evaluating status of feature flag..
+        /// </summary>
+        public static string ErrorEvaluatingFlag {
+            get {
+                return ResourceManager.GetString("ErrorEvaluatingFlag", resourceCulture);
             }
         }
         
@@ -412,6 +412,15 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End time cannot equal start time..
+        /// </summary>
+        public static string ErrorTimeWindowEndEqualStart {
+            get {
+                return ResourceManager.GetString("ErrorTimeWindowEndEqualStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exclude Users.
         /// </summary>
         public static string ExcludeUsers {
@@ -480,6 +489,15 @@ namespace FeatureFlags.Resources {
         public static string Friday {
             get {
                 return ResourceManager.GetString("Friday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactive.
+        /// </summary>
+        public static string Inactive {
+            get {
+                return ResourceManager.GetString("Inactive", resourceCulture);
             }
         }
         

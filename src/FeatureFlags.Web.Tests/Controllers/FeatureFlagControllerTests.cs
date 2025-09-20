@@ -1,4 +1,3 @@
-using FeatureFlags.Client;
 using FeatureFlags.Constants;
 using FeatureFlags.Controllers;
 using FeatureFlags.Models;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using Moq;
 
 namespace FeatureFlags.Web.Tests.Controllers;
@@ -15,7 +15,7 @@ namespace FeatureFlags.Web.Tests.Controllers;
 public class FeatureFlagControllerTests {
     private readonly Mock<IFeatureFlagService> _MockFeatureFlagService = new();
     private readonly Mock<ILogger<FeatureFlagController>> _MockLogger = new();
-    private readonly Mock<IFeatureFlagClient> _MockFeatureFlagClient = new();
+    private readonly Mock<FeatureManager> _MockFeatureManager = new();
     private readonly Mock<IUrlHelper> _MockUrlHelper = new();
 
     private readonly string _Url = "/test";
@@ -29,7 +29,7 @@ public class FeatureFlagControllerTests {
         _MockFeatureFlagService.Setup(x => x.SaveFeatureFlagAsync(_FlagForFailureDisabled, It.IsAny<CancellationToken>())).ReturnsAsync((false, "message"));
     }
 
-    private FeatureFlagController CreateController() => new(_MockFeatureFlagService.Object, _MockFeatureFlagClient.Object, _MockLogger.Object) {
+    private FeatureFlagController CreateController() => new(_MockFeatureFlagService.Object, _MockFeatureManager.Object, _MockLogger.Object) {
         ControllerContext = new ControllerContext {
             HttpContext = new DefaultHttpContext()
         },
@@ -70,22 +70,6 @@ public class FeatureFlagControllerTests {
     }
 
     [Fact]
-    public void Get_ClearCache_ReturnsIndexWithSuccessMessage() {
-        // Arrange
-        var controller = CreateController();
-
-        // Act
-        var result = controller.ClearCache();
-
-        // Assert
-        var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Equal("Index", viewResult.ViewName);
-        Assert.NotNull(controller.ViewData[ViewProperties.Message]);
-        Assert.Equal(Flags.SuccessClearingCache, controller.ViewData[ViewProperties.Message]!.ToString());
-        _MockFeatureFlagClient.Verify(x => x.ClearCache(), Times.Once);
-    }
-
-    [Fact]
     public void Get_Create_ReturnsViewResult() {
         // Arrange
         var controller = CreateController();
@@ -105,7 +89,7 @@ public class FeatureFlagControllerTests {
         var model = new FeatureFlagModel {
             Name = "NewFlag",
             Status = true,
-            RequirementType = RequirementType.All
+            RequirementType = Constants.RequirementType.All
         };
         _MockFeatureFlagService.Setup(s => s.SaveFeatureFlagAsync(model, It.IsAny<CancellationToken>()))
             .ReturnsAsync((true, Flags.SuccessSavingFlag));
@@ -127,7 +111,7 @@ public class FeatureFlagControllerTests {
         var model = new FeatureFlagModel {
             Name = "",
             Status = true,
-            RequirementType = RequirementType.All
+            RequirementType = Constants.RequirementType.All
         };
 
         // Act
@@ -162,7 +146,7 @@ public class FeatureFlagControllerTests {
             Id = 1,
             Name = "EditFlag",
             Status = true,
-            RequirementType = RequirementType.Any
+            RequirementType = Constants.RequirementType.Any
         };
         _MockFeatureFlagService.Setup(s => s.GetFeatureFlagByIdAsync(1, It.IsAny<CancellationToken>()))
             .ReturnsAsync(model);
@@ -200,7 +184,7 @@ public class FeatureFlagControllerTests {
             Id = 1,
             Name = "EditFlag",
             Status = false,
-            RequirementType = RequirementType.Any
+            RequirementType = Constants.RequirementType.Any
         };
         _MockFeatureFlagService.Setup(s => s.SaveFeatureFlagAsync(model, It.IsAny<CancellationToken>()))
             .ReturnsAsync((true, Flags.SuccessSavingFlag));
@@ -223,7 +207,7 @@ public class FeatureFlagControllerTests {
             Id = 1,
             Name = "",
             Status = false,
-            RequirementType = RequirementType.Any
+            RequirementType = Constants.RequirementType.Any
         };
 
         // Act
