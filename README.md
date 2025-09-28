@@ -1,14 +1,21 @@
 # FeatureFlags
 
-A self hosted feature flag solution.
+A self hosted feature flag solution.  The goal is to provide a simple, performant, and easy to use application for managing feature flags in your applications.  Designed to work with Microsoft's feature management libraries, you can easily integrate with your .NET applications.
 
 ## Getting Started
 
 ### Requirements
 
-- Visual Studio is required for building and running the application.
+- DotNet SDK 9.0 or later
+  - [Download](https://dotnet.microsoft.com/download)
+- DotNet Tools
+  - Install EF tools globally with `dotnet tool install --global dotnet-ef`
+- Node 22 or later
+- NPM 10 or later
+- SQLite
+- (Optional) IDE like Visual Studio or VS Code
 
-#### Setup
+### FeatureFlags Setup
 
 Create the SQLite database and seed data using Entity Framework.  Run `dotnet ef database update` in `src/FeatureFlags.Domain` to apply all migrations to the newly created database.
 
@@ -17,14 +24,63 @@ The application uses a feature flag to control access to public user registratio
 Start the application and register yourself as a new user.  You will be assigned the `Administrator` role, which has full access to the application.  You can then log in and manage feature flags, users, and API keys.
 
 To secure your application:
-- After creating your admin user, delete the `Default Key` API key and create a new one with a secure value.  The default key is only for initial setup.  Update your appSettings or user secrets with the new key value.
-- You can disable the `UserRegistration` feature flag after creating your admin user.  This will prevent new users from registering - you'll need to create new users yourself in the UI.
+- You can disable the `UserRegistration` feature flag after creating your admin user by editing `appSettings.json`.  This will prevent new users from registering - you'll need to create new users yourself in the UI.
 - You may also want to add additional roles with limited permissions for other users to manage feature flags.
 - If you leave public registration enabled, new users will be given the default role which is initially set to `Administrator`. Create a new role with limited permissions and set it as the default role for new users.
+
+### Integrating with your Application
+
+The `FeatureFlags.Client` project is a .NET Standard library that can be used in any .NET application.  It provides a `FeatureDefinitionProvider` class that can be used to fetch feature flag definitions from the API.  It also includes a caching mechanism to reduce the number of API calls.
+
+To use the client, register it in your application's dependency injection container.  The client provides an extension method for this using `IHostApplicationBuilder`.  In `Program.cs`:
+```csharp
+using FeatureFlags.Client;
+
+builder.AddFeatureFlags();
+```
+
+You will need to provide the API base URL and an API key for authentication via `appSettings.json`.
+```json
+{
+    "FeatureFlags": {
+        "ApiBaseEndpoint": "https://localhost:44308/api/",
+        "ApiKey": "[from secrets]",
+        "CacheExpirationInMinutes": 15
+    }
+}
+```
+
+The `ApiBaseEndpoint` is the base URL of the API, including the `/api/` suffix.  Make sure to include the trailing slash.  The `ApiKey` is the value of an API key created in the FeatureFlags application.  The `CacheExpirationInMinutes` setting controls how long feature flag definitions are cached in memory.
+
+The `FeatureFlags.Demo` project is a sample ASP.NET Core web application that demonstrates how to use the client library.  It includes examples of how to check feature flag values in views.  Update the appSettings with the correct API base URL and API key to run the demo.
+
+Read more about using Microsoft's feature management functionality at https://docs.azure.cn/en-us/azure-app-configuration/feature-management-dotnet-reference or https://docs.azure.cn/en-us/azure-app-configuration/quickstart-feature-flag-aspnet-core.
+
+## Development
+
+The frontend uses vanilla JavaScript, CSS, and HTML.  No frameworks are used to keep the application lightweight and simple to maintain.  A similar approach is used for the backend, with minimal dependencies.
+
+The solution includes two launch profiles for development:
+- `App Debug`: Launches the application only.  This is useful for normal development.
+- `Demo Debug`: Launches both the application and demo project.  This is useful for testing changes via the client.
+
+The `src/FeatureFlags.Web/package.json` file defines several commands to help with frontend development, linting, and testing. Run these commands from the `src/FeatureFlags.Web` directory using `npm run <command>`.
+
+| Command      | Description                                                                                                     |
+|--------------|-----------------------------------------------------------------------------------------------------------------|
+| build        | Builds frontend assets using the custom build script (`build.mjs`).                                             |
+| watch        | Runs the build script in watch mode, rebuilding assets on file changes.                                         |
+| css:lint     | Lints CSS files in `Assets/css/` using Stylelint and the standard config.                                       |
+| css:fix      | Automatically fixes lint errors in CSS files using Stylelint.                                                   |
+| test         | Runs JavaScript tests with Node.js test runner and outputs a coverage report. Add ` -- --watch` to watch tests. |
+| js:lint      | Lints all JavaScript files in the project using ESLint.                                                         |
+| js:fix       | Automatically fixes lint errors in JavaScript files using ESLint.                                               |
 
 ## CI
 
 Github actions are used for continuous integration.  The repo is configured to only use verified actions, with minimal permissions, for security.
+
+The workflow runs on pushes and pull requests to the `main` branch.  It checks out the code, sets up .NET and Node.js, installs dependencies, runs linters and tests, and builds the project.  Pull requests must pass all checks before they can be merged.  If all checks succeed when merging into `main`, the version is incremented automatically.
 
 ## Logging
 
@@ -32,48 +88,11 @@ Github actions are used for continuous integration.  The repo is configured to o
 
 ## To Do
 
-- Add API endpoints for fetching feature flag configuration
-    - ~~Get all feature flags~~
-    - ~~Get specific feature flag by name~~
-    - Get feature flag for user, with unit tests
-    - ~~GET requests authenticated with API key~~
-- ~~Add API key support for authentication~~
-    - ~~UI to create new API keys~~
-    - ~~New auth attribute to validate API keys~~
-    - ~~Add tests for API key authentication~~
-- ~~Move FeatureDefinitionProvider to client project.~~
-    - ~~Add tests for client project.~~
-- Create client service for consuming feature flag API in client project with FeatureDefinitionProvider.
-    - Methods to
-        - ~~Get all feature flags~~
-        - ~~Get specific feature flag by name~~
-        - Get feature flag value for user, with unit tests
-    - ~~Add caching for feature flag definitions in client, configurable with appSettings. Default 15 minutes.~~
-    - ~~Add a clear cache method.~~
-    - ~~Add appSettings for cache lifetime.~~
-- ~~Add extension method in client project to register FeatureDefinitionProvider, client service, IMemoryCache, and httpClient.~~
-    - ~~Use auth for httpClient. Add header with API key.~~
-    - ~~Add api key in appsettings.~~
-- ~~Use new feature definition provider in web project.~~
-- ~~Add UI support for filters~~
-    - ~~Users can add as many filters as they want~~
-    - ~~Percentage of users - just pick a percentage using a range input~~
-    - ~~Time window - pick start and end time, recurrence~~
-    - ~~Targeting - set patterns to include or exclude users like `email@domain.com`~~
-        - ~~Allow targeting users by email~~
 - Persistent percentage custom filter
     - Like built in percentage but saves user to database so they always get the same value
     - Build UI to support this
     - Add get flag for user API endpoint
         - return default value if user claim is not found (without calling api)
         - if user is not found in db, will set value for user and save to database
-- Build out readme to explain how to use the feature flag solution
 - Release package to nuget for client project
     - Add instructions for using the package in readme
-- ~~Add serilog with appSetting configuration for structured logging~~
-- Add sample web project to show how to use the client package
-
-
-### Misc
-
- - Use `npm run test -- --watch` to watch tests
