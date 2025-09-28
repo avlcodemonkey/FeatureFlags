@@ -66,15 +66,15 @@ The solution includes two launch profiles for development:
 
 The `src/FeatureFlags.Web/package.json` file defines several commands to help with frontend development, linting, and testing. Run these commands from the `src/FeatureFlags.Web` directory using `npm run <command>`.
 
-| Command      | Description                                                                                   |
-|--------------|----------------------------------------------------------------------------------------------|
-| build        | Builds frontend assets using the custom build script (`build.mjs`).                           |
-| watch        | Runs the build script in watch mode, rebuilding assets on file changes.                       |
-| css:lint     | Lints CSS files in `Assets/css/` using Stylelint and the standard config.                     |
-| css:fix      | Automatically fixes lint errors in CSS files using Stylelint.                                 |
-| test         | Runs JavaScript tests with Node.js test runner and outputs a coverage report.                 |
-| js:lint      | Lints all JavaScript files in the project using ESLint.                                       |
-| js:fix       | Automatically fixes lint errors in JavaScript files using ESLint.                             |
+| Command      | Description                                                                                                     |
+|--------------|-----------------------------------------------------------------------------------------------------------------|
+| build        | Builds frontend assets using the custom build script (`build.mjs`).                                             |
+| watch        | Runs the build script in watch mode, rebuilding assets on file changes.                                         |
+| css:lint     | Lints CSS files in `Assets/css/` using Stylelint and the standard config.                                       |
+| css:fix      | Automatically fixes lint errors in CSS files using Stylelint.                                                   |
+| test         | Runs JavaScript tests with Node.js test runner and outputs a coverage report. Add ` -- --watch` to watch tests. |
+| js:lint      | Lints all JavaScript files in the project using ESLint.                                                         |
+| js:fix       | Automatically fixes lint errors in JavaScript files using ESLint.                                               |
 
 ## CI
 
@@ -96,25 +96,3 @@ The workflow runs on pushes and pull requests to the `main` branch.  It checks o
         - if user is not found in db, will set value for user and save to database
 - Release package to nuget for client project
     - Add instructions for using the package in readme
-
-### Misc
-
- - Use `npm run test -- --watch` to watch tests
-
-## Frontend Development Commands
-
-The `src/FeatureFlags.Web/package.json` file defines several commands to help with frontend development, linting, and testing. Run these commands from the `src/FeatureFlags.Web` directory using `npm run <command>`.
-
-| Command      | Description                                                                                   |
-|--------------|----------------------------------------------------------------------------------------------|
-| build        | Builds frontend assets using the custom build script (`build.mjs`).                           |
-| watch        | Runs the build script in watch mode, rebuilding assets on file changes.                       |
-| css:lint     | Lints CSS files in `Assets/css/` using Stylelint and the standard config.                     |
-| css:fix      | Automatically fixes lint errors in CSS files using Stylelint.                                 |
-| test         | Runs JavaScript tests with Node.js test runner and outputs a coverage report.                 |
-| js:lint      | Lints all JavaScript files in the project using ESLint.                                       |
-| js:fix       | Automatically fixes lint errors in JavaScript files using ESLint.                             |
-
-**Examples:**
-
-- Build assets:  
