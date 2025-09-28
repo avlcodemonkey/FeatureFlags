@@ -58,7 +58,7 @@ public class HttpFeatureFlagClient(IHttpClientFactory httpClientFactory, IConfig
             response.EnsureSuccessStatusCode();
 
             var featureFlags = await response.Content.ReadFromJsonAsync<List<CustomFeatureDefinition>>(cancellationToken) ?? [];
-            return featureFlags.Select(x => x.ToFeatureDefinition()).ToList();
+            return featureFlags.Select(FeatureDefinitionMapper.ToFeatureDefinition).ToList();
         } catch (Exception ex) {
             _Logger.LogError(ex, "Error fetching feature definitions");
             return [];

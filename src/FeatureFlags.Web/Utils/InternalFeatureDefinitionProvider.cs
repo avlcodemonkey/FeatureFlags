@@ -22,7 +22,7 @@ public class InternalFeatureDefinitionProvider(IFeatureFlagService featureFlagSe
     public async IAsyncEnumerable<FeatureDefinition> GetAllFeatureDefinitionsAsync() {
         var featureFlags = await _FeatureFlagService.GetAllFeatureFlagsAsync();
         foreach (var featureFlag in featureFlags) {
-            yield return CustomFeatureDefinitionMapper.MapToCustomFeatureDefinition(featureFlag).ToFeatureDefinition();
+            yield return FeatureDefinitionMapper.ToFeatureDefinition(CustomFeatureDefinitionMapper.MapToCustomFeatureDefinition(featureFlag));
         }
     }
 
@@ -38,6 +38,6 @@ public class InternalFeatureDefinitionProvider(IFeatureFlagService featureFlagSe
         if (flag == null) {
             return new FeatureDefinition { Name = featureName };
         }
-        return CustomFeatureDefinitionMapper.MapToCustomFeatureDefinition(flag).ToFeatureDefinition();
+        return FeatureDefinitionMapper.ToFeatureDefinition(CustomFeatureDefinitionMapper.MapToCustomFeatureDefinition(flag));
     }
 }

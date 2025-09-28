@@ -6,10 +6,8 @@ using Microsoft.FeatureManagement;
 namespace FeatureFlags.Client;
 
 /// <summary>
-/// Provides extension methods for configuring feature flags and converting custom feature definitions.
+/// Provides extension methods for configuring feature flags.
 /// </summary>
-/// <remarks>This static class contains methods to simplify the integration of feature flag management into a web
-/// application and to convert custom feature definitions into a standard format.</remarks>
 public static class Extensions {
     /// <summary>
     /// Configures the application to use feature flags by registering the necessary services and HTTP client.
@@ -45,28 +43,9 @@ public static class Extensions {
             .AddMemoryCache()
             .AddScoped<IFeatureFlagClient, HttpFeatureFlagClient>()
             .AddScoped<IFeatureDefinitionProvider, ClientFeatureDefinitionProvider>()
-            .AddScopedFeatureManagement();
+            .AddScopedFeatureManagement()
+            .WithTargeting();
 
         return builder;
     }
-
-    /// <summary>
-    /// Converts a <see cref="CustomFeatureDefinition"/> instance to a <see cref="FeatureDefinition"/> object.
-    /// </summary>
-    /// <param name="featureFlag">The <see cref="CustomFeatureDefinition"/> instance to convert. Cannot be <see langword="null"/>.</param>
-    /// <returns>A new <see cref="FeatureDefinition"/> object containing the equivalent data from the specified <see cref="CustomFeatureDefinition"/>.</returns>
-    public static FeatureDefinition ToFeatureDefinition(this CustomFeatureDefinition featureFlag) => new() {
-        Name = featureFlag.Name,
-        EnabledFor = featureFlag.EnabledFor?.Select(x => {
-            var parameters = new ConfigurationBuilder()
-                .AddInMemoryCollection(x.Parameters)
-                .Build();
-            return new FeatureFilterConfiguration { Name = x.Name, Parameters = parameters };
-        }),
-        RequirementType = featureFlag.RequirementType,
-        Status = featureFlag.Status,
-        Allocation = featureFlag.Allocation,
-        Variants = featureFlag.Variants ?? [],
-        Telemetry = featureFlag.Telemetry
-    };
 }
