@@ -95,16 +95,6 @@ public static class ModelBuilderExtensions {
             new RolePermission { Id = 21, PermissionId = 21, RoleId = 1, CreatedDate = minDate, UpdatedDate = minDate }
         );
 
-        // enable user registration - feature flag name should match the value in Web.Constants.InternalFeatureFlags
-        modelBuilder.Entity<FeatureFlag>().HasData(
-            new FeatureFlag { Id = 1, Name = "UserRegistration", Status = true, CreatedDate = minDate, UpdatedDate = minDate }
-        );
-
-        modelBuilder.Entity<ApiKey>().HasData(
-            // key is the SHA-512 hash of `replace_me_with_a_real_key`
-            new ApiKey { Id = 1, Name = "Default Key", Key = "7edffa1b73ee82ea10a7d18f0d13871bc455175698341b4fe50aabf5d223f8e31b964d86e41d6c1cb41fddf3b1d68290f57372f2b6154d631e6006936b8c96d5", CreatedDate = minDate, UpdatedDate = minDate }
-        );
-
         return modelBuilder;
     }
 }
