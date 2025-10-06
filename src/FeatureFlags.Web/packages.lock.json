@@ -4,11 +4,11 @@
     "net9.0": {
       "MailKit": {
         "type": "Direct",
-        "requested": "[4.13.0, )",
-        "resolved": "4.13.0",
-        "contentHash": "GsepEHKkaQvbAuBizlhz93yc0ihJWzVCfoerfnpCeqiKLeS6gsTKInYy3/U2wqgkGE62TKs5OKS1a90pyc+j4g==",
+        "requested": "[4.14.0, )",
+        "resolved": "4.14.0",
+        "contentHash": "x1J8KIXGP8bWiiLox9g/hSdecqdDcOr9mZa4lumPjT1rvd+mnVm2pOOB4sYgABYcwW2uI7mAQMk7M+4OBD9iiA==",
         "dependencies": {
-          "MimeKit": "4.13.0",
+          "MimeKit": "4.14.0",
           "System.Formats.Asn1": "8.0.1"
         }
       },
@@ -45,11 +45,11 @@
       },
       "MimeKit": {
         "type": "Direct",
-        "requested": "[4.13.0, )",
-        "resolved": "4.13.0",
-        "contentHash": "oa4JuhAzJydHnPCc/XWeyBUGd3uiVyWW0NXqOVgkXEHjbHlPVBssklK3mpw9sokjzAaBGdj0bceFsr+NXvAukA==",
+        "requested": "[4.14.0, )",
+        "resolved": "4.14.0",
+        "contentHash": "g0LtsMC8DCTkc030C3UgVqbltOJmV5cz4AX8ASowz2ZA+lxopXSYtC1XXYmenxy606aWFLwi5Xy4cC/zyYjbjQ==",
         "dependencies": {
-          "BouncyCastle.Cryptography": "2.5.1",
+          "BouncyCastle.Cryptography": "2.6.1",
           "System.Security.Cryptography.Pkcs": "8.0.1"
         }
       },
@@ -94,14 +94,14 @@
       },
       "Swashbuckle.AspNetCore": {
         "type": "Direct",
-        "requested": "[9.0.4, )",
-        "resolved": "9.0.4",
-        "contentHash": "4hghaogMoS87Ivjj8s7aGuGsxrsjXZpjNvahLsN+zSLrZQcV8zQyiBweBd9AXC1sGkeNYb9/hbeS1EXrZ/hKjQ==",
+        "requested": "[9.0.6, )",
+        "resolved": "9.0.6",
+        "contentHash": "q/UfEAgrk6qQyjHXgsW9ILw0YZLfmPtWUY4wYijliX6supozC+TkzU0G6FTnn/dPYxnChjM8g8lHjWHF6VKy+A==",
         "dependencies": {
           "Microsoft.Extensions.ApiDescription.Server": "9.0.0",
-          "Swashbuckle.AspNetCore.Swagger": "9.0.4",
-          "Swashbuckle.AspNetCore.SwaggerGen": "9.0.4",
-          "Swashbuckle.AspNetCore.SwaggerUI": "9.0.4"
+          "Swashbuckle.AspNetCore.Swagger": "9.0.6",
+          "Swashbuckle.AspNetCore.SwaggerGen": "9.0.6",
+          "Swashbuckle.AspNetCore.SwaggerUI": "9.0.6"
         }
       },
       "System.Text.Json": {
@@ -112,8 +112,8 @@
       },
       "BouncyCastle.Cryptography": {
         "type": "Transitive",
-        "resolved": "2.5.1",
-        "contentHash": "zy8TMeTP+1FH2NrLaNZtdRbBdq7u5MI+NFZQOBSM69u5RFkciinwzV2eveY6Kjf5MzgsYvvl6kTStsj3JrXqkg=="
+        "resolved": "2.6.1",
+        "contentHash": "vZsG2YILhthgRqO+ZVgRff4ZFKKTl0v7kqaVBLCtRvpREhfBP33pcWrdA3PRYgWuFL1RxiUFvjMUHTdBZlJcoA=="
       },
       "Microsoft.AspNetCore.Mvc.Razor.Extensions": {
         "type": "Transitive",
@@ -493,24 +493,24 @@
       },
       "Swashbuckle.AspNetCore.Swagger": {
         "type": "Transitive",
-        "resolved": "9.0.4",
-        "contentHash": "syU8U4Eg3DfhU+BBeDUh66erwDsYOhp82InXbrOsqWP3qoOfQbBtePcTetkLNanovYHYX40alZBE6gQQFtBZkQ==",
+        "resolved": "9.0.6",
+        "contentHash": "Bgyc8rWRAYwDrzjVHGbavvNE38G1Dfgf1McHYm+WUr4TxkvEAXv8F8B1z3Kmz4BkDCKv9A/1COa2t7+Ri5+pLg==",
         "dependencies": {
           "Microsoft.OpenApi": "1.6.25"
         }
       },
       "Swashbuckle.AspNetCore.SwaggerGen": {
         "type": "Transitive",
-        "resolved": "9.0.4",
-        "contentHash": "GnCikaq7kagEckGGsrVnKl2icRQebyr14/7s3T/rQQO7edOIXkxtjTOJZqbazOxaTXBDCDdSInMiYbMQhFnE5Q==",
+        "resolved": "9.0.6",
+        "contentHash": "yYrDs5qpIa4UXP+a02X0ZLQs6HSd1C8t6hF6J1fnxoawi3PslJg1yUpLBS89HCbrDACzmwEGG25il+8aa0zdnw==",
         "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "9.0.4"
+          "Swashbuckle.AspNetCore.Swagger": "9.0.6"
         }
       },
       "Swashbuckle.AspNetCore.SwaggerUI": {
         "type": "Transitive",
-        "resolved": "9.0.4",
-        "contentHash": "2ugT2OvZsKHqk/2rMDmuqDuFmtix0NvzlXxAfnfHROVMTovbx7Z0UsOQHZa462DBTgdBFnR2Ss6wm4fypfymdA=="
+        "resolved": "9.0.6",
+        "contentHash": "WGsw/Yop9b16miq8TQd4THxuEgkP5cH3+DX93BrX9m0OdPcKNtg2nNm77WQSAsA+Se+M0bTiu8bUyrruRSeS5g=="
       },
       "System.Collections.Immutable": {
         "type": "Transitive",
