@@ -10,7 +10,7 @@ class BaseDialog extends BaseComponent {
 
     /**
      * Bound focusin event listener.
-     * @type {(event: any) => void|undefined}
+     * @type {(event: FocusEvent) => void|undefined}
      */
     #focusInListener;
 
@@ -46,8 +46,8 @@ class BaseDialog extends BaseComponent {
             return;
         }
 
-        const firstTabbableElement = tabbableElements[0];
-        const lastTabbableElement = tabbableElements[tabbableElements.length - 1];
+        const firstTabbableElement = tabbableElements.at(0);
+        const lastTabbableElement = tabbableElements.at(-1);
 
         this.#focusInListener = (event) => {
             if (!this.#dialog.contains(event.target)) {
@@ -77,7 +77,7 @@ class BaseDialog extends BaseComponent {
      * @param {string} content Text to display in the body of the dialog.
      * @param {string} ok Label for the ok button.
      * @param {string|undefined} cancel Label for the cancel button.
-     * @param {Function|undefined} onClose Function to run after dialog closes.
+     * @param {(returnValue: string) => void|undefined} onClose Function to run after dialog closes.
      */
     showDialog(content, ok, cancel = undefined, onClose = undefined) {
         if (this.#dialog) {
@@ -92,9 +92,12 @@ class BaseDialog extends BaseComponent {
         this.#registerTabTrap();
 
         // manually close the dialog when clicking a button instead of using `form method="dialog"` so this is testable
-        this.#dialog.querySelector('[data-dialog-footer]').querySelectorAll('button').forEach(x => x.addEventListener('click', () => {
-            this.#dialog.close(x.value);
-        }));
+        const buttons = this.#dialog.querySelector('[data-dialog-footer]').querySelectorAll('button');
+        for (const x of buttons) {
+            x.addEventListener('click', () => {
+                this.#dialog.close(x.value);
+            });
+        }
 
         this.#dialog.addEventListener('close', () => {
             const { returnValue } = this.#dialog;
