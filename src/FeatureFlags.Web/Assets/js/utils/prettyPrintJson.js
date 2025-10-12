@@ -72,7 +72,7 @@ const defaults = {
 const prettyPrintJson = {
     /**
      * Converts a JavaScript value to pretty-printed, syntax-highlighted HTML.
-     * @param {*} data - Data to pretty-print (object, array, etc).
+     * @param {object} data - Data to pretty-print (object, array, etc).
      * @param {object} [options] - Formatting options.
      * @returns {string} HTML string representing the pretty-printed JSON.
      */

@@ -41,19 +41,19 @@ class PJax extends BaseComponent {
 
     /**
      * Bound popState event listener.
-     * @type {(event: any) => Promise<void>|undefined}
+     * @type {(event: PopStateEvent) => Promise<void>|undefined}
      */
     #popStateListener;
 
     /**
      * Bound click event listener.
-     * @type {(event: any) => Promise<void>|undefined}
+     * @type {(event: MouseEvent) => Promise<void>|undefined}
      */
     #clickListener;
 
     /**
      * Bound submit event listener.
-     * @type {(event: any) => Promise<void>|undefined}
+     * @type {(event: SubmitEvent) => Promise<void>|undefined}
      */
     #submitListener;
 

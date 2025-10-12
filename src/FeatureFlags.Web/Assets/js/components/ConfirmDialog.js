@@ -12,7 +12,10 @@ class ConfirmDialog extends BaseDialog {
         super();
 
         // add event listener for all links and buttons inside the component
-        this.querySelectorAll('a, button').forEach(x => x.addEventListener('click', this));
+        const buttons = this.querySelectorAll('a, button');
+        for (const x of buttons) {
+            x.addEventListener('click', this);
+        }
     }
 
     /**

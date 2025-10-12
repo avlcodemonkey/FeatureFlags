@@ -1,6 +1,6 @@
 /**
  * Creates a promise that resolves when the getElementFn returns true.
- * @param {*} getElementFn Function to get the element that we are waiting to be rendered.
+ * @param {() => HTMLElement | null | undefined} getElementFn Function to get the element that we are waiting to be rendered.
  * @returns {Promise} Promise to wait for.
  */
 function isRendered(getElementFn) {

@@ -14,7 +14,7 @@ function uid() {
 /**
  * Initializes autocomplete functionality on a given input element.
  * @param {object} settings - Configuration options for autocomplete.
- * @returns {{ destroy: Function, fetch: Function }} Object with destroy and fetch methods.
+ * @returns {{ destroy: () => void, fetch: () => void }} Object with destroy and fetch methods.
  */
 const autocomplete = (settings) => {
     const doc = document;
@@ -57,10 +57,7 @@ const autocomplete = (settings) => {
      * Detach the container from the DOM.
      */
     const detach = () => {
-        const parent = container.parentNode;
-        if (parent) {
-            parent.removeChild(container);
-        }
+        container.remove();
     };
 
     /**
@@ -153,7 +150,7 @@ const autocomplete = (settings) => {
         }
 
         const fragment = doc.createDocumentFragment();
-        items.forEach((item, index) => {
+        for (const [index, item] of items.entries()) {
             const div = render(item, inputValue, index);
             if (div) {
                 div.id = container.id + '_' + index;
@@ -176,7 +173,7 @@ const autocomplete = (settings) => {
                 }
                 fragment.appendChild(div);
             }
-        });
+        }
         container.appendChild(fragment);
         if (items.length < 1) {
             if (settings.emptyMsg) {
@@ -215,10 +212,10 @@ const autocomplete = (settings) => {
      * @param {Event} e - Scroll event.
      */
     const scrollEventHandler = (e) => {
-        if (e.target !== container) {
-            updateIfDisplayed();
-        } else {
+        if (e.target === container) {
             e.preventDefault();
+        } else {
+            updateIfDisplayed();
         }
     };
 
