@@ -76,6 +76,38 @@ The `src/FeatureFlags.Web/package.json` file defines several commands to help wi
 | js:lint      | Lints all JavaScript files in the project using ESLint.                                                         |
 | js:fix       | Automatically fixes lint errors in JavaScript files using ESLint.                                               |
 
+## Testing
+
+This project uses Node's built-in test runner for frontend unit tests. Tests live under `src/FeatureFlags.Web/Assets/tests/`. Use one of the approaches below during development.
+
+- Run all frontend tests (from package folder):
+  - cd into the package folder and run the npm script:
+    - `cd src/FeatureFlags.Web`
+    - `npm run test` or `npm test`
+
+- Run a specific test file using the npm script (for convenience, arguments after `--` are forwarded to the Node test runner):
+  - From the package folder:
+    - `npm run test -- Assets/tests/components/Table.test.js`
+  - From repository root using npm's `--prefix` to target the package:
+    - `npm run --prefix src/FeatureFlags.Web test -- Assets/tests/components/Table.test.js`
+
+- Run a specific test file directly with Node (no npm script required):
+  - From repository root:
+    - `node --test src/FeatureFlags.Web/Assets/tests/components/Table.test.js`
+  - Or include additional flags (for example, watch mode or verbose reporting):
+    - `node --test --watch src/FeatureFlags.Web/Assets/tests/components/Table.test.js`
+
+- Watch mode (rerun tests on file changes):
+  - Forward the `--watch` flag to the test runner:
+    - `npm run test -- --watch`
+    - or `node --test --watch` when running Node directly.
+
+Notes
+- Passing a test file path to the npm script works because arguments after `--` are forwarded to the underlying `node --test` invocation defined in the package script.
+- These commands require Node 22+ (the project recommends Node 22). If you see unexpected behavior, confirm `node -v` and `npm -v`.
+- If a test relies on browser APIs, the test helper `setupDom()` initializes jsdom so tests run deterministically in Node.
+
+
 ## CI
 
 Github actions are used for continuous integration.  The repo is configured to only use verified actions, with minimal permissions, for security.
