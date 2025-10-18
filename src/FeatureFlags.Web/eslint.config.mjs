@@ -32,6 +32,7 @@ export default [
             '@stylistic/max-len': ['error', { code: 160 }],
             '@stylistic/semi': 'error',
             '@stylistic/brace-style': 'error',
+            'prefer-global-this': 'off',
         },
     },
 ];
