@@ -196,9 +196,10 @@ class Table extends BaseComponent {
      * Add event handlers for table sorting functionality.
      */
     #setupSorting() {
-        this.querySelectorAll('th[data-property]').forEach((/** @type {HTMLElement} */ x) => {
-            x.addEventListener('click', () => this.#onSortClick(x));
-        });
+        const headers = this.querySelectorAll('th[data-property]');
+        for (const th of headers) {
+            th.addEventListener('click', () => this.#onSortClick(th));
+        }
     }
 
     /**
@@ -406,7 +407,8 @@ class Table extends BaseComponent {
             return;
         }
 
-        this.querySelectorAll('th[data-property]').forEach((/** @type {HTMLElement} */ th) => {
+        const headers = this.querySelectorAll('th[data-property]');
+        for (const th of headers) {
             const { property } = th.dataset;
             const sortOrder = this.#sortOrder(property);
             const sortAsc = th.querySelector(`[data-table-${TableElements.SortAsc}]`);
@@ -430,7 +432,7 @@ class Table extends BaseComponent {
                 sortDesc?.remove();
                 th.removeAttribute('aria-sort');
             }
-        });
+        }
     }
 
     /**
@@ -447,7 +449,10 @@ class Table extends BaseComponent {
      * Removes existing table rows and renders new rows using the filtered data.
      */
     #updateRows() {
-        this.querySelectorAll(`tbody tr:not([data-table-${TableElements.Status}])`).forEach(x => x.remove());
+        const rows = this.querySelectorAll(`tbody tr:not([data-table-${TableElements.Status}])`);
+        for (const x of rows) {
+            x.remove();
+        }
 
         const tbody = this.querySelector('tbody');
         if (!tbody) {
