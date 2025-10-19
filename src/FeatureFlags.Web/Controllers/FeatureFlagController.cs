@@ -44,7 +44,7 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, Featu
 
         var flagList = new List<FeatureFlagListResultModel>();
         foreach (var flag in flags) {
-            var evaluationText = "";
+            string? evaluationText;
             // we want to catch any errors here so one bad flag config doesn't break the whole list
             try {
                 if (await dynamicFeatureManager.IsEnabledAsync(flag.Name, cancellationToken)) {
@@ -52,7 +52,8 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService, Featu
                 } else {
                     evaluationText = Flags.Disabled;
                 }
-            } catch (Exception) {
+            } catch (Exception ex) {
+                Logger.LogWarning(ex, "Error evaluating feature flag `{Name}`", flag.Name);
                 evaluationText = Flags.Error;
             }
             flagList.Add(new FeatureFlagListResultModel { Id = flag.Id, Name = flag.Name, Status = flag.Status, EvaluationText = evaluationText });

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using FeatureFlags.Client;
 using FeatureFlags.Constants;
 using FeatureFlags.Resources;
 using FeatureFlags.Validators;

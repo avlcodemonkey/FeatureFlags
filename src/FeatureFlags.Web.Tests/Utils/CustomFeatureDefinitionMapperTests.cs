@@ -58,7 +58,7 @@ public class CustomFeatureDefinitionMapperTests {
 
         Assert.Equal(FeatureStatus.Conditional, result.Status);
         var filter = result.EnabledFor.Single();
-        Assert.Equal("Microsoft.Percentage", filter.Name);
+        Assert.Equal("FeatureFlags.ConsistentPercentage", filter.Name);
         Assert.Contains(filter.Parameters, p => p.Key == "Value" && p.Value == "42");
     }
 

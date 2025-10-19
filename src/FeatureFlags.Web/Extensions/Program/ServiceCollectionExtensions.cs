@@ -1,4 +1,5 @@
 using System.Reflection;
+using FeatureFlags.Client;
 using FeatureFlags.Constants;
 using FeatureFlags.Domain;
 using FeatureFlags.Services;
@@ -74,7 +75,9 @@ public static class ServiceCollectionExtensions {
     public static IServiceCollection AddFeatureFlags(this IServiceCollection services) {
         // configures the feature management dependencies include filters for PercentageFilter, TimeWindowFilter,ContextualTargetingFilter and TargetingFilter
         // register any custom filter types here also so they can be used when viewing/editing feature flags
-        services.AddScopedFeatureManagement().WithTargeting();
+        services.AddScopedFeatureManagement()
+            .AddFeatureFilter<ConsistentPercentageFilter>()
+            .WithTargeting();
 
         services.Configure<ConfigurationFeatureDefinitionProviderOptions>(x => x.CustomConfigurationMergingEnabled = true);
 

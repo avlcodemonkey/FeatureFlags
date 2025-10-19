@@ -69,7 +69,7 @@ public static class CustomFeatureDefinitionMapper {
             Name = filter.FilterType switch {
                 FilterTypes.Targeting => "Microsoft.Targeting",
                 FilterTypes.TimeWindow => "Microsoft.TimeWindow",
-                FilterTypes.Percentage => "Microsoft.Percentage",
+                FilterTypes.Percentage => "FeatureFlags.ConsistentPercentage", // @todo add option to switch between this and "Microsoft.Percentage"
                 _ => "AlwaysOn"
             },
             Parameters = parameterConfig.AsEnumerable().ToList()
