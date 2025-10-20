@@ -54,9 +54,8 @@ public class ConsistentPercentageFilter(IHttpContextAccessor httpContextAccessor
         if (result) {
             var name = _HttpContextAccessor.HttpContext?.User?.Identity?.Name ?? string.Empty;
             if (string.IsNullOrEmpty(name)) {
-                // can't identify the user so generate a random number
-                var random = new Random().Next(100);
-                result = random < settings.Value;
+                // can't identify the user so generate a random value
+                result = (RandomGenerator.NextDouble() * 100) < settings.Value;
             } else {
                 // convert name to an integer by summing ASCII values of its characters,
                 // then map into 0..99 via modulo to produce a consistent percentage

@@ -70,7 +70,7 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use the percentage filter to turn a feature on or off based on a set percentage. Users will be randomly included based on the percentage..
+        ///   Looks up a localized string similar to Use the percentage filter to turn a feature on or off based on a set percentage. Users will be randomly included based on the percentage. Authenticated users will consistently see the same behavior. Anonymous users will be random..
         /// </summary>
         public static string AboutPercentage {
             get {
