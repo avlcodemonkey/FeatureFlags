@@ -107,7 +107,6 @@ Notes
 - These commands require Node 22+ (the project recommends Node 22). If you see unexpected behavior, confirm `node -v` and `npm -v`.
 - If a test relies on browser APIs, the test helper `setupDom()` initializes jsdom so tests run deterministically in Node.
 
-
 ## CI
 
 Github actions are used for continuous integration.  The repo is configured to only use verified actions, with minimal permissions, for security.
@@ -116,15 +115,9 @@ The workflow runs on pushes and pull requests to the `main` branch.  It checks o
 
 ## Logging
 
-- Console logging used as it easily integrates with cloud hosting providers.
+- Serilog logging used as it easily integrates with many different sinks.
 
 ## To Do
 
-- Persistent percentage custom filter
-    - Like built in percentage but saves user to database so they always get the same value
-    - Build UI to support this
-    - Add get flag for user API endpoint
-        - return default value if user claim is not found (without calling api)
-        - if user is not found in db, will set value for user and save to database
-- Release package to nuget for client project
+- - Release package to nuget for client project
     - Add instructions for using the package in readme

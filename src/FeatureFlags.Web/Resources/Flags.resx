@@ -340,7 +340,7 @@
     <value>Use the JSON filter to create more complex filters than the UI currently allows.  The JSON value will be added to the list of client_filters.</value>
   </data>
   <data name="AboutPercentage" xml:space="preserve">
-    <value>Use the percentage filter to turn a feature on or off based on a set percentage. Users will be randomly included based on the percentage.</value>
+    <value>Use the percentage filter to turn a feature on or off based on a set percentage. Users will be randomly included based on the percentage. Authenticated users will consistently see the same behavior. Anonymous users will be random.</value>
   </data>
   <data name="ErrorTimeStartOrEndRequired" xml:space="preserve">
     <value>Start time or end time one is required.</value>

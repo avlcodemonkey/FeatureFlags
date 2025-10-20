@@ -44,6 +44,7 @@ public static class Extensions {
             .AddScoped<IFeatureFlagClient, HttpFeatureFlagClient>()
             .AddScoped<IFeatureDefinitionProvider, ClientFeatureDefinitionProvider>()
             .AddScopedFeatureManagement()
+            .AddFeatureFilter<ConsistentPercentageFilter>()
             .WithTargeting();
 
         return builder;
