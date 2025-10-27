@@ -28,9 +28,70 @@ To secure your application:
 - You may also want to add additional roles with limited permissions for other users to manage feature flags.
 - If you leave public registration enabled, new users will be given the default role which is initially set to `Administrator`. Create a new role with limited permissions and set it as the default role for new users.
 
-### Integrating with your Application
+## API Keys
 
-The `FeatureFlags.Client` project is a .NET Standard library that can be used in any .NET application.  It provides a `FeatureDefinitionProvider` class that can be used to fetch feature flag definitions from the API.  It also includes a caching mechanism to reduce the number of API calls.
+API keys are secret tokens issued by the FeatureFlags application to authenticate machine-to-machine requests (clients, services, or other apps) against the FeatureFlags API. Keys are not passwords for users — they are bearer secrets for programmatic access.
+
+### How to create and manage keys
+
+- Sign in with an administrator account.
+- Navigate to the "API Keys" page in the UI.
+- Create a new key, give it a meaningful name, and copy the provided secret value. The secret is shown only once at creation time — store it securely.
+
+### How to use an API key
+
+The FeatureFlags client library reads the API key from configuration. Example `appSettings.json`:
+```json
+{
+    "FeatureFlags": {
+        "ApiBaseEndpoint": "https://localhost:44308/api/",
+        "ApiKey": "[from secrets]",
+        "CacheExpirationInMinutes": 15
+    }
+}
+```
+
+The client library and middleware will attach the API key for you when configured through DI.
+
+If you call the API directly, include the key in an HTTP header (example uses `X-Api-Key`):
+```
+curl -H "X-Api-Key: your_key_here" "https://localhost:44308/api/features"
+```
+
+### Security best practices
+- Never commit API keys or secrets to source control.
+- Store keys in a secrets store or environment variables (for local development use __dotnet user-secrets__ or environment variables).
+- Always use HTTPS for API calls.
+- Rotate keys regularly and delete unused keys.
+- Use least-privilege: issue separate keys for different services when possible and audit usage.
+- Apply IP or network restrictions if your deployment environment supports them.
+
+## Feature Flags
+
+Feature flags are definitions persisted in the application's database and surfaced through the API. A feature flag typically has:
+  - A unique name (identifier)
+  - An enabled state (on / off)
+  - Optional filters/targets for advanced scenarios (rollout, user targeting) — implementable via feature filters
+
+### Workflow
+1. Admins create or modify flags via the web UI.
+2. The API serves flag definitions to authorized clients.
+3. The `FeatureFlags.Client` fetches definitions and caches them in memory to avoid frequent network calls.
+4. Your application queries the client (or feature-management layer) to check whether a named feature is enabled.
+
+### How to create and manage feature flags
+
+- Sign in with an administrator account.
+- Navigate to the "Feature Flags" page in the UI.
+- Create a new flag, give it a meaningful name, and configure its settings (enabled state, filters, etc.).
+
+TODO: More details on filters and advanced usage.
+
+### Client caching and expiration
+- The client caches flag definitions to improve performance; default TTL is configurable via `CacheExpirationInMinutes`.
+- After a change in the UI, clients will see the new value after the cache expires, unless you explicitly clear cache via the API/cache endpoints (the application exposes cache management endpoints).
+
+## Integrating with your Application
 
 To use the client, register it in your application's dependency injection container.  The client provides an extension method for this using `IHostApplicationBuilder`.  In `Program.cs`:
 ```csharp
@@ -76,7 +137,7 @@ The `src/FeatureFlags.Web/package.json` file defines several commands to help wi
 | js:lint      | Lints all JavaScript files in the project using ESLint.                                                         |
 | js:fix       | Automatically fixes lint errors in JavaScript files using ESLint.                                               |
 
-## Testing
+### Testing
 
 This project uses Node's built-in test runner for frontend unit tests. Tests live under `src/FeatureFlags.Web/Assets/tests/`. Use one of the approaches below during development.
 
@@ -107,17 +168,17 @@ Notes
 - These commands require Node 22+ (the project recommends Node 22). If you see unexpected behavior, confirm `node -v` and `npm -v`.
 - If a test relies on browser APIs, the test helper `setupDom()` initializes jsdom so tests run deterministically in Node.
 
-## CI
+### CI
 
 Github actions are used for continuous integration.  The repo is configured to only use verified actions, with minimal permissions, for security.
 
 The workflow runs on pushes and pull requests to the `main` branch.  It checks out the code, sets up .NET and Node.js, installs dependencies, runs linters and tests, and builds the project.  Pull requests must pass all checks before they can be merged.  If all checks succeed when merging into `main`, the version is incremented automatically.
 
-## Logging
+### Logging
 
 - Serilog logging used as it easily integrates with many different sinks.
 
-## To Do
+### To Do
 
-- - Release package to nuget for client project
-    - Add instructions for using the package in readme
+- Release package to nuget for client project
+  - Add instructions for using the package in readme
