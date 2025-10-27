@@ -14,6 +14,7 @@ public sealed class FeatureFlagsDbContext : DbContext {
     private readonly IHttpContextAccessor? _HttpContextAccessor;
 
     public DbSet<ApiKey> ApiKeys { get; set; } = null!;
+    public DbSet<ApiRequest> ApiRequests { get; set; } = null!;
     public DbSet<AuditLog> AuditLog { get; set; } = null!;
     public DbSet<FeatureFlag> FeatureFlags { get; set; } = null!;
     public DbSet<FeatureFlagFilter> FeatureFlagFilters { get; set; } = null!;

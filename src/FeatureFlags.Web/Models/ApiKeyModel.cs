@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using FeatureFlags.Resources;
 using FeatureFlags.Validators;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FeatureFlags.Models;
 
@@ -27,6 +28,12 @@ public sealed record ApiKeyModel : IAuditedModel {
     [Display(ResourceType = typeof(ApiKeys), Name = nameof(ApiKeys.Key))]
     [IsRequired, IsStringLength(100)]
     public string Key { get; init; } = "";
+
+    /// <summary>
+    /// Gets the user ID associated with the API key.
+    /// </summary>
+    [Required, BindNever]
+    public int UserId { get; init; }
 
     /// <summary>
     /// Gets the date and time when the API key was created.
