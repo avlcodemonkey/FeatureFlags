@@ -7,7 +7,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RootNamespace>FeatureFlags</RootNamespace>
     <Product>FeatureFlags</Product>
-    <AssemblyVersion>1.0.0.207</AssemblyVersion>
+    <AssemblyVersion>1.0.0.208</AssemblyVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <UserSecretsId>0876b0fd-3ff6-436e-9f5b-9accb74ee92c</UserSecretsId>
   </PropertyGroup>
