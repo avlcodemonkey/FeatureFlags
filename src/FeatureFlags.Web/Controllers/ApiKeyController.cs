@@ -11,8 +11,9 @@ namespace FeatureFlags.Controllers;
 /// <summary>
 /// Provides actions for managing API keys, including listing, creating, and deleting keys.
 /// </summary>
-public class ApiKeyController(IApiKeyService apiKeyService, ILogger<ApiKeyController> logger) : BaseController(logger) {
+public class ApiKeyController(IApiKeyService apiKeyService, IUserService userService, ILogger<ApiKeyController> logger) : BaseController(logger) {
     private readonly IApiKeyService _ApiKeyService = apiKeyService;
+    private readonly IUserService _UserService = userService;
 
     private const string _IndexView = "Index";
     private const string _CreateView = "Create";
@@ -47,7 +48,13 @@ public class ApiKeyController(IApiKeyService apiKeyService, ILogger<ApiKeyContro
             return ViewWithError(_CreateView, model, ModelState);
         }
 
-        (var success, var message) = await _ApiKeyService.SaveApiKeyAsync(model, cancellationToken);
+        var user = await _UserService.GetUserByEmailAsync(User.Identity!.Name!, cancellationToken);
+        if (user == null) {
+            return ViewWithError(_CreateView, model, Core.ErrorGeneric);
+        }
+
+        var userApiKey = model with { UserId = user.Id };
+        (var success, var message) = await _ApiKeyService.SaveApiKeyAsync(userApiKey, cancellationToken);
         if (!success) {
             return ViewWithError(_CreateView, model, message);
         }

@@ -7,6 +7,7 @@ namespace FeatureFlags.Domain.Models;
 
 [Table("ApiKey")]
 [Index(nameof(Name), IsUnique = true)]
+[Index(nameof(UserId))]
 public class ApiKey : IAuditedEntity {
     [Key]
     public int Id { get; set; }
@@ -16,6 +17,9 @@ public class ApiKey : IAuditedEntity {
 
     [Required, StringLength(50), NoAudit]
     public string Key { get; set; } = null!;
+
+    [Required]
+    public int UserId { get; set; }
 
     /// <summary>
     /// When key was created.
