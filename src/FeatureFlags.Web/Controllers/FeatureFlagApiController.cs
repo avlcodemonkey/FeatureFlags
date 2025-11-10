@@ -25,8 +25,8 @@ public class FeatureFlagApiController(IFeatureFlagService featureFlagService, IA
     /// </summary>
     [HttpGet("features")]
     [ProducesResponseType(typeof(IEnumerable<CustomFeatureDefinition>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllFeatureDefinitionsAsync([FromHeader(Name = Client.Constants.HeaderName)] string apiKeyHeader,
-        [FromHeader(Name = Client.Constants.XForwardedFor)] string? xForwardedFor = null, CancellationToken cancellationToken = default) {
+    public async Task<IActionResult> GetAllFeatureDefinitionsAsync([FromHeader(Name = Client.Constants.ApiKeyHeaderName)] string apiKeyHeader,
+        [FromHeader(Name = Client.Constants.XForwardedForHeaderName)] string? xForwardedFor = null, CancellationToken cancellationToken = default) {
 
         // this should already be covered by the ApiKeyAuthenticationHandler, but double check
         if (string.IsNullOrEmpty(apiKeyHeader)) {

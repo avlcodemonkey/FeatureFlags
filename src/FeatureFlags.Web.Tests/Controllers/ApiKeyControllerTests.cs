@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using FeatureFlags.Controllers;
 using FeatureFlags.Models;
 using FeatureFlags.Resources;
@@ -11,7 +12,8 @@ using Moq;
 namespace FeatureFlags.Web.Tests.Controllers;
 
 public class ApiKeyControllerTests {
-    private readonly Mock<IApiKeyService> _MockService = new();
+    private readonly Mock<IApiKeyService> _MockApiKeyService = new();
+    private readonly Mock<IUserService> _MockUserService = new();
     private readonly Mock<ILogger<ApiKeyController>> _MockLogger = new();
 
     private readonly string _Url = "/ApiKey/Index";
@@ -22,7 +24,7 @@ public class ApiKeyControllerTests {
         mockUrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns(_Url);
         mockUrlHelper.Setup(x => x.IsLocalUrl(_DefaultReturnUrl)).Returns(true);
 
-        var controller = new ApiKeyController(_MockService.Object, _MockLogger.Object) {
+        var controller = new ApiKeyController(_MockApiKeyService.Object, _MockUserService.Object, _MockLogger.Object) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext()
             },
@@ -47,7 +49,7 @@ public class ApiKeyControllerTests {
         {
             new ApiKeyModel { Id = 1, Name = "Test", Key = "abc", CreatedDate = DateTime.UtcNow }
         };
-        _MockService.Setup(s => s.GetAllApiKeysAsync(It.IsAny<CancellationToken>()))
+        _MockApiKeyService.Setup(s => s.GetAllApiKeysAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(apiKeys);
 
         var controller = CreateController();
@@ -88,7 +90,7 @@ public class ApiKeyControllerTests {
 
     [Fact]
     public async Task Post_Create_SaveFails_ReturnsViewWithError() {
-        _MockService.Setup(s => s.SaveApiKeyAsync(It.IsAny<ApiKeyModel>(), It.IsAny<CancellationToken>()))
+        _MockApiKeyService.Setup(s => s.SaveApiKeyAsync(It.IsAny<ApiKeyModel>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((false, "error"));
 
         var controller = CreateController();
@@ -103,10 +105,17 @@ public class ApiKeyControllerTests {
 
     [Fact]
     public async Task Post_Create_Success_RedirectsToIndex() {
-        _MockService.Setup(s => s.SaveApiKeyAsync(It.IsAny<ApiKeyModel>(), It.IsAny<CancellationToken>()))
+        _MockApiKeyService.Setup(s => s.SaveApiKeyAsync(It.IsAny<ApiKeyModel>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((true, "success"));
+        var user = new UserModel { Id = 1, Email = "user@domain.com" };
+        _MockUserService.Setup(s => s.GetUserByEmailAsync(user.Email, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
 
         var controller = CreateController();
+        controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+        {
+            new(ClaimTypes.Name, user.Email)
+        }));
         var model = new ApiKeyModel { Name = "Test", Key = "abc" };
 
         var result = await controller.Create(model);
@@ -117,7 +126,7 @@ public class ApiKeyControllerTests {
 
     [Fact]
     public async Task Delete_InvalidId_ReturnsViewWithError() {
-        _MockService.Setup(s => s.DeleteApiKeyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        _MockApiKeyService.Setup(s => s.DeleteApiKeyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         var controller = CreateController();
@@ -131,7 +140,7 @@ public class ApiKeyControllerTests {
 
     [Fact]
     public async Task Delete_ValidId_ReturnsIndexWithSuccess() {
-        _MockService.Setup(s => s.DeleteApiKeyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        _MockApiKeyService.Setup(s => s.DeleteApiKeyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         var controller = CreateController();
@@ -141,5 +150,73 @@ public class ApiKeyControllerTests {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(ApiKeys.SuccessDeletingApiKey, viewResult.ViewData[Constants.ViewProperties.Message]);
+    }
+
+    [Fact]
+    public async Task Post_Create_ReturnsError_WhenUserIdentityNameIsNull() {
+        // Arrange
+        var controller = CreateController();
+        controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity()); // No identity name
+
+        var model = new ApiKeyModel { Name = "Test", Key = "abc" };
+
+        // Act
+        var result = await controller.Create(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Create", viewResult.ViewName);
+        Assert.Equal(model, viewResult.Model);
+        Assert.Equal(Core.ErrorGeneric, viewResult.ViewData[Constants.ViewProperties.Error]);
+    }
+
+    [Fact]
+    public async Task Post_Create_ReturnsError_WhenUserNotFound() {
+        // Arrange
+        _MockUserService.Setup(s => s.GetUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((UserModel?)null);
+
+        var controller = CreateController();
+        controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+        {
+            new(ClaimTypes.Name, "nonexistent@domain.com")
+        }));
+
+        var model = new ApiKeyModel { Name = "Test", Key = "abc" };
+
+        // Act
+        var result = await controller.Create(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Create", viewResult.ViewName);
+        Assert.Equal(model, viewResult.Model);
+        Assert.Equal(Core.ErrorGeneric, viewResult.ViewData[Constants.ViewProperties.Error]);
+    }
+
+    [Fact]
+    public async Task Post_Create_SuccessfullySavesApiKey_WhenUserIdentityNameIsValid() {
+        // Arrange
+        var user = new UserModel { Id = 1, Email = "user@domain.com" };
+        _MockUserService.Setup(s => s.GetUserByEmailAsync(user.Email, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
+        _MockApiKeyService.Setup(s => s.SaveApiKeyAsync(It.IsAny<ApiKeyModel>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((true, "success"));
+
+        var controller = CreateController();
+        controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+        {
+            new(ClaimTypes.Name, user.Email)
+        }));
+
+        var model = new ApiKeyModel { Name = "Test", Key = "abc" };
+
+        // Act
+        var result = await controller.Create(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Index", viewResult.ViewName);
+        _MockApiKeyService.Verify(s => s.SaveApiKeyAsync(It.Is<ApiKeyModel>(m => m.UserId == user.Id), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

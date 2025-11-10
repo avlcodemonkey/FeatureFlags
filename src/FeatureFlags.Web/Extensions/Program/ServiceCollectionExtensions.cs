@@ -58,7 +58,7 @@ public static class ServiceCollectionExtensions {
 
             options.AddSecurityDefinition(ApiKeyAuthenticationOptions.AuthenticationScheme, new OpenApiSecurityScheme {
                 In = ParameterLocation.Header,
-                Name = Client.Constants.HeaderName,
+                Name = Client.Constants.ApiKeyHeaderName,
                 Type = SecuritySchemeType.ApiKey
             });
 

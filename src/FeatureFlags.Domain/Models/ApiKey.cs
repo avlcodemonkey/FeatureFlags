@@ -21,6 +21,8 @@ public class ApiKey : IAuditedEntity {
     [Required]
     public int UserId { get; set; }
 
+    public User User { get; set; } = null!;
+
     /// <summary>
     /// When key was created.
     /// </summary>

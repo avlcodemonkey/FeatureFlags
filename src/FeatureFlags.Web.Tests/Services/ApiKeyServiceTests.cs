@@ -24,8 +24,8 @@ public class ApiKeyServiceTests {
         // Arrange
         var context = _fixture.CreateContext();
         var now = DateTime.UtcNow;
-        context.ApiKeys.Add(new ApiKey { Name = "getAll1", Key = "hash1", CreatedDate = now, UpdatedDate = now });
-        context.ApiKeys.Add(new ApiKey { Name = "getAll2", Key = "hash2", CreatedDate = now, UpdatedDate = now });
+        context.ApiKeys.Add(new ApiKey { Name = "getAll1", Key = "hash1", UserId = _fixture.User.Id, CreatedDate = now, UpdatedDate = now });
+        context.ApiKeys.Add(new ApiKey { Name = "getAll2", Key = "hash2", UserId = _fixture.User.Id, CreatedDate = now, UpdatedDate = now });
         await context.SaveChangesAsync();
 
         // Act
@@ -43,7 +43,7 @@ public class ApiKeyServiceTests {
         var plainKey = "my-secret";
         var hashedKey = FeatureFlags.Utils.KeyGenerator.GetSha512Hash(plainKey);
         var now = DateTime.UtcNow;
-        var apiKey = new ApiKey { Name = "getKey1", Key = hashedKey, CreatedDate = now, UpdatedDate = now };
+        var apiKey = new ApiKey { Name = "getKey1", Key = hashedKey, UserId = _fixture.User.Id, CreatedDate = now, UpdatedDate = now };
         context.ApiKeys.Add(apiKey);
         await context.SaveChangesAsync();
 
@@ -60,7 +60,7 @@ public class ApiKeyServiceTests {
     public async Task GetApiKeyByKeyAsync_ReturnsNull_WhenKeyDoesNotMatch() {
         // Arrange
         var context = _fixture.CreateContext();
-        context.ApiKeys.Add(new ApiKey { Name = "nullKey1", Key = "somehash", CreatedDate = DateTime.UtcNow });
+        context.ApiKeys.Add(new ApiKey { Name = "nullKey1", Key = "somehash", UserId = _fixture.User.Id, CreatedDate = DateTime.UtcNow });
         await context.SaveChangesAsync();
 
         // Act
@@ -73,7 +73,7 @@ public class ApiKeyServiceTests {
     [Fact]
     public async Task SaveApiKeyAsync_SuccessfullySavesNewApiKey() {
         // Arrange
-        var model = new ApiKeyModel { Name = "UniqueName", Key = "plain-key" };
+        var model = new ApiKeyModel { Name = "UniqueName", Key = "plain-key", UserId = _fixture.User.Id };
 
         // Act
         var (success, message) = await _ApiKeyService.SaveApiKeyAsync(model);
@@ -93,7 +93,7 @@ public class ApiKeyServiceTests {
     public async Task SaveApiKeyAsync_ReturnsError_WhenNameIsDuplicate() {
         // Arrange
         var context = _fixture.CreateContext();
-        context.ApiKeys.Add(new ApiKey { Name = "Duplicate", Key = "hash" });
+        context.ApiKeys.Add(new ApiKey { Name = "Duplicate", Key = "hash", UserId = _fixture.User.Id });
         await context.SaveChangesAsync();
 
         var model = new ApiKeyModel { Name = "Duplicate", Key = "another-key" };
@@ -116,10 +116,20 @@ public class ApiKeyServiceTests {
     }
 
     [Fact]
+    public async Task SaveApiKeyAsync_Throws_WhenUserIdNotSet() {
+        // Arrange
+        // UserId is required by the database; ApiKeyModel.UserId defaults to 0 when not set.
+        var model = new ApiKeyModel { Name = "NoUser", Key = "plain-key" };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<DbUpdateException>(() => _ApiKeyService.SaveApiKeyAsync(model));
+    }
+
+    [Fact]
     public async Task DeleteApiKeyAsync_DeletesAndReturnsTrue_WhenIdExists() {
         // Arrange
         var context = _fixture.CreateContext();
-        var apiKey = new ApiKey { Name = "deleteKey1", Key = "hash" };
+        var apiKey = new ApiKey { Name = "deleteKey1", Key = "hash", UserId = _fixture.User.Id };
         context.ApiKeys.Add(apiKey);
         await context.SaveChangesAsync();
 
