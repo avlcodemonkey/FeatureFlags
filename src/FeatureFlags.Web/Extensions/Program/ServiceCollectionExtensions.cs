@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions {
         services.AddDbContext<FeatureFlagsDbContext>();
 
         services.AddScoped<IApiKeyService, ApiKeyService>();
+        services.AddScoped<IApiRequestService, ApiRequestService>();
         services.AddScoped<IAuditLogService, AuditLogService>();
         services.AddScoped<IEmailService, MailtrapService>();
         services.AddScoped<IFeatureFlagService, FeatureFlagService>();
