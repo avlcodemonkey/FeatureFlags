@@ -3,6 +3,7 @@ using System;
 using FeatureFlags.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,12 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeatureFlags.Domain.Migrations
 {
     [DbContext(typeof(FeatureFlagsDbContext))]
-    partial class FeatureFlagsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027215400_AddUserToApiKey")]
+    partial class AddUserToApiKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
             modelBuilder.Entity("FeatureFlags.Domain.Models.ApiKey", b =>
                 {
@@ -841,17 +844,6 @@ namespace FeatureFlags.Domain.Migrations
                         .IsUnique();
 
                     b.ToTable("UserToken");
-                });
-
-            modelBuilder.Entity("FeatureFlags.Domain.Models.ApiKey", b =>
-                {
-                    b.HasOne("FeatureFlags.Domain.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FeatureFlags.Domain.Models.ApiRequest", b =>

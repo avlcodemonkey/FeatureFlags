@@ -35,7 +35,7 @@ public static class Extensions {
             // Set the base address of the named client.
             client.BaseAddress = new Uri(apiBaseEndpoint);
             // Add the api key header for authentication.
-            client.DefaultRequestHeaders.Add(Constants.HeaderName, apiKey);
+            client.DefaultRequestHeaders.Add(Constants.ApiKeyHeaderName, apiKey);
         });
 
         // Register the feature management services

@@ -54,6 +54,7 @@ public class DatabaseFixture : IDisposable {
                     dbContext.AuditLog.Add(TestAuditLog);
                     dbContext.AuditLog.Add(TestAuditLog2);
 
+                    dbContext.ApiKeys.Add(TestApiKey);
                     dbContext.FeatureFlags.Add(TestFeatureFlag);
 
                     dbContext.SaveChanges();
@@ -91,6 +92,10 @@ public class DatabaseFixture : IDisposable {
     public AuditLog TestAuditLog2 { get; } = new() {
         Id = 2, BatchId = Guid.NewGuid(), Date = DateTime.MinValue, Entity = "test2", State = EntityState.Deleted,
         PrimaryKey = 20, UserId = 200, OldValues = "old", NewValues = "new"
+    };
+
+    public ApiKey TestApiKey { get; } = new() {
+        Id = -1, Name = "name", Key = "key", UserId = -1
     };
 
     public FeatureFlag TestFeatureFlag { get; } = new() {

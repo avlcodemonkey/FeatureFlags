@@ -22,5 +22,11 @@ public static class Constants {
     /// <summary>
     /// Represents the name of the HTTP header used for API key authentication.
     /// </summary>
-    public const string HeaderName = "x-api-key";
+    public const string ApiKeyHeaderName = "x-api-key";
+
+    /// <summary>
+    /// Represents the HTTP header name used to identify the originating IP address of a client connecting to a web
+    /// server through an HTTP proxy or load balancer.
+    /// </summary>
+    public const string XForwardedForHeaderName = "x-forwarded-for";
 }

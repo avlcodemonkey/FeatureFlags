@@ -70,7 +70,7 @@ public class ExtensionsTests {
 
         // Assert
         Assert.Equal(new Uri("https://api.example.com/"), client.BaseAddress);
-        var header = client.DefaultRequestHeaders.FirstOrDefault(h => h.Key == Constants.HeaderName);
+        var header = client.DefaultRequestHeaders.FirstOrDefault(h => h.Key == Constants.ApiKeyHeaderName);
         Assert.Equal("valid-key", header.Value.First());
     }
 }

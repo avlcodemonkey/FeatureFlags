@@ -3,6 +3,7 @@ using System;
 using FeatureFlags.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,12 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeatureFlags.Domain.Migrations
 {
     [DbContext(typeof(FeatureFlagsDbContext))]
-    partial class FeatureFlagsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027213024_CreateApiRequest")]
+    partial class CreateApiRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
             modelBuilder.Entity("FeatureFlags.Domain.Models.ApiKey", b =>
                 {
@@ -43,15 +46,10 @@ namespace FeatureFlags.Domain.Migrations
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(current_timestamp)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("ApiKey");
                 });
@@ -841,28 +839,6 @@ namespace FeatureFlags.Domain.Migrations
                         .IsUnique();
 
                     b.ToTable("UserToken");
-                });
-
-            modelBuilder.Entity("FeatureFlags.Domain.Models.ApiKey", b =>
-                {
-                    b.HasOne("FeatureFlags.Domain.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FeatureFlags.Domain.Models.ApiRequest", b =>
-                {
-                    b.HasOne("FeatureFlags.Domain.Models.ApiKey", "ApiKey")
-                        .WithMany()
-                        .HasForeignKey("ApiKeyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApiKey");
                 });
 
             modelBuilder.Entity("FeatureFlags.Domain.Models.AuditLog", b =>

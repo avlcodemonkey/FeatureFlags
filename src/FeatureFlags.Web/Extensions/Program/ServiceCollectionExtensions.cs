@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions {
         services.AddDbContext<FeatureFlagsDbContext>();
 
         services.AddScoped<IApiKeyService, ApiKeyService>();
+        services.AddScoped<IApiRequestService, ApiRequestService>();
         services.AddScoped<IAuditLogService, AuditLogService>();
         services.AddScoped<IEmailService, MailtrapService>();
         services.AddScoped<IFeatureFlagService, FeatureFlagService>();
@@ -58,7 +59,7 @@ public static class ServiceCollectionExtensions {
 
             options.AddSecurityDefinition(ApiKeyAuthenticationOptions.AuthenticationScheme, new OpenApiSecurityScheme {
                 In = ParameterLocation.Header,
-                Name = Client.Constants.HeaderName,
+                Name = Client.Constants.ApiKeyHeaderName,
                 Type = SecuritySchemeType.ApiKey
             });
 

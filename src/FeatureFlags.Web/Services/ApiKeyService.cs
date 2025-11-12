@@ -46,7 +46,8 @@ public sealed class ApiKeyService(FeatureFlagsDbContext dbContext) : IApiKeyServ
             var hashedKey = KeyGenerator.GetSha512Hash(apiKeyModel.Key);
             var apiKey = new ApiKey {
                 Name = apiKeyModel.Name,
-                Key = hashedKey
+                Key = hashedKey,
+                UserId = apiKeyModel.UserId
             };
             _DbContext.ApiKeys.Add(apiKey);
         }
