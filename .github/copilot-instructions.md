@@ -1,13 +1,13 @@
 # GitHub Copilot Instructions
 
 ## Project Overview
-This repository is a .NET 9 MVC solution for feature flag management. It includes:
+This repository is a .NET 10 MVC solution for feature flag management. It includes:
 - MVC web UI and API controllers.
 - Client library for remote feature flag definitions.
 - Domain and service layers for feature flag persistence and business logic.
 
 ## Coding Style
-- Use C# 13 features and idioms.
+- Use C# 14 features and idioms.
 - Prefer async/await for asynchronous operations.
 - Use dependency injection for all services and clients.
 - Follow conventions from the editorconfig file.
@@ -45,4 +45,4 @@ This repository is a .NET 9 MVC solution for feature flag management. It include
 ## Contribution
 - Follow the existing folder and namespace structure.
 - Write unit tests for all new features.
-- Ensure code builds and tests pass on .NET 9.
+- Ensure code builds and tests pass on .NET 10.
