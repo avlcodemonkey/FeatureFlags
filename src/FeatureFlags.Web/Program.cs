@@ -5,7 +5,6 @@ using FeatureFlags.Extensions.Program;
 using FeatureFlags.Services;
 using FeatureFlags.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Serilog;
 using Serilog.Events;
 
@@ -30,7 +29,6 @@ builder.Services
     .AddAntiforgery()
     .AddSingleton<IAssemblyService, AssemblyService>()
     .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-    .AddSingleton<IActionContextAccessor, ActionContextAccessor>()
     .AddLocalization(x => x.ResourcesPath = "Resources")
     .AddCustomResponseCompression()
     .AddSwagger()
