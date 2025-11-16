@@ -6,7 +6,7 @@ A self hosted feature flag solution.  The goal is to provide a simple, performan
 
 ### Requirements
 
-- DotNet SDK 9.0 or later
+- DotNet SDK 10.0 or later
   - [Download](https://dotnet.microsoft.com/download)
 - DotNet Tools
   - Install EF tools globally with `dotnet tool install --global dotnet-ef`
