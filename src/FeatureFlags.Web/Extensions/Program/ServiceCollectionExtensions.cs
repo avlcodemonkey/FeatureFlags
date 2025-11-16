@@ -5,7 +5,6 @@ using FeatureFlags.Domain;
 using FeatureFlags.Services;
 using FeatureFlags.Utils;
 using Microsoft.FeatureManagement;
-using Microsoft.OpenApi;
 
 namespace FeatureFlags.Extensions.Program;
 
@@ -56,18 +55,6 @@ public static class ServiceCollectionExtensions {
         services.AddSwaggerGen(options => {
             options.DocInclusionPredicate((_, api) => api.GroupName == Swagger.GroupName);
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
-
-            options.AddSecurityDefinition(ApiKeyAuthenticationOptions.AuthenticationScheme, new OpenApiSecurityScheme {
-                In = ParameterLocation.Header,
-                Name = Client.Constants.ApiKeyHeaderName,
-                Type = SecuritySchemeType.ApiKey
-            });
-
-            // @TODO not working with dotnet10 - need to investigate further
-            // think i can probably remove this for now as swagger ui prompts for the api key anyway
-            // options.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme {
-            // Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = ApiKeyAuthenticationOptions.AuthenticationScheme }
-            // }, Array.Empty<string>() } });
         });
         return services;
     }
