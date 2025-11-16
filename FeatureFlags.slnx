@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="global.json" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/FeatureFlags.Client.Tests/FeatureFlags.Client.Tests.csproj" />
+  <Project Path="src/FeatureFlags.Client/FeatureFlags.Client.csproj" />
+  <Project Path="src/FeatureFlags.Demo/FeatureFlags.Demo.csproj" />
+  <Project Path="src/FeatureFlags.Domain.Tests/FeatureFlags.Domain.Tests.csproj" />
+  <Project Path="src/FeatureFlags.Domain/FeatureFlags.Domain.csproj" />
+  <Project Path="src/FeatureFlags.Web.Tests/FeatureFlags.Web.Tests.csproj" />
+  <Project Path="src/FeatureFlags.Web/FeatureFlags.Web.csproj" />
+</Solution>
