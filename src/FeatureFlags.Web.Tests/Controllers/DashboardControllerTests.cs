@@ -1,4 +1,5 @@
 using FeatureFlags.Controllers;
+using FeatureFlags.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -10,11 +11,13 @@ namespace FeatureFlags.Web.Tests.Controllers;
 /// </summary>
 public class DashboardControllerTests() {
     private readonly Mock<ILogger<DashboardController>> _MockLogger = new();
+    private readonly Mock<IApiRequestService> _MockApiRequestService = new();
+    private readonly Mock<IUserService> _MockUserService = new();
 
     [Fact]
     public void Get_Index_ReturnsView() {
         // Arrange
-        var controller = new DashboardController(_MockLogger.Object);
+        var controller = new DashboardController(_MockApiRequestService.Object, _MockUserService.Object, _MockLogger.Object);
 
         // Act
         var result = controller.Index();

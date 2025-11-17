@@ -36,6 +36,45 @@ public sealed class ApiRequestService(FeatureFlagsDbContext dbContext) : IApiReq
     }
 
     /// <inheritdoc />
+    public async Task<Dictionary<int, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default) {
+        var query = _DbContext.ApiRequests.AsQueryable();
+
+        if (userId.HasValue) {
+            query = query.Where(x => x.ApiKey.UserId == userId.Value);
+        }
+
+        if (startDate.HasValue) {
+            query = query.Where(x => x.RequestedDate >= startDate.Value);
+        }
+
+        if (endDate.HasValue) {
+            query = query.Where(x => x.RequestedDate <= endDate.Value);
+        }
+
+        return await query.GroupBy(x => x.ApiKeyId).ToDictionaryAsync(x => x.Key, x => x.Count(), cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<Dictionary<string, int>> GetApiRequestsByIpAddressAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default) {
+        var query = _DbContext.ApiRequests.AsQueryable();
+
+        if (userId.HasValue) {
+            query = query.Where(x => x.ApiKey.UserId == userId.Value);
+        }
+
+        if (startDate.HasValue) {
+            query = query.Where(x => x.RequestedDate >= startDate.Value);
+        }
+
+        if (endDate.HasValue) {
+            query = query.Where(x => x.RequestedDate <= endDate.Value);
+        }
+
+        return await query.GroupBy(x => x.IpAddress).ToDictionaryAsync(x => x.Key, x => x.Count(), cancellationToken);
+
+    }
+
+    /// <inheritdoc />
     public async Task<bool> SaveApiRequestAsync(int apiKeyId, string ipAddress, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(ipAddress);
 

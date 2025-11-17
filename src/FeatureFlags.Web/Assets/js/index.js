@@ -16,6 +16,7 @@ import './components/List.js';
 import './components/DisplayToggle.js';
 import './components/SliderInput.js';
 import './components/DateTimeInput.js';
+import './components/Chart';
 
 // import anything else
 import setupLuxbarToggle from './luxbar.js';
