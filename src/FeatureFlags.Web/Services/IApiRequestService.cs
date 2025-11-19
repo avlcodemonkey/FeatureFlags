@@ -23,8 +23,8 @@ public interface IApiRequestService {
     /// <param name="startDate">The start date to filter API requests. If null, no start date filter is applied.</param>
     /// <param name="endDate">The end date to filter API requests. If null, no end date filter is applied.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> that can be used to cancel the operation. Default value is <see cref="CancellationToken.None"/>.</param>
-    /// <returns>Task that represents the asynchronous operation. Task result contains a dictoinary of api keys and request count.</returns>
-    Task<Dictionary<int, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default);
+    /// <returns>Task that represents the asynchronous operation. Task result contains a dictionary of key names and request count.</returns>
+    Task<Dictionary<string, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves total of API requests matching criteria group by ip address.

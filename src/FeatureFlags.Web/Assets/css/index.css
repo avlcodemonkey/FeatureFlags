@@ -4,6 +4,8 @@
 /* menu styles */
 @import url("./luxbar.css");
 
+@import url("./charts.css");
+
 /* custom styles */
 @import url("./root.css");
 @import url("./layout.css");

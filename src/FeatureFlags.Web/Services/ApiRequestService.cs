@@ -36,7 +36,7 @@ public sealed class ApiRequestService(FeatureFlagsDbContext dbContext) : IApiReq
     }
 
     /// <inheritdoc />
-    public async Task<Dictionary<int, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default) {
+    public async Task<Dictionary<string, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default) {
         var query = _DbContext.ApiRequests.AsQueryable();
 
         if (userId.HasValue) {
@@ -51,7 +51,7 @@ public sealed class ApiRequestService(FeatureFlagsDbContext dbContext) : IApiReq
             query = query.Where(x => x.RequestedDate <= endDate.Value);
         }
 
-        return await query.GroupBy(x => x.ApiKeyId).ToDictionaryAsync(x => x.Key, x => x.Count(), cancellationToken);
+        return await query.GroupBy(x => x.ApiKey.Name).ToDictionaryAsync(x => x.Key, x => x.Count(), cancellationToken);
     }
 
     /// <inheritdoc />
