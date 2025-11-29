@@ -3,11 +3,12 @@ import BaseComponent from './BaseComponent.js';
 import FetchError from '../errors/FetchError.js';
 import HttpHeaders from '../constants/HttpHeaders.js';
 import ChartElements from '../constants/ChartElements.js';
+import ChartTypes from '../constants/ChartTypes.js';
+import escape from '../utils/escape.js';
 
 /**
  * @typedef ChartRow
  * @type {object}
- * @property {string} value Display value
  * @property {number} start Start position for bar
  * @property {number} size Size of bar
  * @property {string} tooltip Tooltip text
@@ -23,7 +24,61 @@ class Chart extends BaseComponent {
      * Url to request data from the server.
      * @type {string}
      */
-    #srcUrl = '';
+    #chartUrl = '';
+
+    /**
+     * Type of the chart to render.
+     * @type {ChartTypes}
+     */
+    #chartType = '';
+
+    /**
+     * Show chart heading.
+     * @type {boolean}
+     */
+    #showHeading = false;
+
+    /**
+     * Show labels on the chart.
+     * @type {boolean}
+     */
+    #showLabels = false;
+
+    /**
+     * Show primary axis on the chart.
+     * @type {boolean}
+     */
+    #showPrimaryAxis = false;
+
+    /**
+     * Show 4 secondary axes on the chart.
+     * @type {boolean}
+     */
+    #showSecondaryAxes = false;
+
+    /**
+     * Show data axes on the chart.
+     * @type {boolean}
+     */
+    #showDataAxes = false;
+
+    /**
+     * Data spacing for the chart.
+     * @type {boolean}
+     */
+    #dataSpacing = false;
+
+    /**
+     * Hide data on the chart.
+     * @type {boolean}
+     */
+    #hideData = false;
+
+    /**
+     * Show data on hover.
+     * @type {boolean}
+     */
+    #showDataOnHover = false;
 
     /**
      * Data fetched from the server.
@@ -55,7 +110,16 @@ class Chart extends BaseComponent {
     constructor() {
         super('chart');
 
-        this.#srcUrl = this.dataset.srcUrl;
+        this.#chartUrl = this.dataset.chartUrl;
+        this.#chartType = this.dataset.chartType || ChartTypes.Bar;
+        this.#showHeading = (this.dataset.chartShowHeading ?? '').toLowerCase() === 'true';
+        this.#showLabels = (this.dataset.chartShowLabels ?? '').toLowerCase() === 'true';
+        this.#showPrimaryAxis = (this.dataset.chartShowPrimaryAxis ?? '').toLowerCase() === 'true';
+        this.#showSecondaryAxes = (this.dataset.chartShowSecondaryAxes ?? '').toLowerCase() === 'true';
+        this.#showDataAxes = (this.dataset.chartShowDataAxes ?? '').toLowerCase() === 'true';
+        this.#dataSpacing = (this.dataset.chartDataSpacing ?? '').toLowerCase() === 'true';
+        this.#hideData = (this.dataset.chartHideData ?? '').toLowerCase() === 'true';
+        this.#showDataOnHover = (this.dataset.chartShowDataOnHover ?? '').toLowerCase() === 'true';
 
         this.#setupFooter();
     }
@@ -86,20 +150,16 @@ class Chart extends BaseComponent {
      * Fetch data from the server at the URL specified in the `src` property.
      */
     async #fetchData() {
-        if (!this.#srcUrl || this.#loading) {
+        if (!this.#chartUrl || this.#loading) {
             return;
         }
 
         this.#loading = true;
         this.#error = false;
 
-        // first clear out the existing data and update the table
-        this.#rows = [];
-        this.#update();
-
         // now request new data
         try {
-            let url = this.#srcUrl;
+            let url = this.#chartUrl;
 
             const headers = {};
             headers[HttpHeaders.RequestedWith] = 'XMLHttpRequest';
@@ -117,7 +177,7 @@ class Chart extends BaseComponent {
             /** @type {object[] } */
             const json = await response.json();
             if (!(json && Array.isArray(json))) {
-                throw new FetchError(`Request to '${this.#srcUrl}' returned invalid response.`);
+                throw new FetchError(`Request to '${this.#chartUrl}' returned invalid response.`);
             }
 
             this.#rows = json ?? [];
@@ -157,20 +217,6 @@ class Chart extends BaseComponent {
     }
 
     /**
-     * Escape HTML to reduce XSS risk when inserting raw values.
-     * @param {string} str
-     * @returns {string}
-     */
-    #escapeHtml(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
-
-    /**
      * Removes existing table and renders new one.
      *
      * Builds HTML compatible with the structure rendered by `chart.vue`.
@@ -189,40 +235,76 @@ class Chart extends BaseComponent {
             return;
         }
 
+        // find largest size from rows
+        const maxSize = Math.max(...this.#rows.map(x => typeof x.size !== 'undefined' && x.size !== null && !Number.isNaN(parseFloat(x.size)) ? x.size : 0));
+
         // Build tbody rows. Each item in #rows is expected to be an object like { valueRaw, start, size, tooltip, label, color }.
         const rowsHtml = this.#rows.map((row) => {
             if (!(typeof row === 'object' && row !== null)) {
                 // If row is not an object, try to render as a single-cell row
-                return `<tr><th scope="row"></th><td>${this.#escapeHtml(row ?? '')}</td></tr>`;
+                return `<tr><th scope="row"></th><td>${escape(row ?? '')}</td></tr>`;
             }
 
             // Determine header label for this row. Prefer first cell.label if present.
-            let headerHtml = `<th scope="row">${this.#escapeHtml(row.label)}</th>`;
+            let headerHtml = `<th scope="row">${escape(row.label)}</th>`;
 
-            const tooltip = row.tooltip ? `<span class="tooltip">${this.#escapeHtml(row.tooltip)}</span>` : '';
+            const tooltip = row.tooltip ? `<span class="tooltip">${escape(row.tooltip)}</span>` : '';
 
             // Collect style properties compatible with charts.css (--start, --size, --color)
             const styleParts = [];
             if (typeof row.start !== 'undefined' && row.start !== null && !Number.isNaN(parseFloat(row.start))) {
                 styleParts.push(`--start: ${parseFloat(row.start)}`);
             }
-            if (typeof row.size !== 'undefined' && row.size !== null && !Number.isNaN(parseFloat(row.size))) {
-                styleParts.push(`--size: ${parseFloat(row.size)}`);
+            if (typeof row.size !== 'undefined' && row.size !== null) {
+                styleParts.push(`--size: calc(${row.size} / ${maxSize})`);
             }
             // allow color from resolved data color or explicit color property
             if (row.color) {
-                styleParts.push(`--color: ${this.#escapeHtml(row.color)}`);
+                styleParts.push(`--color: ${escape(row.color)}`);
             }
 
             const styleAttr = styleParts.length ? ` style="${styleParts.join('; ')}"` : '';
 
-            return `<tr>${headerHtml}<td${styleAttr}><span class="data">${this.#escapeHtml(String(row.value))}</span>${tooltip}</td></tr>`;
+            return `<tr>${headerHtml}<td${styleAttr}><span class="data">${escape(String(row.size))}</span>${tooltip}</td></tr>`;
         }).join('\n');
 
         // @todo add table classes
-        const html = `<table class="charts-css"><tbody>${rowsHtml}</tbody></table>`;
+        const html = `<table class="${this.#buildChartCss()}"><tbody>${rowsHtml}</tbody></table>`;
 
         table.insertAdjacentHTML('beforeend', html);
+    }
+
+    /**
+     * Builds the CSS class list for the chart based on the properties.
+     * @returns {string} CSS class list
+     */
+    #buildChartCss() {
+        const classList = ['charts-css', this.#chartType];
+        if (this.#showHeading) {
+            classList.push('show-heading');
+        }
+        if (this.#showLabels) {
+            classList.push('show-labels');
+        }
+        if (this.#showPrimaryAxis) {
+            classList.push('show-primary-axis');
+        }
+        if (this.#showSecondaryAxes) {
+            classList.push('show-4-secondary-axes');
+        }
+        if (this.#showDataAxes) {
+            classList.push('show-data-axes');
+        }
+        if (this.#dataSpacing) {
+            classList.push('data-spacing-15');
+        }
+        if (this.#hideData) {
+            classList.push('hide-data');
+        }
+        if (this.#showDataOnHover) {
+            classList.push('show-data-on-hover');
+        }
+        return classList.join(' ');
     }
 
     /**

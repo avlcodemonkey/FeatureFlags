@@ -16,11 +16,25 @@ public class DashboardController(IApiRequestService apiRequestService, IUserServ
     private DashboardModel GetBaseModel() => new() {
         RequestsByApiKey = new ChartModel {
             Title = Dashboard.TopApiKeys,
-            SourceUrl = Url.Action(nameof(RequestsByApiKey))!
+            ChartUrl = Url.Action(nameof(RequestsByApiKey))!,
+            ChartType = Constants.ChartTypes.Column,
+            ShowLabels = true,
+            ShowPrimaryAxis = true,
+            ShowSecondaryAxes = true,
+            ShowDataAxes = true,
+            DataSpacing = true,
+            HideData = true
         },
         RequestsByIpAddress = new ChartModel {
             Title = Dashboard.TopIpAddresses,
-            SourceUrl = Url.Action(nameof(RequestsByIpAddress))!
+            ChartUrl = Url.Action(nameof(RequestsByIpAddress))!,
+            ChartType = Constants.ChartTypes.Column,
+            ShowLabels = true,
+            ShowPrimaryAxis = true,
+            ShowSecondaryAxes = true,
+            ShowDataAxes = true,
+            DataSpacing = true,
+            HideData = true
         },
     };
 
@@ -42,7 +56,8 @@ public class DashboardController(IApiRequestService apiRequestService, IUserServ
         var requests = await _ApiRequestService.GetApiRequestsByApiKeyAsync(user.Id, DateTime.UtcNow.AddDays(-30), DateTime.UtcNow, cancellationToken: cancellationToken);
         return Ok(requests.Select(x => new ChartDataModel {
             Label = x.Key,
-            Value = x.Value.ToString(),
+            Size = x.Value.ToString(),
+            Tooltip = x.Value.ToString(),
         }));
     }
 
@@ -59,7 +74,8 @@ public class DashboardController(IApiRequestService apiRequestService, IUserServ
         var requests = await _ApiRequestService.GetApiRequestsByIpAddressAsync(user.Id, DateTime.UtcNow.AddDays(-30), DateTime.UtcNow, cancellationToken: cancellationToken);
         return Ok(requests.Select(x => new ChartDataModel {
             Label = x.Key,
-            Value = x.Value.ToString(),
+            Size = x.Value.ToString(),
+            Tooltip = x.Value.ToString(),
         }));
     }
 }

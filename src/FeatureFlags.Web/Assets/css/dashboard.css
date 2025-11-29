@@ -1,0 +1,9 @@
+nilla-chart {
+    [data-chart-updated-date] {
+        font-style: italic;
+    }
+
+    [data-chart-refresh] {
+        padding: 1rem;
+    }
+}

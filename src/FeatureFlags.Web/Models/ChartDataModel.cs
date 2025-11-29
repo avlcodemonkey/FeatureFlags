@@ -5,11 +5,6 @@ namespace FeatureFlags.Models;
 /// </summary>
 public sealed record ChartDataModel {
     /// <summary>
-    /// Value of the data point.
-    /// </summary>
-    public string Value { get; init; } = "";
-
-    /// <summary>
     /// Starting position of the data point, used for rendering charts.
     /// </summary>
     public string Start { get; init; } = "";
