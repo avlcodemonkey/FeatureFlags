@@ -1,3 +1,5 @@
+/* global RequestInit */
+
 import DefaultTimeout from '../constants/Fetch.js';
 import BaseComponent from './BaseComponent.js';
 import FetchError from '../errors/FetchError.js';
