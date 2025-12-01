@@ -61,6 +61,33 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred.  Try refreshing..
+        /// </summary>
+        public static string ErrorLoadingData {
+            get {
+                return ResourceManager.GetString("ErrorLoadingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data to display..
+        /// </summary>
+        public static string NoData {
+            get {
+                return ResourceManager.GetString("NoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle View.
+        /// </summary>
+        public static string ToggleView {
+            get {
+                return ResourceManager.GetString("ToggleView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Top Api Keys.
         /// </summary>
         public static string TopApiKeys {

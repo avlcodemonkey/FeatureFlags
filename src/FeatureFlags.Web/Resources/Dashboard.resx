@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>An error occurred.  Try refreshing.</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>No data to display.</value>
+  </data>
+  <data name="ToggleView" xml:space="preserve">
+    <value>Toggle View</value>
+  </data>
   <data name="TopApiKeys" xml:space="preserve">
     <value>Top Api Keys</value>
   </data>

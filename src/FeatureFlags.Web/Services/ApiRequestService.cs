@@ -36,26 +36,34 @@ public sealed class ApiRequestService(FeatureFlagsDbContext dbContext) : IApiReq
     }
 
     /// <inheritdoc />
-    public async Task<Dictionary<string, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default) {
+    public async Task<Dictionary<string, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, int? maxResults, CancellationToken cancellationToken = default) {
         var query = _DbContext.ApiRequests.AsQueryable();
 
         if (userId.HasValue) {
             query = query.Where(x => x.ApiKey.UserId == userId.Value);
         }
-
         if (startDate.HasValue) {
             query = query.Where(x => x.RequestedDate >= startDate.Value);
         }
-
         if (endDate.HasValue) {
             query = query.Where(x => x.RequestedDate <= endDate.Value);
         }
 
-        return await query.GroupBy(x => x.ApiKey.Name).ToDictionaryAsync(x => x.Key, x => x.Count(), cancellationToken);
+        var results = await query
+            .GroupBy(x => x.ApiKey.Name)
+            .Select(group => new { ApiKeyName = group.Key, Count = group.Count() })
+            .OrderByDescending(x => x.Count)
+            .ToListAsync();
+
+        if (maxResults.HasValue) {
+            results = results.Take(maxResults.Value).ToList();
+        }
+
+        return results.ToDictionary(x => x.ApiKeyName, x => x.Count);
     }
 
     /// <inheritdoc />
-    public async Task<Dictionary<string, int>> GetApiRequestsByIpAddressAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default) {
+    public async Task<Dictionary<string, int>> GetApiRequestsByIpAddressAsync(int? userId, DateTime? startDate, DateTime? endDate, int? maxResults, CancellationToken cancellationToken = default) {
         var query = _DbContext.ApiRequests.AsQueryable();
 
         if (userId.HasValue) {
@@ -70,7 +78,17 @@ public sealed class ApiRequestService(FeatureFlagsDbContext dbContext) : IApiReq
             query = query.Where(x => x.RequestedDate <= endDate.Value);
         }
 
-        return await query.GroupBy(x => x.IpAddress).ToDictionaryAsync(x => x.Key, x => x.Count(), cancellationToken);
+        var results = await query
+            .GroupBy(x => x.ApiKey.Name)
+            .Select(group => new { ApiKeyName = group.Key, Count = group.Count() })
+            .OrderByDescending(x => x.Count)
+            .ToListAsync();
+
+        if (maxResults.HasValue) {
+            results = results.Take(maxResults.Value).ToList();
+        }
+
+        return results.ToDictionary(x => x.ApiKeyName, x => x.Count);
 
     }
 

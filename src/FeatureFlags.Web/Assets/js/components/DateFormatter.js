@@ -11,10 +11,23 @@ class DateFormatter extends HTMLElement {
         super();
 
         this.#dateFormat = this.dataset.dateFormat;
-        if (this.textContent) {
+        this.#updateTextContent(this.textContent);
+    }
+
+    static get observedAttributes() {
+        return ['data-date-value'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'data-date-value' && oldValue !== newValue) {
+            this.#updateTextContent(newValue);
+        }
+    }
+
+    #updateTextContent(dateString) {
+        if (dateString) {
             try {
-                // backend will always return date in UTC. let JS convert to local
-                let dateString = this.textContent;
+                // expect date in UTC. let JS convert to local
                 if (!dateString.toLowerCase().endsWith('z') && dateString.indexOf('+') === -1) {
                     dateString = `${dateString}Z`;
                 }

@@ -397,7 +397,7 @@ ol.charts-css li {
   justify-content: var(--labels-align-inline, flex-end);
 }
 .charts-css.column, .charts-css.area, .charts-css.line {
-  --labels-size: 2rem;
+  --labels-size: 2.5rem;
 }
 .charts-css.column.show-labels tbody tr th, .charts-css.area.show-labels tbody tr th, .charts-css.line.show-labels tbody tr th {
   display: flex;

@@ -19,21 +19,30 @@
             <h4>@Model.Title</h4>
         </header>
         <div class="row is-hidden" data-chart-error>
-            <!-- todo add error message -->
+            <!-- todo test error message -->
+            <h5 class="col text-center">@Dashboard.ErrorLoadingData</h5>
         </div>
         <div class="row is-hidden" data-chart-empty>
-            <!-- todo add empty message -->
+            <!-- todo test empty message -->
+            <h5 class="col text-center">@Dashboard.NoData</h5>
         </div>
         <div class="row is-hidden" data-chart-progress-indicator>
-            <!-- todo add progress indicator that overlays chart -->
+            <!-- todo test progress indicator that overlays chart -->
+            <div class="col text-center">
+                <span class="spinner" aria-label="@Core.Loading"></span>
+            </div>
         </div>
         <div class="row">
-            <div class="is-full-width mb-1" data-chart-table></div>
+            <div class="is-full-width mb-1 is-hidden" data-chart-table></div>
         </div>
         <div class="row">
-            <span class="col is-end-align hide-xs hide-sm" data-chart-updated-date>
+            <span class="col is-end-align hide-xs">
+                <nilla-date data-date-format="YYYY-MM-DD hh:mm:ss A" data-chart-updated-date></nilla-date>
             </span>
             <span class="col text-right">
+                <button type="button" class="button clear" title="@Dashboard.ToggleView" data-chart-toggle-view>
+                    <icon name="Table" label="@Dashboard.ToggleView" />
+                </button>
                 <button type="button" class="button clear" title="@Core.Refresh" data-chart-refresh>
                     <icon name="Refresh" label="@Core.Refresh" />
                 </button>

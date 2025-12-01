@@ -93,6 +93,12 @@ class Chart extends BaseComponent {
     #updatedDate = null;
 
     /**
+     * Display as chart if true, table if false.
+     * @type {boolean}
+     */
+    #viewChart = true;
+
+    /**
      * Indicates data is currently being fetched from the server if true.
      * @type {boolean}
      */
@@ -144,6 +150,7 @@ class Chart extends BaseComponent {
      */
     #setupFooter() {
         this.getElement(ChartElements.Refresh)?.addEventListener('click', () => this.#onRefreshClick());
+        this.getElement(ChartElements.ToggleView)?.addEventListener('click', () => this.#onToggleViewClick());
     }
 
     /**
@@ -208,11 +215,11 @@ class Chart extends BaseComponent {
         this.getElement(ChartElements.Loading)?.classList.toggle('is-hidden', !this.#loading);
         this.getElement(ChartElements.Error)?.classList.toggle('is-hidden', !this.#error);
         this.getElement(ChartElements.Empty)?.classList.toggle('is-hidden', this.#loading || this.#error || this.#rows.length !== 0);
+        this.getElement(ChartElements.Table)?.classList.toggle('is-hidden', this.#loading || this.#error || this.#rows.length === 0);
 
         const updatedAt = this.getElement(ChartElements.UpdatedDate);
         if (updatedAt) {
-            // @todo localization
-            updatedAt.textContent = this.#updatedDate ? this.#updatedDate.toLocaleString() : '';
+            updatedAt.dataset.dateValue = this.#updatedDate ? this.#updatedDate.toISOString() : '';
         }
     }
 
@@ -248,8 +255,6 @@ class Chart extends BaseComponent {
             // Determine header label for this row. Prefer first cell.label if present.
             let headerHtml = `<th scope="row">${escape(row.label)}</th>`;
 
-            const tooltip = row.tooltip ? `<span class="tooltip">${escape(row.tooltip)}</span>` : '';
-
             // Collect style properties compatible with charts.css (--start, --size, --color)
             const styleParts = [];
             if (typeof row.start !== 'undefined' && row.start !== null && !Number.isNaN(parseFloat(row.start))) {
@@ -262,8 +267,10 @@ class Chart extends BaseComponent {
             if (row.color) {
                 styleParts.push(`--color: ${escape(row.color)}`);
             }
-
             const styleAttr = styleParts.length ? ` style="${styleParts.join('; ')}"` : '';
+
+            const tooltipValue = row.tooltip ?? row.size;
+            const tooltip = tooltipValue ? `<span class="tooltip">${escape(tooltipValue)}</span>` : '';
 
             return `<tr>${headerHtml}<td${styleAttr}><span class="data">${escape(String(row.size))}</span>${tooltip}</td></tr>`;
         }).join('\n');
@@ -279,7 +286,10 @@ class Chart extends BaseComponent {
      * @returns {string} CSS class list
      */
     #buildChartCss() {
-        const classList = ['charts-css', this.#chartType];
+        const classList = [
+            this.#viewChart ? 'charts-css' : 'striped',
+            this.#chartType,
+        ];
         if (this.#showHeading) {
             classList.push('show-heading');
         }
@@ -313,6 +323,16 @@ class Chart extends BaseComponent {
     async #onRefreshClick() {
         if (!this.#loading) {
             await this.#fetchData();
+        }
+    }
+
+    /**
+     * Change the current view mode between chart and table.
+     */
+    async #onToggleViewClick() {
+        if (!this.#loading) {
+            this.#viewChart = !this.#viewChart;
+            this.#update();
         }
     }
 }

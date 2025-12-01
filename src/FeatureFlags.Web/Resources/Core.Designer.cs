@@ -277,7 +277,7 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An unhandled error occurred..
+        ///   Looks up a localized string similar to An error occurred..
         /// </summary>
         public static string ErrorGeneric {
             get {
@@ -340,7 +340,7 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An unhandled error occurred.  Try refreshing the page..
+        ///   Looks up a localized string similar to An error occurred.  Try refreshing the page..
         /// </summary>
         public static string ErrorTryRefreshing {
             get {

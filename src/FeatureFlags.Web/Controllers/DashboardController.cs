@@ -38,6 +38,8 @@ public class DashboardController(IApiRequestService apiRequestService, IUserServ
         },
     };
 
+    private const int _ChartMaxRows = 20;
+
     /// <summary>
     /// Renders the landing page.
     /// </summary>
@@ -53,11 +55,11 @@ public class DashboardController(IApiRequestService apiRequestService, IUserServ
             return BadRequest("User not found.");
         }
 
-        var requests = await _ApiRequestService.GetApiRequestsByApiKeyAsync(user.Id, DateTime.UtcNow.AddDays(-30), DateTime.UtcNow, cancellationToken: cancellationToken);
+        var requests = await _ApiRequestService.GetApiRequestsByApiKeyAsync(user.Id, DateTime.UtcNow.AddDays(-30), DateTime.UtcNow, _ChartMaxRows,
+            cancellationToken: cancellationToken);
         return Ok(requests.Select(x => new ChartDataModel {
             Label = x.Key,
             Size = x.Value.ToString(),
-            Tooltip = x.Value.ToString(),
         }));
     }
 
@@ -71,11 +73,11 @@ public class DashboardController(IApiRequestService apiRequestService, IUserServ
             return BadRequest("User not found.");
         }
 
-        var requests = await _ApiRequestService.GetApiRequestsByIpAddressAsync(user.Id, DateTime.UtcNow.AddDays(-30), DateTime.UtcNow, cancellationToken: cancellationToken);
+        var requests = await _ApiRequestService.GetApiRequestsByIpAddressAsync(user.Id, DateTime.UtcNow.AddDays(-30),
+            DateTime.UtcNow, _ChartMaxRows, cancellationToken: cancellationToken);
         return Ok(requests.Select(x => new ChartDataModel {
             Label = x.Key,
             Size = x.Value.ToString(),
-            Tooltip = x.Value.ToString(),
         }));
     }
 }
