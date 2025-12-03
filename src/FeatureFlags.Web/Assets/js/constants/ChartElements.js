@@ -12,6 +12,7 @@ const ChartElements = Object.freeze({
     Status: 'status',
     UpdatedDate: 'updated-date',
     ToggleView: 'toggle-view',
+    Legend: 'legend',
 });
 
 export default ChartElements;

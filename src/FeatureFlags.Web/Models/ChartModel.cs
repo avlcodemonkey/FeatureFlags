@@ -60,4 +60,9 @@ public sealed record ChartModel {
     /// Gets or sets a value indicating whether data is displayed on hover.
     /// </summary>
     public bool ShowDataOnHover { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the legend should be displayed.
+    /// </summary>
+    public bool ShowLegend { get; set; }
 }

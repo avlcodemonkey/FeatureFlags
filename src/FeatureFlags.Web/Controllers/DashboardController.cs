@@ -18,23 +18,27 @@ public class DashboardController(IApiRequestService apiRequestService, IUserServ
             Title = Dashboard.TopApiKeys,
             ChartUrl = Url.Action(nameof(RequestsByApiKey))!,
             ChartType = Constants.ChartTypes.Column,
-            ShowLabels = true,
+            ShowLabels = false,
             ShowPrimaryAxis = true,
             ShowSecondaryAxes = true,
             ShowDataAxes = true,
             DataSpacing = true,
-            HideData = true
+            HideData = false,
+            ShowDataOnHover = true,
+            ShowLegend = true
         },
         RequestsByIpAddress = new ChartModel {
             Title = Dashboard.TopIpAddresses,
             ChartUrl = Url.Action(nameof(RequestsByIpAddress))!,
             ChartType = Constants.ChartTypes.Column,
-            ShowLabels = true,
+            ShowLabels = false,
             ShowPrimaryAxis = true,
             ShowSecondaryAxes = true,
             ShowDataAxes = true,
             DataSpacing = true,
-            HideData = true
+            HideData = false,
+            ShowDataOnHover = true,
+            ShowLegend = true
         },
     };
 

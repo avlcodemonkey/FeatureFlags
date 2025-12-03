@@ -44,6 +44,11 @@ details {
     }
 }
 
+.is-center-align {
+    display: flex;
+    align-items: center;
+}
+
 .is-end-align {
     display: flex;
     align-items: end;

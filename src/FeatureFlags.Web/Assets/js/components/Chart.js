@@ -83,6 +83,12 @@ class Chart extends BaseComponent {
     #showDataOnHover = false;
 
     /**
+     * Show legend.
+     * @type {boolean}
+     */
+    #showLegend = false;
+
+    /**
      * Data fetched from the server.
      * @type {Array<ChartRow>}
      */
@@ -128,6 +134,7 @@ class Chart extends BaseComponent {
         this.#dataSpacing = (this.dataset.chartDataSpacing ?? '').toLowerCase() === 'true';
         this.#hideData = (this.dataset.chartHideData ?? '').toLowerCase() === 'true';
         this.#showDataOnHover = (this.dataset.chartShowDataOnHover ?? '').toLowerCase() === 'true';
+        this.#showLegend = (this.dataset.chartShowLegend ?? '').toLowerCase() === 'true';
 
         this.#setupFooter();
     }
@@ -208,6 +215,7 @@ class Chart extends BaseComponent {
     #update() {
         this.#updateStatus();
         this.#updateChart();
+        this.#updateLegend();
     }
 
     /**
@@ -218,6 +226,7 @@ class Chart extends BaseComponent {
         this.getElement(ChartElements.Error)?.classList.toggle('is-hidden', !this.#error);
         this.getElement(ChartElements.Empty)?.classList.toggle('is-hidden', this.#loading || this.#error || this.#rows.length !== 0);
         this.getElement(ChartElements.Table)?.classList.toggle('is-hidden', this.#loading || this.#error || this.#rows.length === 0);
+        this.getElement(ChartElements.Legend)?.classList.toggle('is-hidden', this.#loading || this.#error || this.#rows.length === 0);
 
         const updatedAt = this.getElement(ChartElements.UpdatedDate);
         if (updatedAt) {
@@ -227,10 +236,6 @@ class Chart extends BaseComponent {
 
     /**
      * Removes existing table and renders new one.
-     *
-     * Builds HTML compatible with the structure rendered by `chart.vue`.
-     * Supports legacy simple arrays of values as well as the richer value objects
-     * produced by the charts mapping (objects containing valueRaw, start, size, tooltip, label, datasetName, color, etc).
      */
     #updateChart() {
         const table = this.getElement(ChartElements.Table);
@@ -269,6 +274,7 @@ class Chart extends BaseComponent {
             if (row.color) {
                 styleParts.push(`--color: ${escape(row.color)}`);
             }
+
             const styleAttr = styleParts.length ? ` style="${styleParts.join('; ')}"` : '';
 
             const tooltipValue = row.tooltip ?? row.size;
@@ -277,10 +283,35 @@ class Chart extends BaseComponent {
             return `<tr>${headerHtml}<td${styleAttr}><span class="data">${escape(String(row.size))}</span>${tooltip}</td></tr>`;
         }).join('\n');
 
-        // @todo add table classes
-        const html = `<table class="${this.#buildChartCss()}"><tbody>${rowsHtml}</tbody></table>`;
+        table.insertAdjacentHTML('beforeend', `<table class="${this.#buildChartCss()}"><tbody>${rowsHtml}</tbody></table>`);
+    }
 
-        table.insertAdjacentHTML('beforeend', html);
+    /**
+     * Removes existing legend and renders new one.
+     */
+    #updateLegend() {
+        const legend = this.getElement(ChartElements.Legend);
+        if (!legend) {
+            return;
+        }
+        legend.innerHTML = '';
+
+        // if no rows, nothing to render
+        if (!this.#rows || this.#rows.length === 0 || !this.#viewChart) {
+            return;
+        }
+
+        if (this.#showLegend) {
+            const labelHtml = this.#rows.map((row) => {
+                if (!(typeof row === 'object' && row !== null)) {
+                    return `<li>${escape(row ?? '')}</li>`;
+                }
+
+                // Determine header label for this row. Prefer first cell.label if present.
+                return `<li>${escape(row.label)}</li>`;
+            }).join('\n');
+            legend.insertAdjacentHTML('beforeend', `<ul class="charts-css legend legend-inline legend-square">${labelHtml}</ul>`);
+        }
     }
 
     /**
@@ -310,12 +341,16 @@ class Chart extends BaseComponent {
         if (this.#dataSpacing) {
             classList.push('data-spacing-15');
         }
+
         if (this.#hideData) {
             classList.push('hide-data');
+        } else {
+            classList.push('data-start');
+            if (this.#showDataOnHover) {
+                classList.push('show-data-on-hover');
+            }
         }
-        if (this.#showDataOnHover) {
-            classList.push('show-data-on-hover');
-        }
+
         return classList.join(' ');
     }
 
