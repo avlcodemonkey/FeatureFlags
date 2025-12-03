@@ -7,6 +7,7 @@ import HttpHeaders from '../constants/HttpHeaders.js';
 import ChartElements from '../constants/ChartElements.js';
 import ChartTypes from '../constants/ChartTypes.js';
 import escape from '../utils/escape.js';
+import randomColor from '../utils/randomColor.js';
 
 /**
  * @typedef ChartRow
@@ -252,6 +253,7 @@ class Chart extends BaseComponent {
         // find largest size from rows
         const maxSize = Math.max(...this.#rows.map(x => typeof x.size !== 'undefined' && x.size !== null && !Number.isNaN(parseFloat(x.size)) ? x.size : 0));
 
+        const usedColors = [];
         // Build tbody rows. Each item in #rows is expected to be an object like { valueRaw, start, size, tooltip, label, color }.
         const rowsHtml = this.#rows.map((row) => {
             if (!(typeof row === 'object' && row !== null)) {
@@ -270,9 +272,15 @@ class Chart extends BaseComponent {
             if (typeof row.size !== 'undefined' && row.size !== null) {
                 styleParts.push(`--size: calc(${row.size} / ${maxSize})`);
             }
-            // allow color from resolved data color or explicit color property
-            if (row.color) {
-                styleParts.push(`--color: ${escape(row.color)}`);
+
+            // Ensure unique color
+            let color = row.color || randomColor();
+            while (usedColors.includes(color)) {
+                color = randomColor();
+            }
+            usedColors.push(color);
+            if (color) {
+                styleParts.push(`--color: ${escape(color)}`);
             }
 
             const styleAttr = styleParts.length ? ` style="${styleParts.join('; ')}"` : '';
