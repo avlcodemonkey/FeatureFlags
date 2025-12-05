@@ -36,6 +36,63 @@ public sealed class ApiRequestService(FeatureFlagsDbContext dbContext) : IApiReq
     }
 
     /// <inheritdoc />
+    public async Task<Dictionary<string, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, int? maxResults, CancellationToken cancellationToken = default) {
+        var query = _DbContext.ApiRequests.AsQueryable();
+
+        if (userId.HasValue) {
+            query = query.Where(x => x.ApiKey.UserId == userId.Value);
+        }
+        if (startDate.HasValue) {
+            query = query.Where(x => x.RequestedDate >= startDate.Value);
+        }
+        if (endDate.HasValue) {
+            query = query.Where(x => x.RequestedDate <= endDate.Value);
+        }
+
+        var results = await query
+            .GroupBy(x => x.ApiKey.Name)
+            .Select(group => new { ApiKeyName = group.Key, Count = group.Count() })
+            .OrderByDescending(x => x.Count)
+            .ToListAsync();
+
+        if (maxResults.HasValue) {
+            results = results.Take(maxResults.Value).ToList();
+        }
+
+        return results.ToDictionary(x => x.ApiKeyName, x => x.Count);
+    }
+
+    /// <inheritdoc />
+    public async Task<Dictionary<string, int>> GetApiRequestsByIpAddressAsync(int? userId, DateTime? startDate, DateTime? endDate, int? maxResults, CancellationToken cancellationToken = default) {
+        var query = _DbContext.ApiRequests.AsQueryable();
+
+        if (userId.HasValue) {
+            query = query.Where(x => x.ApiKey.UserId == userId.Value);
+        }
+
+        if (startDate.HasValue) {
+            query = query.Where(x => x.RequestedDate >= startDate.Value);
+        }
+
+        if (endDate.HasValue) {
+            query = query.Where(x => x.RequestedDate <= endDate.Value);
+        }
+
+        var results = await query
+            .GroupBy(x => x.IpAddress)
+            .Select(group => new { IpAddress = group.Key, Count = group.Count() })
+            .OrderByDescending(x => x.Count)
+            .ToListAsync();
+
+        if (maxResults.HasValue) {
+            results = results.Take(maxResults.Value).ToList();
+        }
+
+        return results.ToDictionary(x => x.IpAddress, x => x.Count);
+
+    }
+
+    /// <inheritdoc />
     public async Task<bool> SaveApiRequestAsync(int apiKeyId, string ipAddress, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(ipAddress);
 

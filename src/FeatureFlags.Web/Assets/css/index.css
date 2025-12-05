@@ -4,6 +4,9 @@
 /* menu styles */
 @import url("./luxbar.css");
 
+/* charts.css styles */
+@import url("../external/charts.css");
+
 /* custom styles */
 @import url("./root.css");
 @import url("./layout.css");
@@ -17,3 +20,4 @@
 @import url("./json.css");
 @import url("./autocomplete.css");
 @import url("./featureFlags.css");
+@import url("./dashboard.css");

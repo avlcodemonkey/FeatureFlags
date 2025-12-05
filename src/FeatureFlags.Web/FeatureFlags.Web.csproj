@@ -69,6 +69,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="Resources\Dashboard.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Dashboard.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Flags.Designer.cs">
       <DependentUpon>Flags.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -117,6 +122,10 @@
     <EmbeddedResource Update="Resources\ApiKeys.resx">
       <LastGenOutput>ApiKeys.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Dashboard.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Dashboard.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Flags.resx">
       <LastGenOutput>Flags.Designer.cs</LastGenOutput>

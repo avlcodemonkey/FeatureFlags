@@ -226,7 +226,7 @@
     <value>Name is required.</value>
   </data>
   <data name="ErrorGeneric" xml:space="preserve">
-    <value>An unhandled error occurred.</value>
+    <value>An error occurred.</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>No</value>
@@ -301,7 +301,7 @@
     <value>No matching results.</value>
   </data>
   <data name="ErrorTryRefreshing" xml:space="preserve">
-    <value>An unhandled error occurred.  Try refreshing the page.</value>
+    <value>An error occurred.  Try refreshing the page.</value>
   </data>
   <data name="ErrorConcurrency" xml:space="preserve">
     <value>There was a conflict during update.  Refresh and try again.</value>
@@ -311,5 +311,8 @@
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Loading</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
   </data>
 </root>

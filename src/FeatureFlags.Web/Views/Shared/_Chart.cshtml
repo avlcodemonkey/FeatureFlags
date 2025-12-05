@@ -1,0 +1,56 @@
+@using FeatureFlags.Models
+@using FeatureFlags.Resources
+@model ChartModel
+
+<nilla-chart 
+    data-chart-url="@Model.ChartUrl" 
+    data-chart-type="@Model.ChartType.ToString().ToLower()" 
+    data-chart-show-heading="@Model.ShowHeading"
+    data-chart-show-labels="@Model.ShowLabels"
+    data-chart-show-primary-axis="@Model.ShowPrimaryAxis"
+    data-chart-show-secondary-axes="@Model.ShowSecondaryAxes"
+    data-chart-show-data-axes="@Model.ShowDataAxes"
+    data-chart-data-spacing="@Model.DataSpacing"
+    data-chart-hide-data="@Model.HideData"
+    data-chart-show-data-on-hover="@Model.ShowDataOnHover"
+    data-chart-show-legend="@Model.ShowLegend">
+
+    <div class="card">
+        <header>
+            <h4>@Model.Title</h4>
+        </header>
+        <div class="row is-hidden" data-chart-error>
+            <!-- todo test error message -->
+            <h5 class="col text-center">@Dashboard.ErrorLoadingData</h5>
+        </div>
+        <div class="row is-hidden" data-chart-empty>
+            <!-- todo test empty message -->
+            <h5 class="col text-center">@Dashboard.NoData</h5>
+        </div>
+        <div class="row is-hidden" data-chart-progress-indicator>
+            <!-- todo test progress indicator that overlays chart -->
+            <div class="col text-center">
+                <span class="spinner" aria-label="@Core.Loading"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="is-full-width mb-1 is-hidden" data-chart-table></div>
+        </div>
+        <div class="row">
+            <div class="is-full-width mb-1 is-hidden" data-chart-legend></div>
+        </div>
+        <div class="row">
+            <span class="col is-center-align hide-xs hide-sm">
+                <nilla-date data-date-format="YYYY-MM-DD hh:mm:ss A" data-chart-updated-date></nilla-date>
+            </span>
+            <span class="col text-right">
+                <button type="button" class="button clear" title="@Dashboard.ToggleView" data-chart-toggle-view>
+                    <icon name="Table" label="@Dashboard.ToggleView" />
+                </button>
+                <button type="button" class="button clear" title="@Core.Refresh" data-chart-refresh>
+                    <icon name="Refresh" label="@Core.Refresh" />
+                </button>
+            </span>
+        </div>
+    </div>
+</nilla-chart>

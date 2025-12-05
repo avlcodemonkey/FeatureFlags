@@ -19,7 +19,7 @@ namespace FeatureFlags.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Core {
@@ -277,7 +277,7 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An unhandled error occurred..
+        ///   Looks up a localized string similar to An error occurred..
         /// </summary>
         public static string ErrorGeneric {
             get {
@@ -340,7 +340,7 @@ namespace FeatureFlags.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An unhandled error occurred.  Try refreshing the page..
+        ///   Looks up a localized string similar to An error occurred.  Try refreshing the page..
         /// </summary>
         public static string ErrorTryRefreshing {
             get {
@@ -498,6 +498,15 @@ namespace FeatureFlags.Resources {
         public static string PreviousPage {
             get {
                 return ResourceManager.GetString("PreviousPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
             }
         }
         

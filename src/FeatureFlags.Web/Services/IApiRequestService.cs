@@ -17,6 +17,28 @@ public interface IApiRequestService {
     Task<IEnumerable<ApiRequestModel>> GetApiRequestsAsync(int? userId, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Retrieves total of API requests matching criteria group by api key.
+    /// </summary>
+    /// <param name="userId">The user ID to filter API requests. If null, no user ID filter is applied.</param>
+    /// <param name="startDate">The start date to filter API requests. If null, no start date filter is applied.</param>
+    /// <param name="endDate">The end date to filter API requests. If null, no end date filter is applied.</param>
+    /// <param name="maxResults">The maximum number of results to return. If null, all results are returned.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> that can be used to cancel the operation. Default value is <see cref="CancellationToken.None"/>.</param>
+    /// <returns>Task that represents the asynchronous operation. Task result contains a dictionary of key names and request count.</returns>
+    Task<Dictionary<string, int>> GetApiRequestsByApiKeyAsync(int? userId, DateTime? startDate, DateTime? endDate, int? maxResults, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves total of API requests matching criteria group by ip address.
+    /// </summary>
+    /// <param name="userId">The user ID to filter API requests. If null, no user ID filter is applied.</param>
+    /// <param name="startDate">The start date to filter API requests. If null, no start date filter is applied.</param>
+    /// <param name="endDate">The end date to filter API requests. If null, no end date filter is applied.</param>
+    /// <param name="maxResults">The maximum number of results to return. If null, all results are returned.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> that can be used to cancel the operation. Default value is <see cref="CancellationToken.None"/>.</param>
+    /// <returns>Task that represents the asynchronous operation. Task result contains a dictionary of addresses and request count.</returns>
+    Task<Dictionary<string, int>> GetApiRequestsByIpAddressAsync(int? userId, DateTime? startDate, DateTime? endDate, int? maxResults, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Saves the specified API request.
     /// </summary>
     /// <param name="apiKeyId">The ID of the API key associated with the request.</param>
