@@ -79,8 +79,8 @@ public sealed class ApiRequestService(FeatureFlagsDbContext dbContext) : IApiReq
         }
 
         var results = await query
-            .GroupBy(x => x.ApiKey.Name)
-            .Select(group => new { ApiKeyName = group.Key, Count = group.Count() })
+            .GroupBy(x => x.IpAddress)
+            .Select(group => new { IpAddress = group.Key, Count = group.Count() })
             .OrderByDescending(x => x.Count)
             .ToListAsync();
 
@@ -88,7 +88,7 @@ public sealed class ApiRequestService(FeatureFlagsDbContext dbContext) : IApiReq
             results = results.Take(maxResults.Value).ToList();
         }
 
-        return results.ToDictionary(x => x.ApiKeyName, x => x.Count);
+        return results.ToDictionary(x => x.IpAddress, x => x.Count);
 
     }
 
