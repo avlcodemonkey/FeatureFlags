@@ -108,6 +108,12 @@ class Chart extends BaseComponent {
     #viewChart = true;
 
     /**
+     * Maps row labels to their assigned colors.
+     * @type {Map<string, string>}
+     */
+    #labelColors = new Map();
+
+    /**
      * Indicates data is currently being fetched from the server if true.
      * @type {boolean}
      */
@@ -253,7 +259,6 @@ class Chart extends BaseComponent {
         // find largest size from rows
         const maxSize = Math.max(...this.#rows.map(x => typeof x.size !== 'undefined' && x.size !== null && !Number.isNaN(parseFloat(x.size)) ? x.size : 0));
 
-        const usedColors = [];
         // Build tbody rows. Each item in #rows is expected to be an object like { valueRaw, start, size, tooltip, label, color }.
         const rowsHtml = this.#rows.map((row) => {
             if (!(typeof row === 'object' && row !== null)) {
@@ -273,12 +278,14 @@ class Chart extends BaseComponent {
                 styleParts.push(`--size: calc(${row.size} / ${maxSize})`);
             }
 
-            // Ensure unique color
-            let color = row.color || randomColor();
-            while (usedColors.includes(color)) {
-                color = randomColor();
+            // Assign a unique color based on the label, ensuring consistency across refreshes
+            let color = this.#labelColors.get(row.label);
+            if (!color) {
+                do {
+                    color = randomColor();
+                } while ([...this.#labelColors.values()].includes(color)); // Ensure the color is unique
+                this.#labelColors.set(row.label, color);
             }
-            usedColors.push(color);
             if (color) {
                 styleParts.push(`--color: ${escape(color)}`);
             }
@@ -316,9 +323,9 @@ class Chart extends BaseComponent {
                 }
 
                 // Determine header label for this row. Prefer first cell.label if present.
-                return `<li>${escape(row.label)}</li>`;
+                return `<li style="color: ${this.#labelColors.get(row.label)}">${escape(row.label)}</li>`;
             }).join('\n');
-            legend.insertAdjacentHTML('beforeend', `<ul class="charts-css legend legend-inline legend-square">${labelHtml}</ul>`);
+            legend.insertAdjacentHTML('beforeend', `<ul class="charts-css legend legend-inline legend-label">${labelHtml}</ul>`);
         }
     }
 

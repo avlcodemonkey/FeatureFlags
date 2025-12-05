@@ -11,13 +11,5 @@ nilla-chart {
         li {
             font-size: var(--font-size);
         }
-
-        &.legend-square {
-            li::before {
-                width: var(--font-size);
-                height: var(--font-size);
-                border: 0;
-            }
-        }
     }
 }
